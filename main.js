@@ -2,11 +2,11 @@ var neo4j = require('neo4j');
 var restify = require('restify');
 fs = require('fs')
 
-var db = new neo4j.GraphDatabase('http://neo4j:gZb-AFF-82n-CVo@145.24.222.132:6000');
+var db = new neo4j.GraphDatabase('http://neo4j:gZb-AFF-82n-CVo@145.24.222.132:80');
+var response = '';
 
 function filter(type, value) {
-    var response;
-    db.cypher({
+    var data = db.cypher({
         query: 'MATCH (c:Car {' + type + ': \'' + value + '\'}) RETURN c',
     }, function (err, results) {
         if (err) throw err;
@@ -20,8 +20,8 @@ function filter(type, value) {
             }       
         }
     });
-
-    return response;
+    response = 'world!';
+    return response.toString();
 }
 
 var getIndexhtml = function indexHTML(req, res, next) {
@@ -38,7 +38,8 @@ var getIndexhtml = function indexHTML(req, res, next) {
 }
 
 function respond(req, res, next) {
-    res.send('hello' + filter(req.params.type, req.params.value));
+    res.send('hello ' + filter(req.params.type, req.params.value));
+    console.log('log: ' + filter(req.params.type, req.params.value));
     // res.write(filter(req.params.type, req.params.value));
     // res.setHeader('Content-Type', 'JSON');
     // res.end(data);
