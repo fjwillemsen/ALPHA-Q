@@ -3,24 +3,28 @@ var restify = require('restify');
 fs = require('fs')
 
 var db = new neo4j.GraphDatabase('http://neo4j:gZb-AFF-82n-CVo@145.24.222.132:80');
-var response = '';
 
-function filter(type, value) {
-    var data = db.cypher({
+function filter(type, value, res, callback) {
+    db.cypher({
         query: 'MATCH (c:Car {' + type + ': \'' + value + '\'}) RETURN c',
     }, function (err, results) {
+
+        var response = {
+            length: results.length.toString()
+        };
+
         if (err) throw err;
         var result = results[0];
         if (!result) {
             console.log('No car found.');
         } else {
             for (var i = results.length - 1; i >= 0; i--) {
-                var car = results[i]['c'];
-                response = JSON.stringify(car, null, 4);
-            }       
+                response[i] = results[i]['c'];
+            }
         }
+        res.send(response);
+        callback(response);
     });
-    return data;
 }
 
 var getIndexhtml = function indexHTML(req, res, next) {
@@ -36,12 +40,8 @@ var getIndexhtml = function indexHTML(req, res, next) {
     });
 }
 
-function respond(req, res, next) {
-    res.send(filter(req.params.type, req.params.value));
-    console.log('log: ' + filter(req.params.type, req.params.value));
-    // res.write(filter(req.params.type, req.params.value));
-    // res.setHeader('Content-Type', 'JSON');
-    // res.end(data);
+function filterRespond(req, res, next) {
+    filter(req.params.type, req.params.value, res);
     next();
 }
 
@@ -51,9 +51,10 @@ var server = restify.createServer({
 
 server.use(restify.bodyParser());
 server.get('/', getIndexhtml);
-server.get('/filter/:type/:value', respond);
-server.head('/filter/:type/:value', respond);
+
+server.get('/filter/:type/:value', filterRespond);
+server.head('/filter/:type/:value', filterRespond);
 
 server.listen(8080, function() {
-  console.log('%s listening at %s', server.name, server.url);
+    console.log('%s listening at %s', server.name, server.url);
 });

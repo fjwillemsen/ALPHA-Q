@@ -63,6 +63,25 @@ hr {
     color: rgb(230,230,230);
 }
 
+#content p {
+    font-family: 'Titillium Web', sans-serif;
+    text-align: center;
+    font-size: 2em;
+}
+
+#content table {
+    width: 80vw;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#content th, td {
+    padding: 15px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
 @media screen and (max-width: 1060px) {
     #title {
         font-size: 1.5em;
@@ -90,19 +109,61 @@ hr {
 </style>
 
 <script>
-$.getJSON("http://145.24.222.132:8080/filter/make/Lotus", function(data) {
-    // Get the element with id summary and set the inner text to the result.
-    // $('#summary').text(data.result);
-    console.log("Data: " + data);
-    $('#Content').append('<hr><p><b>JSON!</b></p>');
-    for(i = 0; i < data.data.length; i++) {
-        if(data.data[i].message) {
-            console.log(data.data[i]);
-            data.data[i].message = data.data[i].message.replace(/(\r\n|\n|\r)/gm, "<br />");
-            $('#Content').append('<hr><p>' + data.data[i].message + '</p>');
-        }
+// $.getJSON("http://145.24.222.132:8080/filter/make/Lotus", function(data) {
+//     // Get the element with id summary and set the inner text to the result.
+//     // $('#summary').text(data.result);
+//     console.log("Data: " + data);
+//     $('#Content').append('<hr><p><b>JSON!</b></p>');
+//     for(i = 0; i < data.data.length; i++) {
+//         if(data.data[i].message) {
+//             console.log(data.data[i]);
+//             data.data[i].message = data.data[i].message.replace(/(\r\n|\n|\r)/gm, "<br />");
+//             $('#Content').append('<hr><p>' + data.data[i].message + '</p>');
+//         }
+//     }
+//     $('#Content').append('<hr>');
+// });
+
+$.get('http://145.24.222.132:8080/filter/make/Lotus', function(data){
+
+    // $('#content').append("<table><tr><th>Make</th>");
+    // $('#content').append("<th>Model</th>");
+    // $('#content').append("<th>Year</th>");
+    // $('#content').append("<th>Price</th></tr>");
+
+    var table = $('<table>');
+
+    var header = $('<tr>');
+    header.append('<th>Brand</th>');
+    header.append('<th>Model</th>');
+    header.append('<th>Year</th>');
+    header.append('<th>Price</th></tr>');
+    table.append(header);
+
+    for (var i = data.length - 1; i >= 0; i--) {
+        var row = $('<tr>');
+        row.append("<td>" + data[i].properties.make + "</td>");
+        row.append("<td>" + data[i].properties.model + "</td>");
+        row.append("<td>" + data[i].properties.year + "</td>");
+        row.append("<td>&euro;" + data[i].properties.price + "</td></tr>");
+        // $('#content').append("<tr><td>" + data[i].properties.make + "</td>");
+        // $('#content').append("<td>" + data[i].properties.model + "</td>");
+        // $('#content').append("<td>" + data[i].properties.year + "</td>");
+        // $('#content').append("<td>" + data[i].properties.price  + "</td></tr>");
+        table.append(row);
     }
-    $('#Content').append('<hr>');
+    table.append('</table>');
+    $('#content').append(table);
+
+    // $('#content').append("</table>");
+
+    // var table = $('<table></table>');
+    // for(i=0; i<data.length; i++){
+    //     var row = $('<tr></tr>').text('result ' + i);
+    //     table.append(row);
+    // }
+
+    
 });
 </script>
 
@@ -119,7 +180,9 @@ $.getJSON("http://145.24.222.132:8080/filter/make/Lotus", function(data) {
     </div>
 </div>
 
-<div id="Content">Content</div>
+<div id="content">
+    <p>Cars for sale<p>
+</div>
 
 </body>
 </html>
