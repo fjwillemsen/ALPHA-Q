@@ -9,18 +9,16 @@ import java.util.Random;
  * Created by floris-jan on 25-10-16.
  */
 public class Main {
-
-    private static ResultSet resultSet;
+    public static int filecount = 1;
 
     public static void main(String args[]) {
-        resultSet = getRawData();
-        System.out.println(cypherRawData());
+        System.out.println(cypherRawData("Car", "VehicleModelYear"));
     }
 
-    public static ResultSet getRawData() {
+    public static ResultSet getRawData(String table) {
         try {
             final DatabaseReader databaseReader = new DatabaseReader();
-            return databaseReader.statement.executeQuery("SELECT * FROM 'VehicleModelYear'");
+            return databaseReader.statement.executeQuery("SELECT * FROM '" + table + "'");
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -42,19 +40,21 @@ public class Main {
             BufferedWriter out = new BufferedWriter(new FileWriter(filename + ".txt"));
             out.write(value);
             out.close();
+            filecount++;
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static String cypherRawData() {
+    public static String cypherRawData(String type, String table) {
+        ResultSet resultSet = getRawData(table);
         String result = "";
         String miliresult = "";
         int count = 0;
         try {
             while(resultSet.next()) {
                 String create = "CREATE (";
-                create = create + getID(count) + ":Car {";
+                create = create + getID(count) + ":" + type + "{";
                 for (int i = 1; i < resultSet.getMetaData().getColumnCount()+1; i++) {
                     create = create + resultSet.getMetaData().getColumnName(i).toString() + ":'" + resultSet.getString(i).toString() + "'";
                     if(i != resultSet.getMetaData().getColumnCount()) {
@@ -66,11 +66,14 @@ public class Main {
                 miliresult = miliresult + create;
                 count++;
                 if(count%1000 == 0) {
-                    writeToFile((count/1000 + ""), miliresult);
+                    writeToFile((filecount + ""), miliresult);
                     result = result + miliresult;
                     miliresult = "";
                 }
             }
+            writeToFile((filecount + ""), miliresult);
+            result = result + miliresult;
+            miliresult = "";
         } catch (SQLException e) {
             e.printStackTrace();
         }
