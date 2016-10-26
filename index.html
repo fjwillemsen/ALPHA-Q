@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+<head>
+<title>CarShop</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css?family=Titillium+Web:300" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+    font-size: 1em;
+    font-family: 'Titillium Web', sans-serif;
+}
+
+a {
+    color: black;
+    text-decoration:none;
+}
+
+hr {
+    background-color: white;
+    width: 75vw;
+}
+
+#header {
+    background-color: rgb(100,200,200);
+    font-family: 'Titillium Web', sans-serif;
+    text-align: center;
+    color: white;
+    margin: 0;
+    width: 80vw;
+    padding-left: 10vw;
+    padding-right: 10vw;
+}
+
+#title {
+    font-size: 3.5em;
+    letter-spacing: 1em;
+}
+
+#subtitle {
+    font-size: 2vw;
+    letter-spacing: 0.5em;
+}
+
+#navbar {
+    display: inline-block;
+}
+
+#navbar a {
+    font-size: 2em;
+    color: rgb(255,255,255);
+}
+
+#navbar a:hover {
+    color: rgb(230,230,230);
+}
+
+@media screen and (max-width: 1060px) {
+    #title {
+        font-size: 1.5em;
+    }
+
+    #navbar a {
+        font-size: 1em;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    #title {
+        font-size: 1em;
+    }
+
+    .subject .title {
+        font-size: 1.5em;
+    }
+
+    #navbar a {
+        font-size: 1em;
+    }
+}
+
+</style>
+
+<script>
+$.getJSON("http://145.24.222.132:8080/filter/make/Lotus", function(data) {
+    // Get the element with id summary and set the inner text to the result.
+    // $('#summary').text(data.result);
+    console.log("Data: " + data);
+    $('#Content').append('<hr><p><b>JSON!</b></p>');
+    for(i = 0; i < data.data.length; i++) {
+        if(data.data[i].message) {
+            console.log(data.data[i]);
+            data.data[i].message = data.data[i].message.replace(/(\r\n|\n|\r)/gm, "<br />");
+            $('#Content').append('<hr><p>' + data.data[i].message + '</p>');
+        }
+    }
+    $('#Content').append('<hr>');
+});
+</script>
+
+<head>
+<body>
+
+<div id="header">
+    <p id="title">CarShop</p>
+    <div id="navbar">
+        <a href="#">CARS -</a>
+        <a href="#">MY PROFILE -</a>
+        <a href="#">CONTACT -</a>
+        <a href="#">ABOUT US</a>
+    </div>
+</div>
+
+<div id="Content">Content</div>
+
+</body>
+</html>
