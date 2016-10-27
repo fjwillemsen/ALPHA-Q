@@ -3,7 +3,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+
 
 /**
  * Created by floris-jan on 25-10-16.
@@ -12,7 +16,9 @@ public class Main {
     public static int filecount = 1;
 
     public static void main(String args[]) {
-        System.out.println(cypherRawData("Car", "VehicleModelYear"));
+
+        //System.out.println(cypherRawData("Car", "VehicleModelYear","price"));
+        System.out.println(cypherRawData("Company", "Company",null));
     }
 
     public static ResultSet getRawData(String table) {
@@ -46,7 +52,7 @@ public class Main {
         }
     }
 
-    public static String cypherRawData(String type, String table) {
+    public static String cypherRawData(String type, String table, String extra) {
         ResultSet resultSet = getRawData(table);
         String result = "";
         String miliresult = "";
@@ -56,12 +62,14 @@ public class Main {
                 String create = "CREATE (";
                 create = create + getID(count) + ":" + type + "{";
                 for (int i = 1; i < resultSet.getMetaData().getColumnCount()+1; i++) {
-                    create = create + resultSet.getMetaData().getColumnName(i).toString() + ":'" + resultSet.getString(i).toString() + "'";
+                    create = create + resultSet.getMetaData().getColumnName(i) + ":'" + resultSet.getString(i) + "'";
                     if(i != resultSet.getMetaData().getColumnCount()) {
                         create = create + ", ";
                     }
                 }
-                create = create + ", price:" + (10000 + new Random().nextInt(80000));
+                if (extra != null ){
+                    create = create + "," + extra +":" + (10000 + new Random().nextInt(80000));
+                }
                 create = create + "})\n";
                 miliresult = miliresult + create;
                 count++;
@@ -80,4 +88,5 @@ public class Main {
         System.out.println("# converted: " + count);
         return result;
     }
+
 }
