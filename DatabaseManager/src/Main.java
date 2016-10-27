@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -14,9 +13,10 @@ import java.util.Random;
  */
 public class Main {
     public static int filecount = 1;
-    private static ArrayList<String> dealerIDs = new ArrayList<>();
-    private static ArrayList<String> companyIDs= new ArrayList<>();
-    private static ArrayList<String> carIDs= new ArrayList<>();
+//    private static ArrayList<String> dealerIDs = new ArrayList<>();
+//    private static ArrayList<String> companyIDs= new ArrayList<>();
+//    private static ArrayList<String> carIDs= new ArrayList<>();
+    static Random rand = new Random();
     public static void main(String args[]) {
         Character[] carsId = new Character[] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
         Character[] companyId = new Character[] {'K', 'L', 'M', 'O', 'P','Q','R','S','T','U'};
@@ -84,11 +84,11 @@ public class Main {
             while(resultSet.next()) {
                 String create = "CREATE (";
                 String id = getID(count, ids);
-                if(type == "Company") {
-                    companyIDs.add(id);
-                } else if(type == "Car") {
-                    carIDs.add(id);
-                }
+//                if(type == "Company") {
+//                    companyIDs.add(id);
+//                } else if(type == "Car") {
+//                    carIDs.add(id);
+//                }
                 create = create + id + ":" + type + "{";
                 for (int i = 1; i < resultSet.getMetaData().getColumnCount()+1; i++) {
                     create = create + resultSet.getMetaData().getColumnName(i) + ":'" + resultSet.getString(i) + "'";
@@ -117,14 +117,20 @@ public class Main {
         System.out.println("# converted: " + count);
         return result;
     }
-
-//    public static String matchNodes(){
-//        String resultM = "";
-//        String connect = "CREATE (";
-//        for (String i: carIDs){
-//            connect = connect +
-//        }
-//        return resultM;
-//    }
-
+    // carmerk belongs to random company(only make and name)                  not done(only if needed)
+    public static String matchNodes(Character[] idListA, Character[] idListB, String type1,String type2,
+                                    String relation, List<String> lBig, List<String> lSmall){
+        String resultM = "";
+        int count = 0;
+        for (String i: lBig){
+            String connect = "Match (" + getID(count,idListA) + ":"+ type1 +"{make:" + lBig.get(count) +"}) " +
+                    "Match(" + getID(count,idListB) +":"+ type2 + "{name" + getRandomItem(lSmall) + "})" +
+                    "create ("+ getID(count,idListA) +")-[:"+ relation+"]->("+getID(count,idListB)+")";
+            count++;
+        }
+        return resultM;
+    }
+    static <T> T getRandomItem(List<T> list) {
+        return list.get(rand.nextInt(list.size()));
+    }
 }
