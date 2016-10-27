@@ -17,12 +17,13 @@ public class Main {
     private static ArrayList<String> dealerIDs = new ArrayList<>();
     private static ArrayList<String> companyIDs= new ArrayList<>();
     private static ArrayList<String> carIDs= new ArrayList<>();
-
     public static void main(String args[]) {
         Character[] carsId = new Character[] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
         Character[] companyId = new Character[] {'K', 'L', 'M', 'O', 'P','Q','R','S','T','U'};
-        System.out.println(cypherRawData("Car", "VehicleModelYear","price", carsId));
-        System.out.println(cypherRawData("Company", "Company",null,companyId));
+        //System.out.println(cypherRawData("Car", "VehicleModelYear","price", carsId));
+        //System.out.println(cypherRawData("Company", "Company",null,companyId));
+        List<String> carMakes =getSpecificData("VehicleModelYear","distinct(make)","");
+        List<String> compNames =getSpecificData("Company","distinct(name)","");
 
     }
 
@@ -36,6 +37,23 @@ public class Main {
         }
     }
 
+
+    public static List<String> getSpecificData(String table, String output, String where) {
+        try {
+            List<String> result = new ArrayList<>();
+            final DatabaseReader databaseReader = new DatabaseReader();
+            ResultSet rs = databaseReader.statement.executeQuery("SELECT "+ output +" FROM '" + table + "' "+ where);
+            while (rs.next()){
+                result.add(rs.getString(1));
+
+            }
+            return result;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     public static String getID(int value, Character[] ids) {
 
         String result = "";
