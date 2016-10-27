@@ -14,11 +14,16 @@ import java.util.Random;
  */
 public class Main {
     public static int filecount = 1;
+    private static ArrayList<String> dealerIDs = new ArrayList<>();
+    private static ArrayList<String> companyIDs= new ArrayList<>();
+    private static ArrayList<String> carIDs= new ArrayList<>();
 
     public static void main(String args[]) {
+        Character[] carsId = new Character[] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
+        Character[] companyId = new Character[] {'K', 'L', 'M', 'O', 'P','Q','R','S','T','U'};
+        System.out.println(cypherRawData("Car", "VehicleModelYear","price", carsId));
+        System.out.println(cypherRawData("Company", "Company",null,companyId));
 
-        //System.out.println(cypherRawData("Car", "VehicleModelYear","price"));
-        System.out.println(cypherRawData("Company", "Company",null));
     }
 
     public static ResultSet getRawData(String table) {
@@ -31,12 +36,12 @@ public class Main {
         }
     }
 
-    public static String getID(int value) {
-        Character[] characters = new Character[] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
+    public static String getID(int value, Character[] ids) {
+
         String result = "";
         String valueChar = value + "";
         for (int i = 0; i < valueChar.length(); i++) {
-            result = result + characters[Integer.parseInt(valueChar.charAt(i) + "")];
+            result = result + ids[Integer.parseInt(valueChar.charAt(i) + "")];
         }
         return result;
     }
@@ -52,7 +57,7 @@ public class Main {
         }
     }
 
-    public static String cypherRawData(String type, String table, String extra) {
+    public static String cypherRawData(String type, String table, String extra, Character[] ids) {
         ResultSet resultSet = getRawData(table);
         String result = "";
         String miliresult = "";
@@ -60,7 +65,13 @@ public class Main {
         try {
             while(resultSet.next()) {
                 String create = "CREATE (";
-                create = create + getID(count) + ":" + type + "{";
+                String id = getID(count, ids);
+                if(type == "Company") {
+                    companyIDs.add(id);
+                } else if(type == "Car") {
+                    carIDs.add(id);
+                }
+                create = create + id + ":" + type + "{";
                 for (int i = 1; i < resultSet.getMetaData().getColumnCount()+1; i++) {
                     create = create + resultSet.getMetaData().getColumnName(i) + ":'" + resultSet.getString(i) + "'";
                     if(i != resultSet.getMetaData().getColumnCount()) {
@@ -88,5 +99,14 @@ public class Main {
         System.out.println("# converted: " + count);
         return result;
     }
+
+//    public static String matchNodes(){
+//        String resultM = "";
+//        String connect = "CREATE (";
+//        for (String i: carIDs){
+//            connect = connect +
+//        }
+//        return resultM;
+//    }
 
 }

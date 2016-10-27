@@ -1,0 +1,5 @@
+CREATE (K:Company{name:'Mitsabushi Motors', capacity:'1700', country:'Japan'})
+CREATE (L:Company{name:'Nature Cars', capacity:'1068', country:'The Netherlands'})
+CREATE (M:Company{name:'ToBeForward', capacity:'1300', country:'Japan'})
+CREATE (O:Company{name:'Nieuwkoop', capacity:'1200', country:'The Netherlands'})
+CREATE (P:Company{name:'Handa', capacity:'2000', country:'USA'})
