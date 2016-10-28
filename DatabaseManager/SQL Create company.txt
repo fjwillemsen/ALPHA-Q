@@ -1,2 +1,0 @@
-INSERT INTO Company(Name, capacity)
-VALUES ("Mitsabushi Motors", 1500 ), ("Nature Cars", 1500 ) , ("ToBeForWard", 1500 ), ("Nieuwkoop", 1500 ), ("Handa", 1500 );

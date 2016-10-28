@@ -24,7 +24,8 @@ public class Main {
         //System.out.println(cypherRawData("Company", "Company",null,companyId));
         List<String> carMakes =getSpecificData("VehicleModelYear","distinct(make)","");
         List<String> compNames =getSpecificData("Company","distinct(name)","");
-
+        System.out.println(matchNodes(carsId,companyId,"Car","Company",
+                "make","name","belongsTo",carMakes,compNames,"MergeCarWithCompany"));
     }
 
     public static ResultSet getRawData(String table) {
@@ -117,17 +118,20 @@ public class Main {
         System.out.println("# converted: " + count);
         return result;
     }
-    // carmerk belongs to random company(only make and name)                  not done(only if needed)
     public static String matchNodes(Character[] idListA, Character[] idListB, String type1,String type2,
-                                    String relation, List<String> lBig, List<String> lSmall){
+                                    String attribute1, String attribute2, String relation,
+                                    List<String> lBig, List<String> lSmall, String textFileName){
         String resultM = "";
         int count = 0;
         for (String i: lBig){
-            String connect = "Match (" + getID(count,idListA) + ":"+ type1 +"{make:" + lBig.get(count) +"}) " +
-                    "Match(" + getID(count,idListB) +":"+ type2 + "{name" + getRandomItem(lSmall) + "})" +
-                    "create ("+ getID(count,idListA) +")-[:"+ relation+"]->("+getID(count,idListB)+")";
+            String connect = "Match (" + getID(count,idListA) + ":"+ type1 +"{"+attribute1+":'" + lBig.get(count) +"'}) " +
+                    "\nMatch(" + getID(count,idListB) +":"+ type2 + "{"+attribute2+":'" + getRandomItem(lSmall) + "'}) " +
+                    "\nCreate ("+ getID(count,idListA) +")-[:"+ relation+"]->("+getID(count,idListB)+")\n";
+            resultM+= connect;
             count++;
         }
+        System.out.println(count);
+        writeToFile(textFileName,resultM);
         return resultM;
     }
     static <T> T getRandomItem(List<T> list) {
