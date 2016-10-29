@@ -24,11 +24,6 @@ a {
     text-decoration:none;
 }
 
-hr {
-    background-color: white;
-    width: 75vw;
-}
-
 #header {
     background-color: rgb(100,200,200);
     font-family: 'Titillium Web', sans-serif;
@@ -63,6 +58,21 @@ hr {
     color: rgb(230,230,230);
 }
 
+#filterbar {
+    display: inline-block;
+    text-align: center;
+    background-color: rgb(240, 240, 240);
+    width: 100vw;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+#filterbar p {
+    display: inline-block;
+    padding-right: 10px;
+}
+
 #content p {
     font-family: 'Titillium Web', sans-serif;
     text-align: center;
@@ -73,13 +83,20 @@ hr {
     width: 80vw;
     margin-left: auto;
     margin-right: auto;
+    table-layout: fixed;
+    display: block;
+}
+
+#content td {
+    padding: 15px;
+    border: 1px solid rgb(230,230,230);
+    border-collapse: collapse;
+    display: inline-block;
     text-align: center;
 }
 
-#content th, td {
-    padding: 15px;
-    border: 1px solid black;
-    border-collapse: collapse;
+#content td, img {
+    width: 17.5vw;
 }
 
 @media screen and (max-width: 1060px) {
@@ -109,6 +126,16 @@ hr {
 </style>
 
 <script>
+    // function contains(a, obj) {
+    //     var i = a.length;
+    //     while (i--) {
+    //        if (a[i] === obj) {
+    //            return true;
+    //        }
+    //     }
+    //     return false;
+    // }
+
 // $.getJSON("http://145.24.222.132:8080/filter/make/Lotus", function(data) {
 //     // Get the element with id summary and set the inner text to the result.
 //     // $('#summary').text(data.result);
@@ -124,47 +151,6 @@ hr {
 //     $('#Content').append('<hr>');
 // });
 
-$.get('http://145.24.222.132:8080/filter/make/Lotus', function(data){
-
-    // $('#content').append("<table><tr><th>Make</th>");
-    // $('#content').append("<th>Model</th>");
-    // $('#content').append("<th>Year</th>");
-    // $('#content').append("<th>Price</th></tr>");
-
-    var table = $('<table>');
-
-    var header = $('<tr>');
-    header.append('<th>Brand</th>');
-    header.append('<th>Model</th>');
-    header.append('<th>Year</th>');
-    header.append('<th>Price</th></tr>');
-    table.append(header);
-
-    for (var i = data.length - 1; i >= 0; i--) {
-        var row = $('<tr>');
-        row.append("<td>" + data[i].properties.make + "</td>");
-        row.append("<td>" + data[i].properties.model + "</td>");
-        row.append("<td>" + data[i].properties.year + "</td>");
-        row.append("<td>&euro;" + data[i].properties.price + "</td></tr>");
-        // $('#content').append("<tr><td>" + data[i].properties.make + "</td>");
-        // $('#content').append("<td>" + data[i].properties.model + "</td>");
-        // $('#content').append("<td>" + data[i].properties.year + "</td>");
-        // $('#content').append("<td>" + data[i].properties.price  + "</td></tr>");
-        table.append(row);
-    }
-    table.append('</table>');
-    $('#content').append(table);
-
-    // $('#content').append("</table>");
-
-    // var table = $('<table></table>');
-    // for(i=0; i<data.length; i++){
-    //     var row = $('<tr></tr>').text('result ' + i);
-    //     table.append(row);
-    // }
-
-    
-});
 </script>
 
 <head>
@@ -179,10 +165,141 @@ $.get('http://145.24.222.132:8080/filter/make/Lotus', function(data){
         <a href="#">ABOUT US</a>
     </div>
 </div>
+<hr>
+<div id="filter">
+    <div id="filterbar">
+    <p>Filter Cars</p>
+        <select class="selector" id="selectmake">
+            <option value="" disabled="disabled" selected="selected">Brand</option>
+            <option>Lotus</option>
+            <option>Ford</option>
+        </select>
+        <select class="selector" id="selectmodel">
+            <option value="" disabled="disabled" selected="selected">Model</option>
+            <option>Elise</option>
+            <option>GT</option>
+        </select>
+        <select class="selector" id="selectyear">
+            <option value="" disabled="disabled" selected="selected">Year</option>
+            <option>2012</option>
+            <option>2016</option>
+        </select>
+    </div>
+</div>
+<hr>
 
 <div id="content">
-    <p>Cars for sale<p>
+    <p>Over 7000 Cars For Sale<p>
 </div>
 
 </body>
 </html>
+
+
+<script>
+
+    function uArray(array) {
+        return array.filter(function(itm,i,array) {
+            return i==array.indexOf(itm);
+        });
+    }
+
+    function setFilters() {
+        $('#filter').hide();
+        $.get('http://145.24.222.132:8080/filter/Car/model/nn', function(data){
+            var brandarray = [];
+            var modelarray = [];
+            var yeararray = [];
+
+            brandarray.push('<option value="" disabled="disabled" selected="selected">Brand</option>');
+            modelarray.push('<option value="" disabled="disabled" selected="selected">Model</option>');
+            yeararray.push('<option value="" disabled="disabled" selected="selected">Year</option>');
+
+            for (var i = data.length - 1; i >= 0; i--) {
+                brandarray.push('<option value="">' + data[i].properties.make + '</option>');
+                modelarray.push('<option value="">' + data[i].properties.model + '</option>');
+                yeararray.push('<option value="">' + data[i].properties.year + '</option>');
+            }
+
+            brandarray = uArray(brandarray);
+            modelarray = uArray(modelarray);
+            yeararray = uArray(yeararray);
+
+            $('#selectbrand').html(brandarray.join(''));
+            $('#selectmodel').html(modelarray.join(''));
+            $('#selectyear').html(yeararray.join(''));
+
+            $('#filter').show();
+        });
+    }
+
+    function setFilter(property) {
+        $.get('http://145.24.222.132:8080/filter/Car?property1=' + property, function(data){
+            var array = [];
+            array.push('<option value="" disabled="disabled" selected="selected">' + property + '</option>');
+
+            for (var i = data.length - 1; i >= 0; i--) {
+                array.push('<option value="">' + data[i] + '</option>');
+            }
+
+            array = uArray(array);
+            $('#select' + property).html(array.join(''));
+        });
+    }
+
+    function setJSONTable(value) {
+        var url = 'http://145.24.222.132:8080' + value;
+        console.log(value);
+        $.get(url, function(data){
+            var table = $('<table>');
+
+            var row = $('<tr>');
+            for (var i = data.length - 1; i >= 0; i--) {
+                var item = $('<td></td>');
+
+                // item.append("<img src=\"" + data[i].properties.picture + "\">");
+                item.append("Brand: " + data[i].properties.make);
+                item.append("<br>Model: " + data[i].properties.model);
+                item.append("<br>Year: " + data[i].properties.year);
+                item.append("<br>&euro;" + data[i].properties.price);
+                row.append(item);
+            }
+
+            row.append('</tr>');
+            table.append(row);
+            table.append('</table>');
+            $('#content').html('');
+            $('#content').append(table);
+        });
+    }
+
+    function addListeners(value) {
+        var property = false;
+        $("#select" + value).hover(function () {
+            if(!property) {
+                setFilter(value);
+                property = true;
+            }
+        });
+
+        $("#select" + value).change(function () {
+            if(value == 'make') {
+                console.log("if");
+                $('#selectmodel').prop('selectedIndex',0);
+            } else if(value == 'model') {
+                console.log("else if");
+                $('#selectmake').prop('selectedIndex',0);
+            }
+            setJSONTable('/filter/Car?property1=' + value + '&value1=' + $('#select' + value + ' option:selected').text());
+        });
+    }
+
+
+    addListeners('make');
+    addListeners('model');
+    addListeners('year');
+
+    //Initial Setup
+    setJSONTable('/filter/Car');
+
+</script>
