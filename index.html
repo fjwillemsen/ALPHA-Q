@@ -47,6 +47,11 @@ hr {
     padding-right: 10vw;
 }
 
+#header img {
+    width: 15em;
+    padding: 1em;
+}
+
 #title {
     font-size: 3.5em;
     color: white;
@@ -69,8 +74,6 @@ hr {
 #filter {
     display: inline-block;
     text-align: center;
-    /*background-color: rgb(255, 100, 100);*/
-    /*background: linear-gradient(rgb(100,200,200), rgb(255, 100, 100)); !* Standard syntax *!*/
     width: 100vw;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -90,6 +93,7 @@ hr {
     display: block;
 }
 
+/*Overviews*/
 #content p {
     font-family: 'Titillium Web', sans-serif;
     text-align: center;
@@ -117,10 +121,45 @@ hr {
     width: 17.5vw;
 }
 
-#content ul {
-    text-align: center;
+
+/*Details*/
+#content #image {
+    width: 50vw;
+    display: inline-block;
+}
+
+#content #details {
+    width: 45vw;
+    margin-left: 3vw;
+    display: inline-block;
+}
+
+#details #title {
+    font-size: 3.5em;
+    color: black;
+    letter-spacing: 0.6em;
+}
+
+#details #subtitle {
+    font-size: 2em;
+    color: black;
+}
+
+#details #price {
+    color: white;
+    font-size: 3em;
+    letter-spacing: 0.6em;
+    background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+    border-radius: 20px;
+    min-width: 500px;
+}
+
+#details ul {
     margin-left: auto;
     margin-right: auto;
+    list-style-type: circle;
+    padding-top: 10px;
+    padding-bottom: 20px;
 }
 
 @media screen and (max-width: 1060px) {
@@ -133,7 +172,7 @@ hr {
     }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 700px) {
     #title {
         font-size: 1em;
     }
@@ -145,6 +184,29 @@ hr {
     #navbar a {
         font-size: 1em;
     }
+
+    #content #image, #content #details {
+        min-width: 300px;
+    }
+
+    #content #image {
+        width: 90vw;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #content #details {
+        width: 90vw;
+        padding-left: 25px;
+    }
+
+    #details #title {
+        font-size: 2em;
+    }
+
+    #details #price {
+        font-size: 1.5em;
+    }
 }
 
 </style>
@@ -153,8 +215,9 @@ hr {
 <body>
 
 <div id="header">
+    <a onclick="initial()">
     <img src="icons/Logo.svg">
-    <a onclick="initial()"><p id="title">CarShop</p></a>
+    <p id="title">CarShop</p></a>
     <div id="navbar">
         <a onclick="initial()">CARS -</a>
         <a href="#">MY PROFILE -</a>
@@ -200,14 +263,14 @@ hr {
         return array.filter(function(itm,i,array) {
             return i==array.indexOf(itm);
         });
-    } //Returns a unique array
+    } //Returns an array with only unique values
 
     function toUpperCaseFirst(string) {
         string = string.toLowerCase().replace(/\b[a-z]/g, function(letter) {
             return letter.toUpperCase();
         });
         return string;
-    }
+    } //Makes the first letter of the string upper-cased
 
     function setFilters() {
         $('#filter').hide();
@@ -258,21 +321,46 @@ hr {
         });
     }
 
+    function showKey(string) {
+        string = string.split('_');
+        var result = '';
+        for (i = 0; i < string.length; i++) {
+            if(i != 0) {
+                result = result + toUpperCaseFirst(string[i]) + ' ';
+            }
+        }
+        return result;
+    }
+
     function setDetailView(value) {
         var url = 'http://145.24.222.132:8080/detail/' + value;
+
         $.get(url, function(data) {
+            var image = '<img id="image" src="http://www.pngpix.com/wp-content/uploads/2016/02/BMW-Car-PNG-image-1.png">';
+            var details = $('<div id="details"></div>');
+            var title = '<p id="title">' + data[0].properties.make + " " + data[0].properties.model + '</p>';
+            var subtitle = '<p id="subtitle">' + data[0].properties.year + '</p><hr><br>';
+            var price = '<p id="price">&euro;' + data[0].properties.price + '</p>';
+
+            var blacklist = ['model_sold_in_us', 'model', 'make', 'year', 'make_display', 'price', 'model_year', 'model_make_display', 'model_make_id', 'model_trim', 'model_name'];
+
             var list = $('<ul></ul>');
             for (var key in data[0].properties) {
                 if (data[0].properties.hasOwnProperty(key)) {
-                    console.log(data[0].properties[key]);
-                    if(data[0].properties[key] != 'null' && data[0].properties[key] != '') {
-                        list.append('<li>' + key + ': ' + data[0].properties[key] + '</li>');
+                    if(data[0].properties[key] != 'null' && data[0].properties[key] != '' && $.inArray(key, blacklist) == -1) {
+                        list.append('<li>' + showKey(key) + ': ' + data[0].properties[key] + '</li>');
                     }
                 }
             }
 
+            details.append(title);
+            details.append(subtitle);
+            details.append(price);
+            details.append(list);
+
             $('#content').html('');
-            $('#content').append(list);
+            $('#content').append(image);
+            $('#content').append(details);
         });
     }
 
@@ -323,6 +411,9 @@ hr {
             } else if(value == 'model') {
                 setJSONTable('/filter/Car?property1=make&value1=' + $('#selectmake option:selected').text() + '&property2=' + value + '&value2=' + $('#selectmodel option:selected').text());
             } else {
+                $('#selectmodel').prop('selectedIndex',0);
+                $('#selectmodel').hide();
+                $('#selectmake').prop('selectedIndex',0);
                 setJSONTable('/filter/Car?property1=' + value + '&value1=' + $('#select' + value + ' option:selected').text());
             }
         });
