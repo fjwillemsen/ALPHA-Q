@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 
 public class DatabaseReader {
-    static final String DB_URL = "jdbc:sqlite:libs/datasource.db";
+    static final String DB_URL = "jdbc:sqlite:DatabaseManager2/libs/datasource.db";
     Connection connection;
     Statement statement;
 
