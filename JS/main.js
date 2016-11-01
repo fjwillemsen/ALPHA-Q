@@ -1,6 +1,6 @@
 var neo4j = require('neo4j');
 var restify = require('restify');
-fs = require('fs')
+fs = require('fs');
 
 var db = new neo4j.GraphDatabase('http://neo4j:gZb-AFF-82n-CVo@145.24.222.132:80');
 
