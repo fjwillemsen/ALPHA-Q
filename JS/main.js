@@ -2,8 +2,10 @@ var neo4j = require('neo4j');
 var restify = require('restify');
 fs = require('fs');
 
+//Connects to the database
 var db = new neo4j.GraphDatabase('http://neo4j:gZb-AFF-82n-CVo@145.24.222.132:80');
 
+//Executes a query on the database and returns the data to the original caller
 function filter(query, res, getter, callback) {
     if(getter == undefined) {
         getter = 'o';
@@ -83,20 +85,24 @@ function detailRespond(req, res, next) {
 }
 
 
+//Start the server
 var server = restify.createServer({
     name: 'CarShop'
 });
-server.use(restify.bodyParser());
-server.use(restify.queryParser());
+server.use(restify.bodyParser()); //Used for showing the HTML
+server.use(restify.queryParser()); //Used for allowing "?variable=value" in the URL
 
-server.get('/filter/:type', filterRespond);
+server.get('/filter/:type', filterRespond); //Someone who goes to this link will get the result of filterRespond
 server.get('/detail/:id', detailRespond);
 
+
+//Files are made accessible to the user, HTML index page is made default
 server.get(/.*/, restify.serveStatic({
     'directory': '/var/www/html',
     'default': 'index.html'
 }));
 
+//Listens for a connection
 server.listen(8080, function() {
     console.log('%s listening at %s', server.name, server.url);
 });
