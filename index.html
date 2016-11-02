@@ -56,7 +56,7 @@ hr {
     padding: 1em;
 }
 
-#title {
+.title {
     font-size: 3.5em;
     color: white;
     letter-spacing: 1em;
@@ -75,12 +75,44 @@ hr {
     color: rgb(230,230,230);
 }
 
-#view #title {
+#view .title {
     font-family: 'Titillium Web', sans-serif;
     text-align: center;
     font-size: 5em;
 }
 
+/*Buttonbar*/
+#buttonbar {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#buttonbar div {
+    margin-left: auto;
+    margin-right: auto;
+    display: inline-block;
+}
+
+.imagebutton {
+    background-color: rgba(255,255,255,0.4);
+    width: 6em;
+    height: 6em;
+    border-radius: 100%;
+    overflow: hidden;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.imagebutton:hover {
+    background-color: rgba(255,255,255,0.7);
+}
+
+#filterbutton {
+    background-image: url('Logo.svg');
+}
+
+/*Filter*/
 #filter {
     display: inline-block;
     text-align: center;
@@ -88,6 +120,8 @@ hr {
     padding-top: 10px;
     padding-bottom: 10px;
     margin-bottom: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
 }
 
 #filterbar p {
@@ -144,7 +178,7 @@ hr {
     display: inline-block;
 }
 
-#details #title {
+#details .title {
     font-size: 3.5em;
     color: black;
     letter-spacing: 0.6em;
@@ -182,7 +216,7 @@ hr {
     color: black;
 }
 
-#login #title {
+#login .title {
     color: black;
 }
 
@@ -190,6 +224,11 @@ hr {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+}
+
+/*Profile*/
+#profile .title {
+    color: black;
 }
 
 @media screen and (max-width: 1060px) {
@@ -247,20 +286,22 @@ hr {
 <div id="header">
     <a onclick="initial()">
     <img src="icons/Logo.svg">
-    <p id="title">CarShop</p></a>
+    <p class="title">CarShop</p></a>
     <div id="navbar">
         <a onclick="initial()">CARS -</a>
         <a onclick="setLoginView()">MY PROFILE -</a>
         <a href="#">CONTACT -</a>
         <a href="#">ABOUT US</a>
     </div>
+    <hr>
+    <div id="buttonbar">
+        <div class="imagebutton" id="filterbutton" onclick="showFilters()"></div>
+    </div>
 </div>
 
 <div id="view">
 <div id="filter">
-    <button type="button" onclick="showFilters()">Filter</button>
     <div id="filterbar">
-        <p>Filter</p>
         <hr/>
         <div id="filtermakemodel">
             <p>Make & Model</p>
@@ -292,6 +333,8 @@ hr {
 <script>
     var ip = '145.24.222.132'; //change this to use a localhost
     var port = '8080';
+    var username = '';
+    var password = '';
 
     function uArray(array) {
         return array.filter(function(itm,i,array) {
@@ -366,22 +409,46 @@ hr {
         return result;
     }
 
-    function setLoginView() {
-        var url = 'http://' + ip + ':' + port + '/views/login.html';
+    function getFormObjects(formId) {
+        var formObj = {};
+        var inputs = $(formId).serializeArray();
+        $.each(inputs, function (i, input) {
+            formObj[input.name] = input.value;
+        });
+        return formObj;
+    }
+
+    function setContentTo(file, callback) {
+        var url = 'http://' + ip + ':' + port + '/views/' + file;
         $.get(url, function(data) {
             $('#filter').hide();
             $('#content').html(data);
+            if(callback != undefined) {
+                callback(); //This function is ran when the async .get is done
+            }
         });
+    }
 
-        $('#')
+    function setLoginView() {
+        setContentTo('login.html');
+
 //        var url = 'http://145.24.222.132:8080/login/attempt&user=' + user + '&password=' + password;
 //        $.post(url, function(data) {
 //            $('#view').html('<p id="title">' + data + '</p>');
 //        });
     }
 
-    function setProfileView(value) {
+    function setProfileView() {
+        setContentTo('profile.html', function() {
+            $('#username').text(username);
+        });
+    }
 
+    function submitLogin() {
+        var formobjects = getFormObjects('#form');
+        username = formobjects['username'];
+        password = formobjects['password'];
+        setProfileView();
     }
 
     function setDetailView(value) {
@@ -391,7 +458,7 @@ hr {
         $.get(url, function(data) {
             var image = '<img id="image" src="http://www.pngpix.com/wp-content/uploads/2016/02/BMW-Car-PNG-image-1.png">';
             var details = $('<div id="details"></div>');
-            var title = '<p id="title">' + data[0].properties.make + " " + data[0].properties.model + '</p>';
+            var title = '<p class="title">' + data[0].properties.make + " " + data[0].properties.model + '</p>';
             var subtitle = '<p id="subtitle">' + data[0].properties.year + '</p><hr><br>';
             var price = '<p id="price">&euro;' + data[0].properties.price + '</p>';
 
