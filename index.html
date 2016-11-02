@@ -95,13 +95,14 @@ hr {
 
 .imagebutton {
     background-color: rgba(255,255,255,0.4);
-    width: 6em;
-    height: 6em;
+    width: 3em;
+    height: 3em;
     border-radius: 100%;
     overflow: hidden;
-    background-size: cover;
+    background-size: 75%;
     background-repeat: no-repeat;
     background-position: center center;
+    background-origin: content-box;
 }
 
 .imagebutton:hover {
@@ -109,32 +110,42 @@ hr {
 }
 
 #filterbutton {
-    background-image: url('Logo.svg');
+    background-image: url('icons/Filter.svg');
 }
 
-/*Filter*/
-#filter {
+#searchbutton {
+    background-image: url('icons/Search.svg');
+}
+
+/*Subbar*/
+#subbar {
     display: inline-block;
     text-align: center;
     width: 100vw;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: 10px;
     margin-bottom: 20px;
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
+    display: none;
 }
 
+#subbar div {
+    padding: 10px;
+}
+
+/*Filter*/
 #filterbar p {
     display: inline-block;
     padding-right: 10px;
 }
 
-#filtermakemodel {
+#filtermakemodel, #filteryear {
     display: block;
 }
 
-#filteryear {
-    display: block;
+/*Content*/
+#content {
+    margin-top: 20px;
 }
 
 /*Overviews*/
@@ -289,37 +300,19 @@ hr {
     <p class="title">CarShop</p></a>
     <div id="navbar">
         <a onclick="initial()">CARS -</a>
-        <a onclick="setLoginView()">MY PROFILE -</a>
+        <a onclick="setLoginView()">ACCOUNT -</a>
         <a href="#">CONTACT -</a>
         <a href="#">ABOUT US</a>
     </div>
     <hr>
     <div id="buttonbar">
         <div class="imagebutton" id="filterbutton" onclick="showFilters()"></div>
+        <div class="imagebutton" id="searchbutton" onclick="showSearch()"></div>
     </div>
 </div>
 
 <div id="view">
-<div id="filter">
-    <div id="filterbar">
-        <hr/>
-        <div id="filtermakemodel">
-            <p>Make & Model</p>
-            <select class="selector" id="selectmake">
-                <option value="" disabled="disabled" selected="selected">Brand</option>
-            </select>
-            <select class="selector" id="selectmodel">
-                <option value="" disabled="disabled" selected="selected">Model</option>
-            </select>
-        </div>
-        <div id="filteryear">
-        <p>Year</p>
-            <select class="selector" id="selectyear">
-                <option value="" disabled="disabled" selected="selected">Year</option>
-            </select>
-        </div>
-    </div>
-</div>
+<div id="subbar"></div>
 
 <div id="content">
     <p>Over 7000 Cars For Sale<p>
@@ -418,10 +411,20 @@ hr {
         return formObj;
     }
 
-    function setContentTo(file, callback) {
+    function setSubbarTo(file, callback) {
         var url = 'http://' + ip + ':' + port + '/views/' + file;
         $.get(url, function(data) {
-            $('#filter').hide();
+            $('#subbar').html(data);
+            if(callback != undefined) {
+                callback(); //This function is ran when the async .get is done
+            }
+        });
+    }
+
+    function setContentTo(file, callback) {
+        $('subbar').hide();
+        var url = 'http://' + ip + ':' + port + '/views/' + file;
+        $.get(url, function(data) {
             $('#content').html(data);
             if(callback != undefined) {
                 callback(); //This function is ran when the async .get is done
@@ -431,16 +434,13 @@ hr {
 
     function setLoginView() {
         setContentTo('login.html');
-
-//        var url = 'http://145.24.222.132:8080/login/attempt&user=' + user + '&password=' + password;
-//        $.post(url, function(data) {
-//            $('#view').html('<p id="title">' + data + '</p>');
-//        });
     }
 
-    function setProfileView() {
+    function setProfileView(user) {
         setContentTo('profile.html', function() {
-            $('#username').text(username);
+            $('#name').append(user.firstname);
+            $('#lastname').append(user.lastname);
+            $('#username').append(user.username);
         });
     }
 
@@ -448,11 +448,31 @@ hr {
         var formobjects = getFormObjects('#form');
         username = formobjects['username'];
         password = formobjects['password'];
-        setProfileView();
+
+        var url = 'http://' + ip + ':' + port + '/login';
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify({'username':username, 'password':password}),
+            datatype: 'json',
+            contentType: "application/x-www-form-urlencoded",
+            success: function(data) {
+                if(data.length != '0') {
+                    setProfileView(data[0].properties);
+                } else {
+                    alert('Wrong identification.');
+                }
+            },
+            error: function() { alert('Failure!'); }
+        }); //Requests the account data from the server in a safe way
+    }
+
+    function submitSearch() {
+        var formobjects = getFormObjects('#searchform');
     }
 
     function setDetailView(value) {
-        $('#filter').show();
         var url = 'http://' + ip + ':' + port + '/detail/' + value;
 
         $.get(url, function(data) {
@@ -485,7 +505,6 @@ hr {
     }
 
     function setJSONTable(value) {
-        $('#filter').show();
         var url = 'http://' + ip + ':' + port + value;
         console.log(value);
         $.get(url, function(data) {
@@ -541,12 +560,28 @@ hr {
     }
 
     function showFilters() {
-        if($('#filterbar').css('display') == 'none') {
-            setFilter('make');
-            setFilter('year');
-            $('#filterbar').show();
+        if($('#subbar').css('display') == 'none') {
+            setSubbarTo('filter.html', function () {
+                $('#selectmodel').hide();
+                setFilter('make');
+                setFilter('year');
+                addListeners('make');
+                addListeners('model');
+                addListeners('year');
+                $('#subbar').show();
+            });
         } else {
-            $('#filterbar').hide();
+            $('#subbar').hide();
+        }
+    }
+
+    function showSearch() {
+        if($('#subbar').css('display') == 'none') {
+            setSubbarTo('search.html', function () {
+                $('#subbar').show();
+            });
+        } else {
+            $('#subbar').hide();
         }
     }
 
@@ -554,12 +589,6 @@ hr {
         //Initial Setup
         setJSONTable('/filter/Car');
     }
-
-    $('#filterbar').hide();
-    $('#selectmodel').hide();
-    addListeners('make');
-    addListeners('model');
-    addListeners('year');
 
     initial();
 

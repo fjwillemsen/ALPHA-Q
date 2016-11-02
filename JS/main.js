@@ -29,7 +29,7 @@ function filter(query, res, getter, callback) {
             }
         }
 
-        res.send(response);
+        res.send(200, response);
         callback(response);
     });
 }
@@ -84,17 +84,30 @@ function detailRespond(req, res, next) {
     next();
 }
 
+function returnData(results) {
+    return results;
+}
+
+function loginRespond(req, res, next) {
+    var username = JSON.parse(req.body.toString())["username"];
+    var password = JSON.parse(req.body.toString())["password"];
+
+    var query = 'MATCH (o:User { username: \'' + username + '\', password: \'' + password + '\' }) RETURN o';
+    filter(query, res, 'o', returnData)
+    next();
+}
 
 //Start the server
 var server = restify.createServer({
     name: 'CarShop'
 });
-server.use(restify.bodyParser()); //Used for showing the HTML
+
+server.use(restify.bodyParser()); //Used for parsing the Request body
 server.use(restify.queryParser()); //Used for allowing "?variable=value" in the URL
 
 server.get('/filter/:type', filterRespond); //Someone who goes to this link will get the result of filterRespond
 server.get('/detail/:id', detailRespond);
-
+server.post('/login', loginRespond);
 
 //Files are made accessible to the user, HTML index page is made default
 server.get(/.*/, restify.serveStatic({
