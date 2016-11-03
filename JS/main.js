@@ -12,7 +12,7 @@ function filter(query, res, getter, callback) {
     }
 
     db.cypher({
-        query: query,
+        query: query
     }, function (err, results) {
 
         var response = {
@@ -32,6 +32,16 @@ function filter(query, res, getter, callback) {
         res.send(200, response);
         callback(response);
     });
+}
+
+function editQuery(query, res, callback) {
+    db.cypher({ query: query }, function (err, results) {
+            console.log('result: ' + results);
+            var response = {ok: 'ok'};
+            res.send(200, response);
+            callback(response);
+        }
+    );
 }
 
 function matchDataBy2(type, property, value, property2, value2) {
@@ -97,6 +107,19 @@ function loginRespond(req, res, next) {
     next();
 }
 
+function editProfileRespond(req, res, next) {
+    var data = JSON.parse(req.body.toString());
+    if(data['currentpassword'] == '' || !data['currentpassword']) {
+        var query = 'MATCH (o:User { username: \'' + data['currentusername'] + '\'}) SET o.username=\'' + data['username'] + '\', o.password=\'' + data['password'] + '\', o.firstname=\'' + data['firstname'] + '\', o.lastname=\'' + data['lastname'] + '\', o.role=\'' + data['role'] + '\';';
+    } else {
+        var query = 'MATCH (o:User { username: \'' + data['currentusername'] + '\', password: \'' + data['currentpassword'] + '\'}) SET o.username=\'' + data['username'] + '\', o.password=\'' + data['password'] + '\', o.firstname=\'' + data['firstname'] + '\', o.lastname=\'' + data['lastname'] + '\', o.role=\'' + data['role'] + '\';';
+    }
+
+    console.log('Query: ' + query);
+    editQuery(query, res);
+    next();
+}
+
 //Start the server
 var server = restify.createServer({
     name: 'CarShop'
@@ -108,6 +131,7 @@ server.use(restify.queryParser()); //Used for allowing "?variable=value" in the 
 server.get('/filter/:type', filterRespond); //Someone who goes to this link will get the result of filterRespond
 server.get('/detail/:id', detailRespond);
 server.post('/login', loginRespond);
+server.post('/edituser', editProfileRespond);
 
 //Files are made accessible to the user, HTML index page is made default
 server.get(/.*/, restify.serveStatic({

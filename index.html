@@ -36,6 +36,12 @@ hr {
     height: 1px;
 }
 
+button {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
 #view {
     width: 100vw;
 }
@@ -59,7 +65,7 @@ hr {
 .title {
     font-size: 3.5em;
     color: white;
-    letter-spacing: 1em;
+    letter-spacing: 0.5em;
 }
 
 #navbar {
@@ -79,6 +85,7 @@ hr {
     font-family: 'Titillium Web', sans-serif;
     text-align: center;
     font-size: 5em;
+    letter-spacing: 0.1em;
 }
 
 /*Buttonbar*/
@@ -238,6 +245,15 @@ hr {
 }
 
 /*Profile*/
+#profile {
+    width: 30vw;
+    min-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    color: black;
+}
+
 #profile .title {
     color: black;
 }
@@ -327,6 +343,7 @@ hr {
     var port = '8080';
     var username = '';
     var password = '';
+    var user;
 
 
 //  Modifiying functions
@@ -413,6 +430,41 @@ hr {
         return formObj;
     }
 
+    function empty(value) {
+        if(value != '' && value != undefined && value != null && value && value.trim()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function setIfNotEmpty(value, fallback) {
+        if(!empty(value)) {
+            return value;
+        } else {
+            return fallback;
+        }
+    }
+
+    function processEditForm() {
+        var fo = getFormObjects('#editform');
+        if(!empty(fo['currentusername'])) {
+            if(!empty(fo['currentpassword']) || user.role == 'admin') {
+                user.username = setIfNotEmpty(fo['username'], user.username);
+                user.password = setIfNotEmpty(fo['password'], user.password);
+                user.firstname = setIfNotEmpty(fo['firstname'], user.firstname);
+                user.lastname = setIfNotEmpty(fo['lastname'], user.lastname);
+                user.role = setIfNotEmpty(fo['role'], user.role);
+                user.currentusername = setIfNotEmpty(fo['currentusername']);
+                user.currentpassword = setIfNotEmpty(fo['currentpassword']);
+            } else {
+                alert('You forgot to enter your current password.')
+            }
+        } else {
+            alert('You forgot to enter your current username.');
+        }
+    }
+
 
 //  View-making functions
 
@@ -450,6 +502,16 @@ hr {
             $('#lastname').append(user.lastname);
             $('#username').append(user.username);
             $('#role').append(user.role);
+        });
+    }
+
+    function setEditProfileView() {
+        setContentTo('editprofile.html', function() {
+            if(user.role === 'admin') {
+                $('#currentpasswordinput').hide();
+            } else {
+                $('#currentpasswordinput').show();
+            }
         });
     }
 
@@ -551,7 +613,7 @@ hr {
 //  General functions
 
     function submitLogin() {
-        var formobjects = getFormObjects('#form');
+        var formobjects = getFormObjects('#loginform');
         username = formobjects['username'];
         password = formobjects['password'];
 
@@ -565,13 +627,31 @@ hr {
             contentType: "application/x-www-form-urlencoded",
             success: function(data) {
                 if(data.length != '0') {
-                    setProfileView(data[0].properties);
+                    user = data[0].properties;
+                    console.log('ajax: ' + user.username);
+                    setProfileView(user);
                 } else {
                     alert('Wrong identification.');
                 }
             },
             error: function() { alert('Failure!'); }
         }); //Requests the account data from the server in a safe way
+    }
+
+    function submitEdit() {
+        var url = 'http://' + ip + ':' + port + '/edituser';
+        processEditForm();
+        console.log('user ' + JSON.stringify(user).toString());
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify(user),
+            datatype: 'json',
+            contentType: "application/x-www-form-urlencoded",
+            success: function() { alert('Edit Succesful.'); },
+            error: function() { alert('Edit Failed.'); }
+        }); //Sends the account data to the server in a safe way
     }
 
     function submitSearch() {
