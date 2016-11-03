@@ -313,7 +313,7 @@ hr {
     <div id="buttonbar">
         <div class="imagebutton" id="filterbutton" onclick="showFilters()"></div>
         <div class="imagebutton" id="searchbutton" onclick="showSearch()"></div>
-        <div class="imagebutton" id="cartbutton" onclick=")"></div>
+        <div class="imagebutton" id="cartbutton" onclick= showCart() ></div>
     </div>
 </div>
 
@@ -330,7 +330,7 @@ hr {
 
 
 <script>
-    var ip = '145.24.222.150'; //change this to use a localhost
+    var ip = '145.24.222.176'; //change this to use a localhost
     var port = '8080';
     var username = '';
     var password = '';
@@ -525,6 +525,10 @@ hr {
         setContentTo('contact.html');
     }
 
+    function setCartView() {
+        setContentTo('cart.html');
+    }
+
 
 //  View-changing functions
 
@@ -553,6 +557,17 @@ hr {
             $('#subbar').hide();
         }
     }
+
+    function showCart() {
+        if($('#subbar').css('display') == 'none') {
+            setSubbarTo('cart.html', function () {
+                $('#subbar').show();
+            });
+        } else {
+            $('#subbar').hide();
+        }
+    }
+
 
 
 //  General functions
