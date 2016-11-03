@@ -301,8 +301,7 @@ hr {
     <div id="navbar">
         <a onclick="initial()">CARS -</a>
         <a onclick="setLoginView()">ACCOUNT -</a>
-        <a href="#">CONTACT -</a>
-        <a href="#">ABOUT US</a>
+        <a onclick="setContactView()">CONTACT</a>
     </div>
     <hr>
     <div id="buttonbar">
@@ -328,6 +327,9 @@ hr {
     var port = '8080';
     var username = '';
     var password = '';
+
+
+//  Modifiying functions
 
     function uArray(array) {
         return array.filter(function(itm,i,array) {
@@ -411,6 +413,9 @@ hr {
         return formObj;
     }
 
+
+//  View-making functions
+
     function setSubbarTo(file, callback) {
         var url = 'http://' + ip + ':' + port + '/views/' + file;
         $.get(url, function(data) {
@@ -432,6 +437,9 @@ hr {
         });
     }
 
+
+//  View-setting functions
+
     function setLoginView() {
         setContentTo('login.html');
     }
@@ -441,35 +449,8 @@ hr {
             $('#name').append(user.firstname);
             $('#lastname').append(user.lastname);
             $('#username').append(user.username);
+            $('#role').append(user.role);
         });
-    }
-
-    function submitLogin() {
-        var formobjects = getFormObjects('#form');
-        username = formobjects['username'];
-        password = formobjects['password'];
-
-        var url = 'http://' + ip + ':' + port + '/login';
-
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: JSON.stringify({'username':username, 'password':password}),
-            datatype: 'json',
-            contentType: "application/x-www-form-urlencoded",
-            success: function(data) {
-                if(data.length != '0') {
-                    setProfileView(data[0].properties);
-                } else {
-                    alert('Wrong identification.');
-                }
-            },
-            error: function() { alert('Failure!'); }
-        }); //Requests the account data from the server in a safe way
-    }
-
-    function submitSearch() {
-        var formobjects = getFormObjects('#searchform');
     }
 
     function setDetailView(value) {
@@ -533,31 +514,12 @@ hr {
         });
     }
 
-    function addListeners(value) {
-        var property = false;
-        $("#select" + value).hover(function () {
-            if(!property) {
-                setFilter(value);
-                property = true;
-            }
-        });
-
-        $("#select" + value).change(function () {
-            if(value == 'make') {
-                setFilter('model', '&extraprop=make&extraval=' + $('#selectmake option:selected').text());
-                $('#selectmodel').show();
-                $('#selectmodel').prop('selectedIndex',0);
-                setJSONTable('/filter/Car?property1=' + value + '&value1=' + $('#selectmake option:selected').text());
-            } else if(value == 'model') {
-                setJSONTable('/filter/Car?property1=make&value1=' + $('#selectmake option:selected').text() + '&property2=' + value + '&value2=' + $('#selectmodel option:selected').text());
-            } else {
-                $('#selectmodel').prop('selectedIndex',0);
-                $('#selectmodel').hide();
-                $('#selectmake').prop('selectedIndex',0);
-                setJSONTable('/filter/Car?property1=' + value + '&value1=' + $('#select' + value + ' option:selected').text());
-            }
-        });
+    function setContactView() {
+        setContentTo('contact.html');
     }
+
+
+//  View-changing functions
 
     function showFilters() {
         if($('#subbar').css('display') == 'none') {
@@ -585,9 +547,71 @@ hr {
         }
     }
 
+
+//  General functions
+
+    function submitLogin() {
+        var formobjects = getFormObjects('#form');
+        username = formobjects['username'];
+        password = formobjects['password'];
+
+        var url = 'http://' + ip + ':' + port + '/login';
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify({'username':username, 'password':password}),
+            datatype: 'json',
+            contentType: "application/x-www-form-urlencoded",
+            success: function(data) {
+                if(data.length != '0') {
+                    setProfileView(data[0].properties);
+                } else {
+                    alert('Wrong identification.');
+                }
+            },
+            error: function() { alert('Failure!'); }
+        }); //Requests the account data from the server in a safe way
+    }
+
+    function submitSearch() {
+        var formobjects = getFormObjects('#searchform');
+    }
+
+    function addListeners(value) {
+        var property = false;
+        $("#select" + value).hover(function () {
+            if(!property) {
+                setFilter(value);
+                property = true;
+            }
+        });
+
+        $("#select" + value).change(function () {
+            if(value == 'make') {
+                setFilter('model', '&extraprop=make&extraval=' + $('#selectmake option:selected').text());
+                $('#selectmodel').show();
+                $('#selectmodel').prop('selectedIndex',0);
+                setJSONTable('/filter/Car?property1=' + value + '&value1=' + $('#selectmake option:selected').text());
+            } else if(value == 'model') {
+                setJSONTable('/filter/Car?property1=make&value1=' + $('#selectmake option:selected').text() + '&property2=' + value + '&value2=' + $('#selectmodel option:selected').text());
+            } else {
+                $('#selectmodel').prop('selectedIndex',0);
+                $('#selectmodel').hide();
+                $('#selectmake').prop('selectedIndex',0);
+                setJSONTable('/filter/Car?property1=' + value + '&value1=' + $('#select' + value + ' option:selected').text());
+            }
+        });
+    }
+
     function initial() {
         //Initial Setup
         setJSONTable('/filter/Car');
+        jQuery(document).bind("keyup", function(e) {
+            if(e.keyCode == 13 && $('#login').length){
+                submitLogin()
+            }
+        }); //Checks if the enter key is pressed on the login page to submit the form
     }
 
     initial();
