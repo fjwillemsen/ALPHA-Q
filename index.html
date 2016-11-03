@@ -117,11 +117,15 @@ button {
 }
 
 #filterbutton {
-    background-image: url('icons/Filter.svg');
+    background-image: url('Icons/Filter.svg');
 }
 
 #searchbutton {
-    background-image: url('icons/Search.svg');
+    background-image: url('Icons/Search.svg');
+}
+
+#cartbutton {
+    background-image: url('Icons/Cart.svg');
 }
 
 /*Subbar*/
@@ -224,6 +228,14 @@ button {
     padding-bottom: 20px;
 }
 
+#details #addToCartButton{
+    color: blue;
+    font-size: 3em;
+    background: #fff22a;
+    width:300px;
+    float: right;
+}
+
 /*Login*/
 #login {
     width: 30vw;
@@ -312,17 +324,20 @@ button {
 
 <div id="header">
     <a onclick="initial()">
-    <img src="icons/Logo.svg">
+    <img src="Icons/Logo.svg">
     <p class="title">CarShop</p></a>
     <div id="navbar">
         <a onclick="initial()">CARS -</a>
         <a onclick="setLoginView()">ACCOUNT -</a>
-        <a onclick="setContactView()">CONTACT</a>
-    </div>
+        <a onclick="setContactView()">CONTACT -</a>
+        <a href="#">ABOUT US -</a>
+</div>
+
     <hr>
     <div id="buttonbar">
         <div class="imagebutton" id="filterbutton" onclick="showFilters()"></div>
         <div class="imagebutton" id="searchbutton" onclick="showSearch()"></div>
+        <div class="imagebutton" id="cartbutton" onclick= "showCart()" ></div>
     </div>
 </div>
 
@@ -339,7 +354,7 @@ button {
 
 
 <script>
-    var ip = '145.24.222.132'; //change this to use a localhost
+    var ip = '145.24.222.176'; //change this to use a localhost
     var port = '8080';
     var username = '';
     var password = '';
@@ -536,14 +551,18 @@ button {
                 }
             }
 
+            var addToCart = '<a id="addToCartButton" onclick=showCart()> Add To Cart</a>';
+
             details.append(title);
             details.append(subtitle);
             details.append(price);
+            details.append(addToCart);
             details.append(list);
 
             $('#content').html('');
             $('#content').append(image);
             $('#content').append(details);
+
         });
     }
 
@@ -580,6 +599,10 @@ button {
         setContentTo('contact.html');
     }
 
+    function setCartView() {
+        setContentTo('cart.html');
+    }
+
 
 //  View-changing functions
 
@@ -608,6 +631,17 @@ button {
             $('#subbar').hide();
         }
     }
+
+    function showCart() {
+        if($('#subbar').css('display') == 'none') {
+            setSubbarTo('cart.html', function () {
+                $('#subbar').show();
+            });
+        } else {
+            $('#subbar').hide();
+        }
+    }
+
 
 
 //  General functions
