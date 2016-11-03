@@ -110,11 +110,15 @@ hr {
 }
 
 #filterbutton {
-    background-image: url('icons/Filter.svg');
+    background-image: url('Icons/Filter.svg');
 }
 
 #searchbutton {
-    background-image: url('icons/Search.svg');
+    background-image: url('Icons/Search.svg');
+}
+
+#cartbutton {
+    background-image: url('Icons/Cart.svg');
 }
 
 /*Subbar*/
@@ -296,17 +300,20 @@ hr {
 
 <div id="header">
     <a onclick="initial()">
-    <img src="icons/Logo.svg">
+    <img src="Icons/Logo.svg">
     <p class="title">CarShop</p></a>
     <div id="navbar">
         <a onclick="initial()">CARS -</a>
         <a onclick="setLoginView()">ACCOUNT -</a>
-        <a onclick="setContactView()">CONTACT</a>
-    </div>
+        <a onclick="setContactView()">CONTACT -</a>
+        <a href="#">ABOUT US -</a>
+</div>
+
     <hr>
     <div id="buttonbar">
         <div class="imagebutton" id="filterbutton" onclick="showFilters()"></div>
         <div class="imagebutton" id="searchbutton" onclick="showSearch()"></div>
+        <div class="imagebutton" id="cartbutton" onclick=")"></div>
     </div>
 </div>
 
@@ -323,7 +330,7 @@ hr {
 
 
 <script>
-    var ip = '145.24.222.132'; //change this to use a localhost
+    var ip = '145.24.222.150'; //change this to use a localhost
     var port = '8080';
     var username = '';
     var password = '';
