@@ -68,6 +68,12 @@ button {
     letter-spacing: 0.5em;
 }
 
+.subtitle {
+    font-size: 1.5em;
+    color: white;
+    letter-spacing: 0.3em;
+}
+
 #navbar {
     display: inline-block;
 }
@@ -125,8 +131,11 @@ button {
 }
 
 #cartbutton {
-
     background-image: url('icons/Cart.svg');
+}
+
+#wishlistbutton {
+    background-image: url('icons/WishList.svg');
 }
 
 /*Subbar*/
@@ -255,23 +264,6 @@ button {
     padding-bottom: 20px;
 }
 
-/*#details #addToCartButton {*/
-    /*color: blue;*/
-    /*font-size: 3em;*/
-    /*background: #fff22a;*/
-    /*width:300px;*/
-    /*float: right;*/
-/*}*/
-
-/*#details #addToCartButton{*/
-    /*cursor: pointer;*/
-    /*color: blue;*/
-    /*font-size: 3em;*/
-    /*background: #fff22a;*/
-    /*width:300px;*/
-    /*float: right;*/
-/*}*/
-
 /*Login*/
 #login {
     width: 30vw;
@@ -372,7 +364,8 @@ button {
     <div id="buttonbar">
         <div class="imagebutton" id="filterbutton" onclick="showFilters()"></div>
         <div class="imagebutton" id="searchbutton" onclick="showSearch()"></div>
-        <div class="imagebutton" id="cartbutton" onclick= "showCart()" ></div>
+        <div class="imagebutton" id="cartbutton" onclick= "showCart()"></div>
+        <div class="imagebutton" id="wishlistbutton" onclick= "showWishList()"></div>
     </div>
 </div>
 
@@ -394,11 +387,8 @@ button {
     var username = '';
     var password = '';
     var cartList = [];
-    var currentItem = "";
     var user;
-    var wishlist = [];
-    var currentcar;
-
+    var wishlist;
 
 
 //  Modifiying functions
@@ -415,6 +405,10 @@ button {
         });
         return string;
     } //Makes the first letter of the string upper-cased
+
+    function jString(value) {
+        return '\'' + value + '\'';
+    } //Puts single quotes around a given string
 
     function setFilters() {
         $('#filter').hide();
@@ -524,11 +518,28 @@ button {
         cartList.push(make + " " + model);
         console.log(id);
         $('#subbar').hide();
-    } //Add items to cart.
+    } //Add items to cart
 
-    function addToWishList(id, make, model) {
+    function addToWishList(id, make, model, year) {
         console.log(id, make, model);
-    }
+
+        if(user) {
+            var url = 'http://' + ip + ':' + port + '/wladd';
+            user.addwishlistid = id;
+
+            submitWishlistAjax(url, user, function() {
+                var list = $('<div></div>');
+                for (var i = wishlist.length - 1; i >= 0; i--) {
+                    var line = $('<p style="display: inline-block">' + wishlist[i].properties.make + ' ' + wishlist[i].properties.model + ' - </p><button style="display: inline-block">Add To Cart</button><button style="display: inline-block">Remove</button><br>');
+                    list.append(line);
+                }
+                $('#wishlistlist').html(list);
+            });
+        } else {
+            alert('You must be logged in to add items to your wishlist.');
+        }
+
+    } //Add items to wishlist
 
 
 //  View-making functions
@@ -548,6 +559,7 @@ button {
         var url = 'http://' + ip + ':' + port + '/views/' + file;
         $.get(url, function(data) {
             $('#content').html(data);
+            $('#subbar').hide();
             if(callback != undefined) {
                 callback(); //This function is ran when the async .get is done
             }
@@ -639,49 +651,64 @@ button {
         setContentTo('contact.html');
     }
 
+    function setWishListView() {
+        if(user) {
+            submitViewWishList(user.username, function() {
+                var list = $('<div></div>');
+                for (var i = wishlist.length - 1; i >= 0; i--) {
+                    var line = $('<p style="display: inline-block">' + wishlist[i].properties.make + ' ' + wishlist[i].properties.model + ' - </p><button style="display: inline-block">Add To Cart</button><button style="display: inline-block">Remove</button><br>');
+                    list.append(line);
+                }
+                $('#wishlistlist').html(list);
+            });
+        } else {
+            $('#wishlistlist').html('<a onclick="setLoginView()"><b style="color: white">Log in</b></a> before you can use the wishlist.');
+        }
+    }
+
 
 //  View-changing functions
 
-    function showFilters() {
-        if($('#subbar').css('display') == 'none' || !$('#filterbar').length) {
-            setSubbarTo('filter.html', function () {
-                $('#selectmodel').hide();
-                setFilter('make');
-                setFilter('year');
-                addListeners('make');
-                addListeners('model');
-                addListeners('year');
-                $('#subbar').show();
-            });
+    function toggleAndSetSubbar(id, page, fn) {
+        if($('#subbar').css('display') == 'none' || !$('#' + id).length) {
+            $('#subbar').show();
+            setSubbarTo(page + '.html', fn);
         } else {
             $('#subbar').hide();
         }
+    }
+
+    function showFilters() {
+        toggleAndSetSubbar('filterbar', 'filter', function() {
+            $('#selectmodel').hide();
+            setFilter('make');
+            setFilter('year');
+            addListeners('make');
+            addListeners('model');
+            addListeners('year');
+        });
     }
 
     function showSearch() {
-        if($('#subbar').css('display') == 'none' || !$('#searchbar').length) {
-            setSubbarTo('search.html', function () {
-                $('#subbar').show();
-            });
-        } else {
-            $('#subbar').hide();
-        }
+        toggleAndSetSubbar('searchbar', 'search');
     }
 
     function showCart() {
-        if($('#subbar').css('display') == 'none' || !$('#cart').length) {
-            setSubbarTo('cart.html', function () {
-                $('#subbar').show();
-                var item = $('<p></p>');
-                item.append(JSON.stringify(cartList));
-                $('#cart').append(item);// add cart the cart.html
-            });
-        } else {
-            $('#subbar').hide();
-        }
+        toggleAndSetSubbar('cart', 'cart', function() {
+            var item = $('<p></p>');
+            item.append(JSON.stringify(cartList));
+            $('#cart').append(item);// add cart the cart.html
+        });
     }
 
-//  General functions
+    function showWishList() {
+        toggleAndSetSubbar('wishlist', 'wishlist', function() {
+            setWishListView();
+        });
+    }
+
+
+//  Data-requesting functions
 
     function submitLogin() {
         var formobjects = getFormObjects('#loginform');
@@ -701,6 +728,7 @@ button {
                     user = data[0].properties;
                     console.log('ajax: ' + user.username);
                     setProfileView(user);
+                    submitViewWishList();
                 } else {
                     alert('Wrong identification.');
                 }
@@ -728,6 +756,31 @@ button {
     function submitSearch() {
         var formobjects = getFormObjects('#searchform');
     }
+
+    function submitWishlistAjax(url, data, fn) {
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify(data),
+            datatype: 'json',
+            contentType: "application/x-www-form-urlencoded",
+            success: function(data) {
+                wishlist = data;
+                fn();
+            },
+            error: function() { }
+        }); //Sends the account data to the server in a safe way
+    }
+
+    function submitViewWishList(wluser, fn) {
+        var url = 'http://' + ip + ':' + port + '/wl';
+        user.wishlistusername = wluser;
+        console.log(user.password);
+        submitWishlistAjax(url, user, fn);
+    }
+
+
+//  General Functions
 
     function addListeners(value) {
         var property = false;
@@ -758,6 +811,7 @@ button {
     function initial() {
         //Initial Setup
         setJSONTable('/filter/Car');
+
         jQuery(document).bind("keyup", function(e) {
             if(e.keyCode == 13 && $('#login').length){
                 submitLogin()

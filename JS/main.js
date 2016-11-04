@@ -44,6 +44,8 @@ function editQuery(query, res, callback) {
     );
 }
 
+
+//Query Creators
 function matchDataBy2(type, property, value, property2, value2) {
     var result = 'MATCH (o:' + type + '{' + property + ': \'' + value + '\', ' + property2 + ': \'' + value2 + '\'}) RETURN o';
     return result;
@@ -72,6 +74,7 @@ function matchRandom(type) {
 }
 
 
+//Respond Functions
 function filterRespond(req, res, next) {
     if(req.query.property2 != undefined) {
         filter(matchDataBy2(req.params.type, req.query.property1, req.query.value1, req.query.property2, req.query.value2), res);
@@ -120,6 +123,50 @@ function editProfileRespond(req, res, next) {
     next();
 }
 
+function viewWishListRespond(req, res, next) {
+    var data = JSON.parse(req.body.toString());
+    var query = 'MATCH (u:User { username: \'' + data['wishlistusername'] + '\', wishlist: \'public\'})-[:WISHES]-(c:Car) return c';
+    db.cypher({ query: query }, function(err, results) {
+        if(!results[0]) { //If the requested user's wishlist is not public, check if it is the logged in users' wishlist
+            query = 'MATCH (u:User { username: \'' + data['wishlistusername'] + '\', password: \'' + data['password'] + '\'})-[:WISHES]-(c:Car) return c';
+            db.cypher({ query: query}, function(err, results) {
+                if(results[0]) {
+                    var response = { length: results.length.toString() };
+                    for (var i = results.length - 1; i >= 0; i--) {
+                        response[i] = results[i]['c'];
+                    }
+                    res.send(200, response);
+                }
+            });
+        } else {
+            var response = { length: results.length.toString() };
+            for (var i = results.length - 1; i >= 0; i--) {
+                response[i] = results[i]['c'];
+            }
+            res.send(200, response);
+        }
+    });
+    next();
+}
+
+function addWishListRespond(req, res, next) {
+    var data = JSON.parse(req.body.toString());
+    var query = 'MATCH (u:User {username:\'' + data['username'] + '\', password: \'' + data['password'] + '\'}), (c:Car) where ID(c)=' + data['addwishlistid'] + ' CREATE (u)-[:WISHES]->(c)';
+    db.cypher({ query: query }, function(err, results) {
+        query = 'MATCH (u:User { username: \'' + data['wishlistusername'] + '\', password: \'' + data['password'] + '\'})-[:WISHES]-(c:Car) return c';
+        db.cypher({ query: query }, function(err, results) {
+            if(results[0]) {
+                var response = { length: results.length.toString() };
+                for (var i = results.length - 1; i >= 0; i--) {
+                    response[i] = results[i]['c'];
+                }
+                res.send(200, response);
+            }
+        });
+    });
+}
+
+
 //Start the server
 var server = restify.createServer({
     name: 'CarShop'
@@ -130,8 +177,13 @@ server.use(restify.queryParser()); //Used for allowing "?variable=value" in the 
 
 server.get('/filter/:type', filterRespond); //Someone who goes to this link will get the result of filterRespond
 server.get('/detail/:id', detailRespond);
+
 server.post('/login', loginRespond);
 server.post('/edituser', editProfileRespond);
+
+server.post('/wladd', addWishListRespond) //Add to wishlist
+// server.post('/wldel', deleteWishListRespond); //Delete from wishlist
+server.post('/wl', viewWishListRespond) //View the wishlist
 
 //Files are made accessible to the user, HTML index page is made default
 server.get(/.*/, restify.serveStatic({
