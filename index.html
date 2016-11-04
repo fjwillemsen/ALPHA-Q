@@ -190,6 +190,10 @@ button {
 
 
 /*Details*/
+#content #currentcar {
+    display: none;
+}
+
 #content #detailimage {
     width: 50vw;
     display: inline-block;
@@ -251,7 +255,6 @@ button {
     padding-bottom: 20px;
 }
 
-<<<<<<< HEAD
 /*#details #addToCartButton {*/
     /*color: blue;*/
     /*font-size: 3em;*/
@@ -260,17 +263,14 @@ button {
     /*float: right;*/
 /*}*/
 
-
-=======
-#details #addToCartButton{
-    cursor: pointer;
-    color: blue;
-    font-size: 3em;
-    background: #fff22a;
-    width:300px;
-    float: right;
-}
->>>>>>> e9a1db232cd242b735d1427085695387a2abe5bd
+/*#details #addToCartButton{*/
+    /*cursor: pointer;*/
+    /*color: blue;*/
+    /*font-size: 3em;*/
+    /*background: #fff22a;*/
+    /*width:300px;*/
+    /*float: right;*/
+/*}*/
 
 /*Login*/
 #login {
@@ -365,8 +365,7 @@ button {
     <div id="navbar">
         <a onclick="initial()">CARS -</a>
         <a onclick="setLoginView()">ACCOUNT -</a>
-        <a onclick="setContactView()">CONTACT -</a>
-        <a href="#">ABOUT US -</a>
+        <a onclick="setContactView()">CONTACT</a>
 </div>
 
     <hr>
@@ -398,7 +397,7 @@ button {
     var currentItem = "";
     var user;
     var wishlist = [];
-    var currentdetailid = 0;
+    var currentcar;
 
 
 
@@ -521,6 +520,16 @@ button {
         }
     } //Validity check for the Edit-form.
 
+    function addCarToCart(id, make, model) {
+        cartList.push(make + " " + model);
+        console.log(id);
+        $('#subbar').hide();
+    } //Add items to cart.
+
+    function addToWishList(id, make, model) {
+        console.log(id, make, model);
+    }
+
 
 //  View-making functions
 
@@ -572,7 +581,6 @@ button {
     }
 
     function setDetailView(value) {
-<<<<<<< HEAD
         setContentTo('details.html', function() {
             var url = 'http://' + ip + ':' + port + '/detail/' + value;
             $.get(url, function(data) {
@@ -580,6 +588,8 @@ button {
                 $('#details .title').append(data[0].properties.make + " " + data[0].properties.model);
                 $('#subtitle').append(data[0].properties.year);
                 $('#price').append(data[0].properties.price);
+                $('#optionsbar').html('<div class="imagebutton" id="addtocartbutton" onclick="addCarToCart(\'' + data[0]._id.toString() + '\', \'' + data[0].properties.make.toString() + '\', \'' + data[0].properties.model.toString() + '\')"></div>' +
+                        '<div class="imagebutton" id="addtowishlistbutton" onclick="addToWishList(\'' + data[0]._id.toString() + '\', \'' + data[0].properties.make.toString() + '\', \'' + data[0].properties.model.toString() + '\')"></div>');
 
                 var blacklist = ['model_sold_in_us', 'model', 'make', 'year', 'make_display', 'price', 'model_year', 'model_make_display', 'model_make_id', 'model_trim', 'model_name'];
 
@@ -591,42 +601,6 @@ button {
                         }
                     }
                 }
-=======
-        var url = 'http://' + ip + ':' + port + '/detail/' + value;
-
-        $.get(url, function(data) {
-            console.log(data);
-            var image = '<img id="image" src="http://www.pngpix.com/wp-content/uploads/2016/02/BMW-Car-PNG-image-1.png">';
-            var details = $('<div id="details"></div>');
-            var title = '<p class="title">' + data[0].properties.make + " " + data[0].properties.model + '</p>';
-            var subtitle = '<p id="subtitle">' + data[0].properties.year + '</p><hr><br>';
-            var price = '<p id="price">&euro;' + data[0].properties.price + '</p>';
-
-            currentItem = data[0].properties.make + " " + data[0].properties.model+ " " +data[0].properties.year+ " " +data[0].properties.price+"euro";
-            var addToCart = '<a id="addToCartButton" onclick= addCarToCart(currentItem)> Add To Cart</a>';
-            console.log(data[0].properties.make);
-
-            var blacklist = ['model_sold_in_us', 'model', 'make', 'year', 'make_display', 'price', 'model_year', 'model_make_display', 'model_make_id', 'model_trim', 'model_name'];
-
-            var list = $('<ul></ul>');
-            for (var key in data[0].properties) {
-                if (data[0].properties.hasOwnProperty(key)) {
-                    if(data[0].properties[key] != 'null' && data[0].properties[key] != '' && $.inArray(key, blacklist) == -1) {
-                        list.append('<li>' + showKey(key) + ': ' + data[0].properties[key] + '</li>');
-                    }
-                }
-            }
-
-            details.append(title);
-            details.append(subtitle);
-            details.append(price);
-            details.append(addToCart);
-            details.append(list);
-
-            $('#content').html('');
-            $('#content').append(image);
-            $('#content').append(details);
->>>>>>> e9a1db232cd242b735d1427085695387a2abe5bd
 
                 $('#speclist').html(list);
             });
@@ -665,10 +639,11 @@ button {
         setContentTo('contact.html');
     }
 
+
 //  View-changing functions
 
     function showFilters() {
-        if($('#subbar').css('display') == 'none') {
+        if($('#subbar').css('display') == 'none' || !$('#filterbar').length) {
             setSubbarTo('filter.html', function () {
                 $('#selectmodel').hide();
                 setFilter('make');
@@ -684,7 +659,7 @@ button {
     }
 
     function showSearch() {
-        if($('#subbar').css('display') == 'none') {
+        if($('#subbar').css('display') == 'none' || !$('#searchbar').length) {
             setSubbarTo('search.html', function () {
                 $('#subbar').show();
             });
@@ -694,7 +669,7 @@ button {
     }
 
     function showCart() {
-        if($('#subbar').css('display') == 'none') {
+        if($('#subbar').css('display') == 'none' || !$('#cart').length) {
             setSubbarTo('cart.html', function () {
                 $('#subbar').show();
                 var item = $('<p></p>');
@@ -704,14 +679,6 @@ button {
         } else {
             $('#subbar').hide();
         }
-    }
-    //add items to cart
-    function addCarToCart(carId) {
-
-        cartList.push(carId);
-        console.log(carId);
-        $('#subbar').hide();
-
     }
 
 //  General functions
@@ -760,12 +727,6 @@ button {
 
     function submitSearch() {
         var formobjects = getFormObjects('#searchform');
-    }
-
-    function addToWishList() {
-        if(!empty(user)) {
-            wishlist.push(currentdetailid);
-        }
     }
 
     function addListeners(value) {
