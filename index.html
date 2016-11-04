@@ -117,15 +117,16 @@ button {
 }
 
 #filterbutton {
-    background-image: url('Icons/Filter.svg');
+    background-image: url('icons/Filter.svg');
 }
 
 #searchbutton {
-    background-image: url('Icons/Search.svg');
+    background-image: url('icons/Search.svg');
 }
 
 #cartbutton {
-    background-image: url('Icons/Cart.svg');
+
+    background-image: url('icons/Cart.svg');
 }
 
 /*Subbar*/
@@ -189,7 +190,7 @@ button {
 
 
 /*Details*/
-#content #image {
+#content #detailimage {
     width: 50vw;
     display: inline-block;
 }
@@ -220,6 +221,28 @@ button {
     min-width: 500px;
 }
 
+#details #optionsbar div {
+    display: inline-block;
+    width: 7em;
+    height: 7em;
+}
+
+#details #addtocartbutton {
+    background-image: url('icons/addToCartBG.svg');
+}
+
+#details #addtocartbutton:hover {
+    background-image: url('icons/addedToCartBG.svg');
+}
+
+#details #addtowishlistbutton {
+    background-image: url('icons/addToWishListBG.svg');
+}
+
+#details #addtowishlistbutton:hover {
+    background-image: url('icons/addedToWishListBG.svg');
+}
+
 #details ul {
     margin-left: auto;
     margin-right: auto;
@@ -228,13 +251,15 @@ button {
     padding-bottom: 20px;
 }
 
-#details #addToCartButton{
-    color: blue;
-    font-size: 3em;
-    background: #fff22a;
-    width:300px;
-    float: right;
-}
+/*#details #addToCartButton {*/
+    /*color: blue;*/
+    /*font-size: 3em;*/
+    /*background: #fff22a;*/
+    /*width:300px;*/
+    /*float: right;*/
+/*}*/
+
+
 
 /*Login*/
 #login {
@@ -324,7 +349,7 @@ button {
 
 <div id="header">
     <a onclick="initial()">
-    <img src="Icons/Logo.svg">
+    <img src="icons/Logo.svg">
     <p class="title">CarShop</p></a>
     <div id="navbar">
         <a onclick="initial()">CARS -</a>
@@ -354,11 +379,13 @@ button {
 
 
 <script>
-    var ip = '145.24.222.176'; //change this to use a localhost
+    var ip = '145.24.222.132'; //change this to use a localhost
     var port = '8080';
     var username = '';
     var password = '';
     var user;
+    var wishlist = [];
+    var currentdetailid = 0;
 
 
 //  Modifiying functions
@@ -403,7 +430,7 @@ button {
 
             $('#filter').show();
         });
-    }
+    } //Sets all filters (Warning: Deprecated. Use the "setFilter" instead.)
 
     function setFilter(property, extra) {
         var string = property;
@@ -423,7 +450,7 @@ button {
             array = uArray(array);
             $('#select' + property).html(array.join(''));
         });
-    }
+    } //Sets a filter to the values obtained trough the database
 
     function showKey(string) {
         string = string.split('_');
@@ -434,7 +461,7 @@ button {
             }
         }
         return result;
-    }
+    } //Edits the String data so it gets prettier to look at (for example, from "model_key" to "Key")
 
     function getFormObjects(formId) {
         var formObj = {};
@@ -443,7 +470,7 @@ button {
             formObj[input.name] = input.value;
         });
         return formObj;
-    }
+    } //Seperates individual parts of forms into key-value pairs
 
     function empty(value) {
         if(value != '' && value != undefined && value != null && value && value.trim()) {
@@ -451,7 +478,7 @@ button {
         } else {
             return true;
         }
-    }
+    } //Checks if a String is empty
 
     function setIfNotEmpty(value, fallback) {
         if(!empty(value)) {
@@ -459,7 +486,7 @@ button {
         } else {
             return fallback;
         }
-    }
+    } //Returns a value if it is not empty, otherwise it returns the fallback
 
     function processEditForm() {
         var fo = getFormObjects('#editform');
@@ -478,7 +505,7 @@ button {
         } else {
             alert('You forgot to enter your current username.');
         }
-    }
+    } //Validity check for the Edit-form.
 
 
 //  View-making functions
@@ -531,38 +558,27 @@ button {
     }
 
     function setDetailView(value) {
-        var url = 'http://' + ip + ':' + port + '/detail/' + value;
+        setContentTo('details.html', function() {
+            var url = 'http://' + ip + ':' + port + '/detail/' + value;
+            $.get(url, function(data) {
+                $('#detailimage').html('<img id="image" src="http://www.pngpix.com/wp-content/uploads/2016/02/BMW-Car-PNG-image-1.png">');
+                $('#details .title').append(data[0].properties.make + " " + data[0].properties.model);
+                $('#subtitle').append(data[0].properties.year);
+                $('#price').append(data[0].properties.price);
 
-        $.get(url, function(data) {
-            var image = '<img id="image" src="http://www.pngpix.com/wp-content/uploads/2016/02/BMW-Car-PNG-image-1.png">';
-            var details = $('<div id="details"></div>');
-            var title = '<p class="title">' + data[0].properties.make + " " + data[0].properties.model + '</p>';
-            var subtitle = '<p id="subtitle">' + data[0].properties.year + '</p><hr><br>';
-            var price = '<p id="price">&euro;' + data[0].properties.price + '</p>';
+                var blacklist = ['model_sold_in_us', 'model', 'make', 'year', 'make_display', 'price', 'model_year', 'model_make_display', 'model_make_id', 'model_trim', 'model_name'];
 
-            var blacklist = ['model_sold_in_us', 'model', 'make', 'year', 'make_display', 'price', 'model_year', 'model_make_display', 'model_make_id', 'model_trim', 'model_name'];
-
-            var list = $('<ul></ul>');
-            for (var key in data[0].properties) {
-                if (data[0].properties.hasOwnProperty(key)) {
-                    if(data[0].properties[key] != 'null' && data[0].properties[key] != '' && $.inArray(key, blacklist) == -1) {
-                        list.append('<li>' + showKey(key) + ': ' + data[0].properties[key] + '</li>');
+                var list = $('<ul></ul>');
+                for (var key in data[0].properties) {
+                    if (data[0].properties.hasOwnProperty(key)) {
+                        if(data[0].properties[key] != 'null' && data[0].properties[key] != '' && $.inArray(key, blacklist) == -1) {
+                            list.append('<li>' + showKey(key) + ': ' + data[0].properties[key] + '</li>');
+                        }
                     }
                 }
-            }
 
-            var addToCart = '<a id="addToCartButton" onclick=showCart()> Add To Cart</a>';
-
-            details.append(title);
-            details.append(subtitle);
-            details.append(price);
-            details.append(addToCart);
-            details.append(list);
-
-            $('#content').html('');
-            $('#content').append(image);
-            $('#content').append(details);
-
+                $('#speclist').html(list);
+            });
         });
     }
 
@@ -690,6 +706,12 @@ button {
 
     function submitSearch() {
         var formobjects = getFormObjects('#searchform');
+    }
+
+    function addToWishList() {
+        if(!empty(user)) {
+            wishlist.push(currentdetailid);
+        }
     }
 
     function addListeners(value) {

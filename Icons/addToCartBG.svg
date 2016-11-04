@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1100px" height="950px" viewBox="0 0 1100 950" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>addToCartBG</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="765.008996 42.2348717 719.102737 339.472742 133.56354 339.472742 87.6572808 42.2348717"></polygon>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="677.351715" height="297.23787" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="addToCartBG">
+            <circle id="Oval-10" stroke="#979797" fill="#26B7AD" cx="551" cy="475" r="474"></circle>
+            <g id="Cart" transform="translate(146.000000, 278.000000)">
+                <use id="Rectangle-3" stroke="#FFFFFF" mask="url(#mask-2)" stroke-width="40" xlink:href="#path-1"></use>
+                <path d="M127.899942,240.65908 L723.172567,240.65908" id="Line" stroke="#FFFFFF" stroke-width="10" stroke-linecap="square"></path>
+                <path d="M113.556023,143.439187 L745.086887,143.439187" id="Line" stroke="#FFFFFF" stroke-width="10" stroke-linecap="square"></path>
+                <path d="M522.756147,328.316361 L585.710013,51.7974841" id="Line" stroke="#FFFFFF" stroke-width="10" stroke-linecap="square"></path>
+                <path d="M273.331339,328.316361 L336.285205,51.7974841" id="Line" stroke="#FFFFFF" stroke-width="10" stroke-linecap="square"></path>
+                <rect id="Rectangle-4" fill="#FFFFFF" transform="translate(117.601919, 240.778263) rotate(-10.000000) translate(-117.601919, -240.778263) " x="102.909851" y="9.39552396" width="29.3841362" height="462.765478" rx="14.6920681"></rect>
+                <rect id="Rectangle-4" fill="#FFFFFF" x="142.642302" y="429.520676" width="498.849616" height="41.8596944" rx="20.9298472"></rect>
+                <rect id="Rectangle-4" fill="#FFFFFF" x="-4.52976321e-14" y="0" width="87.4897486" height="41.8596944" rx="20.9298472"></rect>
+                <ellipse id="Oval-6" fill="#FFFFFF" cx="222.729182" cy="521.560821" rx="42.6333139" ry="42.6333139"></ellipse>
+                <ellipse id="Oval-6" fill="#FFFFFF" cx="523.15459" cy="521.560821" rx="42.6333139" ry="42.6333139"></ellipse>
+            </g>
+            <g id="addButton" transform="translate(668.000000, 176.000000)">
+                <ellipse id="Oval-8" fill="#26B750" cx="143.837629" cy="143.837629" rx="143.837629" ry="143.837629"></ellipse>
+                <rect id="Rectangle" fill="#FFFFFF" x="126.704615" y="20.7189937" width="35.0629123" height="245.440386" rx="8"></rect>
+                <rect id="Rectangle" fill="#FFFFFF" transform="translate(144.236071, 143.439187) rotate(90.000000) translate(-144.236071, -143.439187) " x="126.704615" y="20.7189937" width="35.0629123" height="245.440386" rx="8"></rect>
+            </g>
+        </g>
+    </g>
+</svg>
