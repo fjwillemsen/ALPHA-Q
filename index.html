@@ -222,6 +222,7 @@ hr {
 }
 
 #details #addToCartButton{
+    cursor: pointer;
     color: blue;
     font-size: 3em;
     background: #fff22a;
@@ -342,8 +343,8 @@ hr {
     var port = '8080';
     var username = '';
     var password = '';
-
-
+    var cartList = [];
+    var currentItem = "";
 //  Modifiying functions
 
     function uArray(array) {
@@ -472,11 +473,16 @@ hr {
         var url = 'http://' + ip + ':' + port + '/detail/' + value;
 
         $.get(url, function(data) {
+            console.log(data);
             var image = '<img id="image" src="http://www.pngpix.com/wp-content/uploads/2016/02/BMW-Car-PNG-image-1.png">';
             var details = $('<div id="details"></div>');
             var title = '<p class="title">' + data[0].properties.make + " " + data[0].properties.model + '</p>';
             var subtitle = '<p id="subtitle">' + data[0].properties.year + '</p><hr><br>';
             var price = '<p id="price">&euro;' + data[0].properties.price + '</p>';
+
+            currentItem = data[0].properties.make + " " + data[0].properties.model+ " " +data[0].properties.year+ " " +data[0].properties.price;
+            var addToCart = '<a id="addToCartButton" onclick= addCarToCart(currentItem)> Add To Cart</a>';
+            console.log(data[0].properties.make);
 
             var blacklist = ['model_sold_in_us', 'model', 'make', 'year', 'make_display', 'price', 'model_year', 'model_make_display', 'model_make_id', 'model_trim', 'model_name'];
 
@@ -488,8 +494,6 @@ hr {
                     }
                 }
             }
-
-            var addToCart = '<a id="addToCartButton" onclick=showCart()> Add To Cart</a>';
 
             details.append(title);
             details.append(subtitle);
@@ -514,7 +518,6 @@ hr {
             for (var i = data.length - 1; i >= 0; i--) {
                 var itemcontainer = $('<a onclick="setDetailView(' + data[i]._id + ')"></a>');
                 var item = $('<td></td>');
-
                 // item.append("<img src=\"" + data[i].properties.picture + "\">");
                 item.append(data[i].properties.make);
                 item.append(" " + data[i].properties.model);
@@ -522,6 +525,7 @@ hr {
                 item.append("<br>&euro;" + data[i].properties.price);
 
                 itemcontainer.append(item);
+
                 row.append(itemcontainer);
             }
 
@@ -536,11 +540,6 @@ hr {
     function setContactView() {
         setContentTo('contact.html');
     }
-
-    function setCartView() {
-        setContentTo('cart.html');
-    }
-
 
 //  View-changing functions
 
@@ -574,13 +573,22 @@ hr {
         if($('#subbar').css('display') == 'none') {
             setSubbarTo('cart.html', function () {
                 $('#subbar').show();
+                var item = $('<p></p>');
+                item.append(JSON.stringify(cartList));
+                $('#cart').append(item);// add cart the cart.html
             });
         } else {
             $('#subbar').hide();
         }
     }
+    //add items to cart
+    function addCarToCart(carId) {
 
+        cartList.push(carId);
+        console.log(carId);
+        $('#subbar').hide();
 
+    }
 
 //  General functions
 
