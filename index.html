@@ -402,7 +402,7 @@ button {
 
 
 <script>
-    var ip = '145.24.222.132'; //change this to use a localhost
+    var ip = '145.24.222.176'; //change this to use a localhost
     var port = '8080';
     var username = '';
     var password = '';
@@ -410,6 +410,9 @@ button {
     var user;
     var wishlist;
 
+    function onRemoveCartItem() {
+        $('#cList').find("option:selected").remove();
+    }
 
 //  Modifiying functions
 
@@ -535,7 +538,10 @@ button {
     } //Validity check for the Edit-form.
 
     function addCarToCart(id, make, model) {
-        cartList.push(make + " " + model);
+
+        var item = $('<option value="">'+ make + " " + model+'</option>');
+        cartList.push(item);
+        //item.append(JSON.stringify(cartList));
         console.log(id);
         $('#subbar').hide();
     } //Add items to cart
@@ -719,9 +725,13 @@ button {
 
     function showCart() {
         toggleAndSetSubbar('cart', 'cart', function() {
-            var item = $('<p></p>');
-            item.append(JSON.stringify(cartList));
-            $('#cart').append(item);// add cart the cart.html
+            //var item = $('<p></p>');
+            var deleteButton = $('<input type= "button"id="btDel" value="Remove" onclick= onRemoveCartItem() />');
+            var box = $('<select id = "cList"></select>' )
+            cartList.join('');
+            box.append(cartList);
+            $('#cart').append(box);
+            $('#cart').append(deleteButton);
         });
     }
 
