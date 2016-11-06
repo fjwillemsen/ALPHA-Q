@@ -284,6 +284,25 @@ button {
     text-align: center;
 }
 
+#register {
+    width: 30vw;
+    min-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    color: black;
+}
+
+#register #title {
+    color: black;
+}
+
+#register form {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
 /*Profile*/
 #profile {
     width: 30vw;
@@ -357,6 +376,7 @@ button {
     <div id="navbar">
         <a onclick="initial()">CARS -</a>
         <a onclick="setLoginView()">ACCOUNT -</a>
+        <a onclick="setRegisterView()">REGISTER -</a>
         <a onclick="setContactView()">CONTACT</a>
 </div>
 
@@ -573,6 +593,10 @@ button {
         setContentTo('login.html');
     }
 
+    function setRegisterView() {
+        setContentTo('register.html');
+    }
+
     function setProfileView(user) {
         setContentTo('profile.html', function() {
             $('#name').append(user.firstname);
@@ -736,6 +760,44 @@ button {
             error: function() { alert('Failure!'); }
         }); //Requests the account data from the server in a safe way
     }
+
+    function submitRegister() {
+        var fo = getFormObjects('#register') // form object
+        var url = 'http://' + ip + ':' + port + '/register';
+
+
+        var data = JSON.stringify({
+            'firstname': fo['firstname'],
+            'lastname': fo['lastname'],
+            'address': fo['address'],
+            'postalcode': fo['postalcode'],
+            'shippingaddress': fo['shippingaddress'],
+            'shippingcountry': fo['shippingcountry'],
+            'username': fo['username'],
+            'password': fo['password']
+        });
+
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: data,
+            datatype: 'json',
+            contentType: "application/x-www-form-urlencoded",
+            succes: function (data) {
+                if (data.length != '0') {
+                    setRegisterView()(data[0].properties);
+                } else {
+                    alert('Wrong identification');
+                }
+            },
+            error: function () {
+                alert('Failure!');
+            }
+
+        });
+    }
+
 
     function submitEdit() {
         var url = 'http://' + ip + ':' + port + '/edituser';
