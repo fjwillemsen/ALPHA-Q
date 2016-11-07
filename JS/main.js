@@ -164,6 +164,16 @@ function addWishListRespond(req, res, next) {
             }
         });
     });
+    next();
+}
+
+function deleteWishListRespond(req, res, next) {
+    var data = JSON.parse(req.body.toString());
+
+    var query = 'MATCH (u:User {username:\'' + data['username'] + '\', password: \'' + data['password'] + '\'})-[relation:WISHES]-(c:Car) where ID(c)=' + data['removewishlistid'] + ' DELETE relation';
+    console.log('Q: ' + query);
+    editQuery(query, res);
+    next();
 }
 
 
@@ -182,7 +192,7 @@ server.post('/login', loginRespond);
 server.post('/edituser', editProfileRespond);
 
 server.post('/wladd', addWishListRespond) //Add to wishlist
-// server.post('/wldel', deleteWishListRespond); //Delete from wishlist
+server.post('/wldel', deleteWishListRespond); //Delete from wishlist
 server.post('/wl', viewWishListRespond) //View the wishlist
 
 //Files are made accessible to the user, HTML index page is made default
