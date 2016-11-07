@@ -110,6 +110,30 @@ function loginRespond(req, res, next) {
     next();
 }
 
+
+function registerRespond(req, res, next) {
+    var data = JSON.parse(req.body.toString())
+    console.log(data['firstname']);
+    console.log(data['lastname']);
+    console.log(data['address']);
+    console.log(data['postalcode']);
+    console.log(data['country']);
+    console.log(data['shipaddress']);
+    console.log(data['shippostalcode']);
+    console.log(data['shipcountry']);
+    console.log(data['username']);
+    console.log(data['password']);
+    
+    console.log(data)
+    
+    if (!data || data != undefined) {
+        var query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \'' + data['postalcode'] + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\'});';
+    }
+    console.log('Query: ' + query);
+    editQuery(query, res);
+    next();
+}
+
 function editProfileRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
     if(data['currentpassword'] == '' || !data['currentpassword']) {
@@ -180,6 +204,8 @@ server.get('/detail/:id', detailRespond);
 
 server.post('/login', loginRespond);
 server.post('/edituser', editProfileRespond);
+
+server.post('/register', registerRespond);
 
 server.post('/wladd', addWishListRespond) //Add to wishlist
 // server.post('/wldel', deleteWishListRespond); //Delete from wishlist
