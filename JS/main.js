@@ -132,7 +132,7 @@ function registerRespond(req, res, next) {
     console.log(data['shipcountry']);
     console.log(data['username']);
     console.log(data['password']);
-    
+
     console.log(data)
     
     if (!data || data != undefined) {
