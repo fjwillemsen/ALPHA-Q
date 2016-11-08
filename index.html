@@ -327,6 +327,7 @@ button {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+    line-height: 120%;
 }
 
 /*Profile*/
@@ -455,10 +456,6 @@ button {
         });
         return string;
     } //Makes the first letter of the string upper-cased
-
-    function jString(value) {
-        return '\'' + value + '\'';
-    } //Puts single quotes around a given string
 
     function showKey(string) {
         string = string.split('_');
@@ -768,7 +765,7 @@ button {
                 var list = $('<div></div>');
 
                 for (var i = wishlist.length - 1; i >= 0; i--) {
-                    var line = $('<p style="display: inline-block">' + wishlist[i].properties.make + ' ' + wishlist[i].properties.model + ' ' + wishlist[i].properties.year + ' - </p><button style="display: inline-block">Add To Cart</button><button onclick="removeFromWishList(' + wishlist[i]._id + ')" style="display: inline-block">Remove</button><br>');
+                    var line = $('<p style="display: inline-block">' + wishlist[i].properties.make + ' ' + wishlist[i].properties.model + ' ' + wishlist[i].properties.year + ' - </p><button onclick="addCarToCart(\'' + wishlist[i]._id + '\', \'' + wishlist[i].properties.make + '\', \'' + wishlist[i].properties.model + '\', \'' + wishlist[i].properties.year + '\')" style="display: inline-block">Add To Cart</button><button onclick="removeFromWishList(' + wishlist[i]._id + ')" style="display: inline-block">Remove</button><br>');
                     list.append(line);
                 }
                 $('#wishlistlist').html(list);
@@ -1057,8 +1054,6 @@ button {
     function initial() {
         //Initial Setup
         setJSONTable('/filter/Car');
-
-//        $('#searchform').attr('action', 'javascript:void(0);'); //Avoids the page from reloading when the user taps enter on the form
 
         jQuery(document).bind("keyup", function(e) {
             if(e.which == 13 || e.keycode == 13) {
