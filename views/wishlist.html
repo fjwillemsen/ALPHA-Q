@@ -1,4 +1,18 @@
 <div id= "wishlist">
 	<p class="subtitle">Wishlist</p>
+    <div id="visibility">
+        <p>My Wishlist:</p>
+        <select id="wlsetvisibility" onchange="if (this.selectedIndex) submitVisibilityChange();">
+            <option value="" disabled selected style="display:none;">Visibility</option>
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+        </select>
+    </div>
+    <div id="publicwls">
+        <p>Wishlists by other users:</p>
+        <select id="publicwishlists" onchange="if (this.selectedIndex) setPublicWishListView()">
+            <option value="" disabled selected style="display:none;">Users</option>
+        </select>
+    </div>
 	<p id="wishlistlist"></p>
 </div>

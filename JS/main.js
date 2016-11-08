@@ -73,6 +73,10 @@ function matchRandom(type) {
     return result;
 }
 
+function search(value) {
+
+}
+
 
 //Respond Functions
 function filterRespond(req, res, next) {
@@ -89,6 +93,11 @@ function filterRespond(req, res, next) {
     } else {
         filter(matchRandom(req.params.type), res);
     }
+    next();
+}
+
+function searchRespond(req, res, next) {
+
     next();
 }
 
@@ -110,7 +119,7 @@ function loginRespond(req, res, next) {
     next();
 }
 
-
+//Profile
 function registerRespond(req, res, next) {
     var data = JSON.parse(req.body.toString())
     console.log(data['firstname']);
@@ -147,6 +156,7 @@ function editProfileRespond(req, res, next) {
     next();
 }
 
+//Wishlist
 function viewWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
     var query = 'MATCH (u:User { username: \'' + data['wishlistusername'] + '\', wishlist: \'public\'})-[:WISHES]-(c:Car) return c';
@@ -193,10 +203,23 @@ function addWishListRespond(req, res, next) {
 
 function deleteWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
-
     var query = 'MATCH (u:User {username:\'' + data['username'] + '\', password: \'' + data['password'] + '\'})-[relation:WISHES]-(c:Car) where ID(c)=' + data['removewishlistid'] + ' DELETE relation';
     console.log('Q: ' + query);
     editQuery(query, res);
+    next();
+}
+
+function visibilityWishListRespond(req, res, next) {
+    var data = JSON.parse(req.body.toString());
+    var query = 'MATCH (u:User {username:\'' + data['username'] + '\', password: \'' + data['password'] + '\'}) SET u.wishlist=\'' + data['wlvisibility'] + '\'';
+    console.log('Q: ' + query);
+    editQuery(query, res);
+    next();
+}
+
+function publicWishListsRespond(req, res, next) {
+    var query = 'MATCH (o:User { wishlist: \'public\' })-[:WISHES]-(c:Car) RETURN DISTINCT o.username ORDER BY o.username';
+    filter(query, res, 'o.username');
     next();
 }
 
@@ -211,6 +234,7 @@ server.use(restify.queryParser()); //Used for allowing "?variable=value" in the 
 
 server.get('/filter/:type', filterRespond); //Someone who goes to this link will get the result of filterRespond
 server.get('/detail/:id', detailRespond);
+server.get('/wishlists', publicWishListsRespond); //Gives all of the public wishlists usernames
 
 server.post('/login', loginRespond);
 server.post('/edituser', editProfileRespond);
@@ -219,6 +243,7 @@ server.post('/register', registerRespond);
 
 server.post('/wladd', addWishListRespond) //Add to wishlist
 server.post('/wldel', deleteWishListRespond); //Delete from wishlist
+server.post('/wlvis', visibilityWishListRespond); //Set wishlist visibility ('public' or 'private'
 server.post('/wl', viewWishListRespond) //View the wishlist
 
 //Files are made accessible to the user, HTML index page is made default

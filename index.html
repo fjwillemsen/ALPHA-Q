@@ -167,6 +167,23 @@ button {
     display: block;
 }
 
+/*Wishlist*/
+#wishlist #visibility {
+    display: none;
+}
+
+#wishlist #visibility p, select {
+    display: inline-block;
+}
+
+#publicwls {
+    display: none;
+}
+
+#publicwls p, select {
+    display: inline-block;
+}
+
 /*Content*/
 #content {
     margin-top: 20px;
@@ -405,7 +422,7 @@ button {
 
 
 <script>
-    var ip = '145.24.222.110'; //change this to use a localhost
+    var ip = '145.24.222.132'; //change this to use a localhost
     var port = '8080';
     var username = '';
     var password = '';
@@ -436,54 +453,6 @@ button {
     function jString(value) {
         return '\'' + value + '\'';
     } //Puts single quotes around a given string
-
-    function setFilters() {
-        $('#filter').hide();
-        $.get('http://' + ip + ':' + port + '/filter/Car/model/nn', function(data){
-            var brandarray = [];
-            var modelarray = [];
-            var yeararray = [];
-
-            brandarray.push('<option value="" disabled="disabled" selected="selected">Brand</option>');
-            modelarray.push('<option value="" disabled="disabled" selected="selected">Model</option>');
-            yeararray.push('<option value="" disabled="disabled" selected="selected">Year</option>');
-
-            for (var i = data.length - 1; i >= 0; i--) {
-                brandarray.push('<option value="">' + data[i].properties.make + '</option>');
-                modelarray.push('<option value="">' + data[i].properties.model + '</option>');
-                yeararray.push('<option value="">' + data[i].properties.year + '</option>');
-            }
-
-            brandarray = uArray(brandarray);
-            modelarray = uArray(modelarray);
-            yeararray = uArray(yeararray);
-
-            $('#selectbrand').html(brandarray.join(''));
-            $('#selectmodel').html(modelarray.join(''));
-            $('#selectyear').html(yeararray.join(''));
-
-            $('#filter').show();
-        });
-    } //Sets all filters (Warning: Deprecated. Use the "setFilter" instead)
-
-    function setFilter(property, extra) {
-        var string = property;
-        if(extra != undefined) {
-            string = string + extra;
-        }
-
-        $.get('http://' + ip + ':' + port + '/filter/Car?property1=' + string, function(data){
-            var array = [];
-            array.push('<option value="" disabled="disabled" selected="selected">' + toUpperCaseFirst(property) + '</option>');
-
-            for (var i = data.length - 1; i >= 0; i--) {
-                array.push('<option value="">' + data[i] + '</option>');
-            }
-
-            array = uArray(array);
-            $('#select' + property).html(array.join(''));
-        });
-    } //Sets a filter to the values obtained trough the database
 
     function showKey(string) {
         string = string.split('_');
@@ -532,6 +501,7 @@ button {
                 user.role = setIfNotEmpty(fo['role'], user.role);
                 user.currentusername = setIfNotEmpty(fo['currentusername']);
                 user.currentpassword = setIfNotEmpty(fo['currentpassword']);
+                return true;
             } else {
                 swal({
                     title: "Ooops!",
@@ -544,6 +514,7 @@ button {
                 })
             }
         } else {
+            console.log("No user");
             swal({
                 title: "Ooops!",
                 text: "You forgot to enter a username!",
@@ -728,23 +699,102 @@ button {
         });
     }
 
+    function setFilters() {
+        $('#filter').hide();
+        $.get('http://' + ip + ':' + port + '/filter/Car/model/nn', function(data){
+            var brandarray = [];
+            var modelarray = [];
+            var yeararray = [];
+
+            brandarray.push('<option value="" disabled="disabled" selected="selected">Brand</option>');
+            modelarray.push('<option value="" disabled="disabled" selected="selected">Model</option>');
+            yeararray.push('<option value="" disabled="disabled" selected="selected">Year</option>');
+
+            for (var i = data.length - 1; i >= 0; i--) {
+                brandarray.push('<option value="">' + data[i].properties.make + '</option>');
+                modelarray.push('<option value="">' + data[i].properties.model + '</option>');
+                yeararray.push('<option value="">' + data[i].properties.year + '</option>');
+            }
+
+            brandarray = uArray(brandarray);
+            modelarray = uArray(modelarray);
+            yeararray = uArray(yeararray);
+
+            $('#selectbrand').html(brandarray.join(''));
+            $('#selectmodel').html(modelarray.join(''));
+            $('#selectyear').html(yeararray.join(''));
+
+            $('#filter').show();
+        });
+    } //Sets all filters (Warning: Deprecated. Use the "setFilter" instead)
+
+    function setFilter(property, extra) {
+        var string = property;
+        if(extra != undefined) {
+            string = string + extra;
+        }
+
+        $.get('http://' + ip + ':' + port + '/filter/Car?property1=' + string, function(data){
+            var array = [];
+            array.push('<option value="" disabled="disabled" selected="selected">' + toUpperCaseFirst(property) + '</option>');
+
+            for (var i = data.length - 1; i >= 0; i--) {
+                array.push('<option value="">' + data[i] + '</option>');
+            }
+
+            array = uArray(array);
+            $('#select' + property).html(array.join(''));
+        });
+    } //Sets a filter to the values obtained trough the database
+
     function setContactView() {
         setContentTo('contact.html');
     }
 
-    function setWishListView() {
+    function setWishListView(uname) {
+        console.log(user);
         if(user) {
-            submitViewWishList(user.username, function() {
+            var username = user.username;
+            if(uname || uname != undefined) {
+                username = uname;
+            }
+            console.log(username);
+            submitViewWishList(username, function() {
                 var list = $('<div></div>');
+
                 for (var i = wishlist.length - 1; i >= 0; i--) {
                     var line = $('<p style="display: inline-block">' + wishlist[i].properties.make + ' ' + wishlist[i].properties.model + ' ' + wishlist[i].properties.year + ' - </p><button style="display: inline-block">Add To Cart</button><button onclick="removeFromWishList(' + wishlist[i]._id + ')" style="display: inline-block">Remove</button><br>');
                     list.append(line);
                 }
                 $('#wishlistlist').html(list);
+                $('#wishlist #visibility').show();
+                setPublicWishLists();
             });
         } else {
             $('#wishlistlist').html('<a onclick="setLoginView()"><b style="color: white">Log in</b></a> before you can use the wishlist.');
         }
+    }
+
+    function setPublicWishLists() {
+        $.get('http://' + ip + ':' + port + '/wishlists', function(data){
+            var array = [];
+            array.push('<option value="" disabled selected style="display:none;">Users</option>');
+
+            for (var i = data.length - 1; i >= 0; i--) {
+                array.push('<option value="" onclick="setWishListView(' + data[i] + ')">' + data[i] + '</option>');
+            }
+
+            array = uArray(array);
+            var list = $('<p>Wishlists by other users:</p><select id="publicwishlists" onchange="if (this.selectedIndex) setPublicWishListView()">')
+            list.append(array.join(''));
+            $('#publicwls').html(list);
+            $('#publicwls').show();
+        });
+    }
+
+    function setPublicWishListView() {
+        console.log($("#publicwishlists option:selected").text());
+        setWishListView($("#publicwishlists option:selected").text());
     }
 
 
@@ -795,7 +845,7 @@ button {
     }
 
 
-//  Data-requesting functions
+//  Data-requesting/changing functions
 
     function submitLogin() {
         var formobjects = getFormObjects('#loginform');
@@ -898,34 +948,45 @@ button {
         });
     }
 
-
     function submitEdit() {
         var url = 'http://' + ip + ':' + port + '/edituser';
-        processEditForm();
-
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: JSON.stringify(user),
-            datatype: 'json',
-            contentType: "application/x-www-form-urlencoded",
-            success: function() {  swal("Awesome!", "Edit successful", "success") },
-            error: function() { swal({
-                title: "Ooops..!",
-                text: "Edit went wrong. Please Try again!",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Try again",
-                cancelButtonText: "Cancel",
-                closeOnConfirm: false,
-                closeOnCancel: false
-            }) }
-        }); //Sends the account data to the server in a safe way
+        if(processEditForm()) {
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: JSON.stringify(user),
+                datatype: 'json',
+                contentType: "application/x-www-form-urlencoded",
+                success: function () {
+                    swal("Awesome!", "Edit successful", "success")
+                    logOut();
+                    setContentTo('login.html');
+                },
+                error: function () {
+                    swal({
+                        title: "Ooops..!",
+                        text: "Edit went wrong. Please Try again!",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Try again",
+                        cancelButtonText: "Cancel",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    })
+                }
+            }); //Sends the account data to the server in a safe way
+        }
     }
 
     function submitSearch() {
         var formobjects = getFormObjects('#searchform');
+    }
+
+    function submitVisibilityChange() {
+        user.wlvisibility = $("#wlsetvisibility").val();
+        console.log('u: ' + user.wlvisibility + ' $ ' + $("#wlsetvisibility").val());
+        submitWishlistAjax('http://' + ip + ':' + port + '/wlvis', user);
     }
 
     function submitWishlistAjax(url, data, fn) {
@@ -937,7 +998,9 @@ button {
             contentType: "application/x-www-form-urlencoded",
             success: function(data) {
                 wishlist = data;
-                fn();
+                if(fn) {
+                    fn();
+                }
             },
             error: function() { }
         }); //Sends the account data to the server in a safe way
