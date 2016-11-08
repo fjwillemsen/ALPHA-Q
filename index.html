@@ -304,7 +304,8 @@ button {
     text-align: center;
 }
 
-#register {
+/*Register*/
+#registerpage {
     width: 30vw;
     min-width: 500px;
     margin-left: auto;
@@ -313,11 +314,16 @@ button {
     color: black;
 }
 
-#register #title {
+#registerpage p, #registerpage input {
+    display: inline-block;
+    font-size: 1.3em;
+}
+
+#registerpage .title {
     color: black;
 }
 
-#register form {
+#registerpage form {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
@@ -752,13 +758,12 @@ button {
     }
 
     function setWishListView(uname) {
-        console.log(user);
         if(user) {
             var username = user.username;
             if(uname || uname != undefined) {
                 username = uname;
             }
-            console.log(username);
+
             submitViewWishList(username, function() {
                 var list = $('<div></div>');
 
@@ -793,7 +798,6 @@ button {
     }
 
     function setPublicWishListView() {
-        console.log($("#publicwishlists option:selected").text());
         setWishListView($("#publicwishlists option:selected").text());
     }
 
@@ -822,6 +826,12 @@ button {
 
     function showSearch() {
         toggleAndSetSubbar('searchbar', 'search');
+        $("#searchform").bind('keyup', function(event){
+            if(event.keyCode == 13 || event.which == 13){
+                event.preventDefault();
+                submitSearch();
+            }
+        });
     }
 
     function showCart() {
@@ -981,6 +991,9 @@ button {
 
     function submitSearch() {
         var formobjects = getFormObjects('#searchform');
+        var url = '/search/' + formobjects['search'];
+        console.log(formobjects['search']);
+        setJSONTable(url);
     }
 
     function submitVisibilityChange() {
@@ -1045,9 +1058,16 @@ button {
         //Initial Setup
         setJSONTable('/filter/Car');
 
+//        $('#searchform').attr('action', 'javascript:void(0);'); //Avoids the page from reloading when the user taps enter on the form
+
         jQuery(document).bind("keyup", function(e) {
-            if(e.keyCode == 13 && $('#login').length){
-                submitLogin()
+            if(e.which == 13 || e.keycode == 13) {
+                e.preventDefault();
+                if($('#login').length) {
+                    submitLogin()
+                } else if($('#searchform').length) {
+                    submitSearch();
+                }
             }
         }); //Checks if the enter key is pressed on the login page to submit the form
     }

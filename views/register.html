@@ -1,33 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Registration</title>
-</head>
-<body>
-
-<form id="register" >
-    First name:
-    <input type="text" id="firstname" name="firstname"/><p id="error-Firstname"></p><br>
-    Last name:
-    <input type="text" id="lastname" name="lastname" /><p id="error-Lastname"></p><br>
-    Address:
-    <input type="text" id="address" name="address" /><p id="error-Address"></p><br>
-    Postal code:
-    <input type="text" id="postalcode"  name="postalcode" /><p id="error-Postalcode"></p><br>
-    Country:
-    <input type="text" id="country"  name="country" /><p id="error-Country"></p><br>
-    Shipping address:
-    <input type="text" id="shipaddress" name="shipaddress" /><p id="error-Shipaddress"></p><br>
-    Shipping postal code:
-    <input type="text" id="shippostalcode" name="shippostalcode" /><p id="error-Shippostalcode"></p><br>
-    Shipping country:
-    <input type="text" id="shipcountry" name="shipcountry" /><p id="error-Shipcountry"></p><br>
-    Username:
-    <input type="text" id="username" name="username" /><p id="error-Username"></p><br>
-    Password:
-    <input type="password" id="password" name="password" /><p id="error-Password"></p><br>
+<div id="registerpage">
+<p class="title">Register</p>
+<form id="register">
+    <p>First name:</p><input type="text" id="firstname" name="firstname"/><p id="error-Firstname"></p><br>
+    <p>Last name:</p><input type="text" id="lastname" name="lastname" /><p id="error-Lastname"></p><br>
+    <p>Address:</p><input type="text" id="address" name="address" /><p id="error-Address"></p><br>
+    <p>Zipcode:</p><input type="text" id="postalcode"  name="postalcode" /><p id="error-Postalcode"></p><br>
+    <p>Country</p><input type="text" id="country"  name="country" /><p id="error-Country"></p><br>
+    <p>Shipping address:</p><input type="text" id="shipaddress" name="shipaddress" /><p id="error-Shipaddress"></p><br>
+    <p>Shipping postal code:</p><input type="text" id="shippostalcode" name="shippostalcode" /><p id="error-Shippostalcode"></p><br>
+    <p>Shipping country:</p><input type="text" id="shipcountry" name="shipcountry" /><p id="error-Shipcountry"></p><br>
+    <p>Username:</p><input type="text" id="username" name="username" /><p id="error-Username"></p><br>
+    <p>Password:</p><input type="password" id="password" name="password" /><p id="error-Password"></p><br>
 </form>
-<button onclick="submitRegister()">Register</button>
-</body>
-</html>
+<button onclick="submitRegister()">Submit</button>
+</div>

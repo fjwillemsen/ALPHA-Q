@@ -74,7 +74,7 @@ function matchRandom(type) {
 }
 
 function search(value) {
-
+    return 'MATCH (o:Car) WHERE o.make =~ \'(?i)' + value + '\' OR o.model =~ \'(?i)' + value + '\' OR o.year =~ \'(?i)' + value + '\' return o ORDER BY o.year;';
 }
 
 
@@ -97,7 +97,7 @@ function filterRespond(req, res, next) {
 }
 
 function searchRespond(req, res, next) {
-
+    filter(search(req.params.value), res);
     next();
 }
 
@@ -232,6 +232,7 @@ var server = restify.createServer({
 server.use(restify.bodyParser()); //Used for parsing the Request body
 server.use(restify.queryParser()); //Used for allowing "?variable=value" in the URL
 
+server.get('/search/:value', searchRespond); //Allows users to search by make, model and year
 server.get('/filter/:type', filterRespond); //Someone who goes to this link will get the result of filterRespond
 server.get('/detail/:id', detailRespond);
 server.get('/wishlists', publicWishListsRespond); //Gives all of the public wishlists usernames
