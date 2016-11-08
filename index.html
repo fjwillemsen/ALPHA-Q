@@ -392,7 +392,7 @@ button {
 
 </style>
 
-<head>
+    <head>
 <body>
 
 <div id="header">
@@ -428,7 +428,7 @@ button {
 
 
 <script>
-    var ip = '145.24.222.132'; //change this to use a localhost
+    var ip = '145.24.222.110'; //change this to use a localhost
     var port = '8080';
     var username = '';
     var password = '';
@@ -440,22 +440,18 @@ button {
         $('#cList').find("option:selected").remove();
         swal("Shame on you!","Such a nice car is deleted from your list :(", "success");
     }
-
-//  Modifiying functions
-
+    //  Modifiying functions
     function uArray(array) {
         return array.filter(function(itm,i,array) {
             return i==array.indexOf(itm);
         });
     } //Returns an array with only unique values
-
     function toUpperCaseFirst(string) {
         string = string.toLowerCase().replace(/\b[a-z]/g, function(letter) {
             return letter.toUpperCase();
         });
         return string;
     } //Makes the first letter of the string upper-cased
-
     function jString(value) {
         return '\'' + value + '\'';
     } //Puts single quotes around a given string
@@ -487,7 +483,6 @@ button {
             return true;
         }
     } //Checks if a String is empty
-
     function setIfNotEmpty(value, fallback) {
         if(!empty(value)) {
             return value;
@@ -495,7 +490,6 @@ button {
             return fallback;
         }
     } //Returns a value if it is not empty, otherwise it returns the fallback
-
     function processEditForm() {
         var fo = getFormObjects('#editform');
         if(!empty(fo['currentusername'])) {
@@ -532,22 +526,18 @@ button {
             })
         }
     } //Validity check for the Edit-form.
-
     function addCarToCart(id, make, model, year) {
-
         var item = $('<option value="">'+ make + " " + model+ " " + year + '</option>');
         cartList.push(item);
         //item.append(JSON.stringify(cartList));
         $('#subbar').hide();
-       // window.confirm(make + ' ' + model  +  ' added to your shopping cart!');
+        // window.confirm(make + ' ' + model  +  ' added to your shopping cart!');
         swal(make + ' ' + model + ' added to your shopping cart!')
     } //Add items to cart
-
     function addToWishList(id) {
         if(user) {
             var url = 'http://' + ip + ':' + port + '/wladd';
             user.addwishlistid = id;
-
             submitWishlistAjax(url, user, function() {
                 var list = $('<div></div>');
                 for (var i = wishlist.length - 1; i >= 0; i--) {
@@ -569,14 +559,11 @@ button {
             })
             //alert('You must be logged in to add items to your wishlist.');
         }
-
     } //Add items to wishlist
-
     function removeFromWishList(id) {
         if(user) {
             user.removewishlistid = id;
             var url = 'http://' + ip + ':' + port + '/wldel';
-
             submitWishlistAjax(url, user, function() {
                 setWishListView();
             });
@@ -584,17 +571,13 @@ button {
             alert('You must be logged in to remove items from your wishlist.');
         }
     } //Remove items from wishlist
-
     function logOut() {
         var empty;
         user = empty;
         $('#accountButton').text('LOG IN -');
         setJSONTable('/filter/Car');
     }
-
-
-//  View-making functions
-
+    //  View-making functions
     function setSubbarTo(file, callback) {
         var url = 'http://' + ip + ':' + port + '/views/' + file;
         $.get(url, function(data) {
@@ -604,7 +587,6 @@ button {
             }
         });
     }
-
     function setContentTo(file, callback) {
         $('subbar').hide();
         var url = 'http://' + ip + ':' + port + '/views/' + file;
@@ -616,10 +598,7 @@ button {
             }
         });
     }
-
-
-//  View-setting functions
-
+    //  View-setting functions
     function setLoginView() {
         if(!user || user == undefined) {
             setContentTo('login.html');
@@ -766,7 +745,6 @@ button {
 
             submitViewWishList(username, function() {
                 var list = $('<div></div>');
-
                 for (var i = wishlist.length - 1; i >= 0; i--) {
                     var line = $('<p style="display: inline-block">' + wishlist[i].properties.make + ' ' + wishlist[i].properties.model + ' ' + wishlist[i].properties.year + ' - </p><button style="display: inline-block">Add To Cart</button><button onclick="removeFromWishList(' + wishlist[i]._id + ')" style="display: inline-block">Remove</button><br>');
                     list.append(line);
@@ -900,64 +878,195 @@ button {
             }) }
         }); //Requests the account data from the server in a safe way
     }
-
     function submitRegister() {
-        var fo = getFormObjects('#register') // form object
-        var url = 'http://' + ip + ':' + port + '/register';
-
-
-        var data = JSON.stringify({
-            'firstname': fo['firstname'],
-            'lastname': fo['lastname'],
-            'address': fo['address'],
-            'postalcode': fo['postalcode'],
-            'country': fo['country'],
-            'shipaddress': fo['shipaddress'],
-            'shipcountry': fo['shipcountry'],
-            'shippostalcode': fo['shippostalcode'],
-            'username': fo['username'],
-            'password': fo['password']
-        });
-
-
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: data,
-            datatype: 'json',
-            contentType: "application/x-www-form-urlencoded",
-            succes: function (data) {
-                if (data.length != '0') {
-                    setRegisterView()(data[0].properties);
-                } else {
-                   // alert('Wrong identification');
+        if (validateRequiredFields()) { // als alle velden zijn ingevuld
+            var fo = getFormObjects('#register') // form object
+            var url = 'http://' + ip + ':' + port + '/register';
+            var data = JSON.stringify({
+                'firstname': fo['firstname'],
+                'lastname': fo['lastname'],
+                'address': fo['address'],
+                'postalcode': fo['postalcode'],
+                'country': fo['country'],
+                'shipaddress': fo['shipaddress'],
+                'shipcountry': fo['shipcountry'],
+                'shippostalcode': fo['shippostalcode'],
+                'username': fo['username'],
+                'password': fo['password']
+            }); console.log(data)
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                datatype: 'json',
+                contentType: "application/x-www-form-urlencoded",
+                succes: function (data) {
+                    if (data.length != '0') {
+                        setRegisterView()(data[0].properties);
+                    } else {
+                        // alert('Wrong identification');
+                        swal({
+                            title: "Ooops!",
+                            text: "Wrong identification...",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Retry",
+                            closeOnConfirm: true
+                        })
+                    }
+                },
+                error: function () {
+                    //alert('Failure!');
                     swal({
                         title: "Ooops!",
-                        text: "Wrong identification...",
+                        text: "Something went terribly wrong... :(",
                         type: "warning",
-                        showCancelButton: true,
+                        showCancelButton: false,
                         confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Retry",
+                        confirmButtonText: "Cancel",
                         closeOnConfirm: true
                     })
                 }
-            },
-            error: function () {
-                //alert('Failure!');
-                swal({
-                    title: "Ooops!",
-                    text: "Something went terribly wrong... :(",
-                    type: "warning",
-                    showCancelButton: false,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Cancel",
-                    closeOnConfirm: true
-                })
-            }
+            });
+        }
+    }
+    function validateRequiredFields() {
+        var done = true;
+        var fo = getFormObjects('#register');
 
-        });
+
+        if (!fo['firstname'] || fo['firstname'] == '') {
+            var el = document.getElementById("error-Firstname");
+            el.innerHTML = "Fill in your first gayname"
+            done = false;
+        } else {
+            var el = document.getElementById("error-Firstname");
+            el.innerHTML = "";
+        }
+
+        if (!fo['lastname'] || fo['lastname'] == '') {
+            var el = document.getElementById("error-Lastname");
+            el.innerHTML = "Fill in your last gayname";
+            done = false;
+        } else {
+            var el = document.getElementById("error-Lastname");
+            el.innerHTML = "";
+
+        }
+
+        if (!fo['address'] || fo['address'] == '') {
+            var el = document.getElementById("error-Address");
+            el.innerHTML = "Fill in your address";
+            done = false;
+        } else {
+            var el = document.getElementById("error-Address");
+
+        }
+
+        if (!fo['postalcode'] || fo['postalcode'] == '') {
+            var el = document.getElementById("error-Postalcode");
+            el.innerHTML = "Fill in your postal code";
+            done = false;
+        } else {
+            var el = document.getElementById("error-Postalcode");
+            el.innerHTML = "";
+
+        }
+
+        if (!fo['country'] || fo['country'] == '') {
+            var el = document.getElementById("error-Country");
+            el.innerHTML = "Fill in your country";
+            done = false
+        } else {
+            var el = document.getElementById("error-Country");
+            el.innerHTML = "";
+
+        }
+
+        if (!fo['shipaddress'] || fo['shipaddress'] == '') {
+            var el = document.getElementById("error-Shipaddress");
+            el.innerHTML = "Fill in your shipaddress";
+            done = false;
+        } else {
+            var el = document.getElementById("error-Shipaddress");
+            el.innerHTML = "";
+
+        }
+
+        if (!fo['shippostalcode'] || fo['shippostalcode'] == '') {
+            var el = document.getElementById("error-Shippostalcode");
+            el.innerHTML = "Fill in your shippostalcode";
+            done = false;
+        } else {
+            var el = document.getElementById("error-Shippostalcode");
+            el.innerHTML = "";
+
+        }
+
+        if (!fo['shipcountry'] || fo['shipcountry'] == '') {
+            var el = document.getElementById("error-Shipcountry");
+            el.innerHTML = "Fill in your shipcountry";
+            done = false;
+        } else {
+            var el = document.getElementById("error-Shipcountry");
+            el.innerHTML = "";
+
+        }
+
+        if (!fo['username'] || fo['username'] == '') {
+            var el = document.getElementById("error-Username");
+            el.innerHTML = "Fill in your username";
+            done = false;
+        } else {
+            var el = document.getElementById("error-Username");
+            el.innerHTML = "";
+
+        }
+        if (!fo['password'] || fo['password'] == '') {
+            var el = document.getElementById("error-Password");
+            el.innerHTML = "Fill in your password";
+            done = false;
+        } else {
+            var el = document.getElementById("error-Password");
+            el.innerHTML = "";
+
+        }
+
+        if (done == false) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
+        function submitEdit() {
+            var url = 'http://' + ip + ':' + port + '/edituser';
+            processEditForm();
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: JSON.stringify(user),
+                datatype: 'json',
+                contentType: "application/x-www-form-urlencoded",
+                success: function () {
+                    swal("Awesome!", "Edit successful", "success")
+                },
+                error: function () {
+                    swal({
+                        title: "Ooops..!",
+                        text: "Edit went wrong. Please Try again!",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Try again",
+                        cancelButtonText: "Cancel",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    })
+                }
+            }); //Sends the account data to the server in a safe way
+        }
     function submitEdit() {
         var url = 'http://' + ip + ':' + port + '/edituser';
         if(processEditForm()) {
