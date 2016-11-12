@@ -228,6 +228,11 @@ button {
     display: inline-block;
 }
 
+#content #detailimage img {
+    width: 50vw;
+    display: inline-block;
+}
+
 #content #details {
     width: 45vw;
     margin-left: 3vw;
@@ -447,6 +452,7 @@ button {
             return i==array.indexOf(itm);
         });
     } //Returns an array with only unique values
+
     function toUpperCaseFirst(string) {
         string = string.toLowerCase().replace(/\b[a-z]/g, function(letter) {
             return letter.toUpperCase();
@@ -485,6 +491,7 @@ button {
             return true;
         }
     } //Checks if a String is empty
+
     function setIfNotEmpty(value, fallback) {
         if(!empty(value)) {
             return value;
@@ -529,6 +536,7 @@ button {
             })
         }
     } //Validity check for the Edit-form.
+
     function addCarToCart(id, make, model, year) {
         var item = $('<option value="">'+ make + " " + model+ " " + year + '</option>');
         cartList.push(item);
@@ -537,6 +545,7 @@ button {
         // window.confirm(make + ' ' + model  +  ' added to your shopping cart!');
         swal(make + ' ' + model + ' added to your shopping cart!')
     } //Add items to cart
+
     function addToWishList(id) {
         if(user) {
             var url = 'http://' + ip + ':' + port + '/wladd';
@@ -563,6 +572,7 @@ button {
             //alert('You must be logged in to add items to your wishlist.');
         }
     } //Add items to wishlist
+
     function removeFromWishList(id) {
         if(user) {
             user.removewishlistid = id;
@@ -574,12 +584,14 @@ button {
             alert('You must be logged in to remove items from your wishlist.');
         }
     } //Remove items from wishlist
+
     function logOut() {
         var empty;
         user = empty;
         $('#accountButton').text('LOG IN -');
         setJSONTable('/filter/Car');
     }
+
     //  View-making functions
     function setSubbarTo(file, callback) {
         var url = 'http://' + ip + ':' + port + '/views/' + file;
@@ -590,6 +602,7 @@ button {
             }
         });
     }
+
     function setContentTo(file, callback) {
         $('subbar').hide();
         var url = 'http://' + ip + ':' + port + '/views/' + file;
@@ -601,6 +614,7 @@ button {
             }
         });
     }
+
     //  View-setting functions
     function setLoginView() {
         if(!user || user == undefined) {
@@ -637,10 +651,11 @@ button {
         setContentTo('details.html', function() {
             var url = 'http://' + ip + ':' + port + '/detail/' + value;
             $.get(url, function(data) {
-                $('#detailimage').html('<img id="image" src="http://www.pngpix.com/wp-content/uploads/2016/02/BMW-Car-PNG-image-1.png">');
+//                $('#detailimage').html('<img id="image" src="http://www.pngpix.com/wp-content/uploads/2016/02/BMW-Car-PNG-image-1.png">');
+                $('#detailimage').html('<img src="/images/' + data[0].properties.make.toString() + '/' + data[0].properties.model.toString() + '.png">');
                 $('#details .title').append(data[0].properties.make + " " + data[0].properties.model);
                 $('#subtitle').append(data[0].properties.year);
-                $('#price').append(data[0].properties.price);
+                $('#price').append('&euro;' + data[0].properties.price);
                 $('#optionsbar').html('<div class="imagebutton" id="addtocartbutton" onclick="addCarToCart(\'' + data[0]._id.toString() + '\', \'' + data[0].properties.make.toString() + '\', \'' + data[0].properties.model.toString() + '\', \'' + data[0].properties.year.toString() + '\')"></div>' +
                         '<div class="imagebutton" id="addtowishlistbutton" onclick="addToWishList(\'' + data[0]._id.toString() + '\', \'' + data[0].properties.make.toString() + '\', \'' + data[0].properties.model.toString() + '\')"></div>');
 
@@ -669,7 +684,7 @@ button {
             for (var i = data.length - 1; i >= 0; i--) {
                 var itemcontainer = $('<a onclick="setDetailView(' + data[i]._id + ')"></a>');
                 var item = $('<td></td>');
-                // item.append("<img src=\"" + data[i].properties.picture + "\">");
+                item.append('<img src="/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png">');
                 item.append(data[i].properties.make);
                 item.append(" " + data[i].properties.model);
                 item.append(" " + data[i].properties.year);
@@ -881,6 +896,7 @@ button {
             }) }
         }); //Requests the account data from the server in a safe way
     }
+
     function submitRegister() {
         if (validateRequiredFields()) { // als alle velden zijn ingevuld
             var fo = getFormObjects('#register') // form object
@@ -896,30 +912,22 @@ button {
                 'shippostalcode': fo['shippostalcode'],
                 'username': fo['username'],
                 'password': fo['password']
-            }); console.log(data)
+            });
+            console.log(data);
+
             $.ajax({
                 url: url,
                 type: 'POST',
                 data: data,
                 datatype: 'json',
                 contentType: "application/x-www-form-urlencoded",
-                succes: function (data) {
-                    if (data.length != '0') {
-                        setRegisterView()(data[0].properties);
-                    } else {
-                        // alert('Wrong identification');
-                        swal({
-                            title: "Ooops!",
-                            text: "Wrong identification...",
-                            type: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#DD6B55",
-                            confirmButtonText: "Retry",
-                            closeOnConfirm: true
-                        })
-                    }
+                succes: function() {
+                    console.log('Succes!');
+                    swal("Awesome!", "Edit successful", "success");
+                    setJSONTable('/filter/Car');
                 },
-                error: function () {
+                error: function() {
+                    console.log('Failure!');
                     //alert('Failure!');
                     swal({
                         title: "Ooops!",
@@ -929,11 +937,12 @@ button {
                         confirmButtonColor: "#DD6B55",
                         confirmButtonText: "Cancel",
                         closeOnConfirm: true
-                    })
+                    });
                 }
             });
         }
     }
+
     function validateRequiredFields() {
         var done = true;
         var fo = getFormObjects('#register');
@@ -1052,12 +1061,12 @@ button {
                 data: JSON.stringify(user),
                 datatype: 'json',
                 contentType: "application/x-www-form-urlencoded",
-                success: function () {
-                    swal("Awesome!", "Edit successful", "success")
+                success: function() {
+                    swal("Awesome!", "Edit successful", "success");
                     logOut();
                     setContentTo('login.html');
                 },
-                error: function () {
+                error: function() {
                     swal({
                         title: "Ooops..!",
                         text: "Edit went wrong. Please Try again!",
@@ -1068,7 +1077,7 @@ button {
                         cancelButtonText: "Cancel",
                         closeOnConfirm: false,
                         closeOnCancel: false
-                    })
+                    });
                 }
             }); //Sends the account data to the server in a safe way
         }

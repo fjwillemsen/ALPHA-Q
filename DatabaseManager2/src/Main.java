@@ -2,14 +2,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by floris-jan on 25-10-16.
@@ -30,7 +36,7 @@ public class Main {
     public static ResultSet getRawData(String table) {
         try {
             final DatabaseReader databaseReader = new DatabaseReader();
-            return databaseReader.statement.executeQuery("SELECT * FROM '" + table + "'");
+            return databaseReader.statement.executeQuery("SELECT * FROM '" + table + "' ORDER BY year DESC");
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -57,6 +63,11 @@ public class Main {
         }
     }
 
+    static String readFile(String path, Charset encoding) throws IOException {
+        byte[] encoded = Files.readAllBytes(Paths.get(path));
+        return new String(encoded, encoding);
+    }
+
     public static String generateCypherDealers(int max) {
         String result = "";
         for (int i = 0; i < max; i++) {
@@ -77,6 +88,21 @@ public class Main {
     public static String cypherKV(String key, String value) {
         return key + ": '" + value + "'";
     }
+
+    public static void downloadImage(String make, String model) {
+        String script = "say \"Hallo wereld\"";
+        Runtime runtime = Runtime.getRuntime();
+
+        try {
+            script = readFile("script.txt", StandardCharsets.UTF_8);
+            String[] args = { "osascript", "-e", script, make, model };
+            Process process = runtime.exec(args);
+            TimeUnit.SECONDS.sleep(3);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    } //Runs the Apple Script with the make and model parameters to download the image
 
     public static String cypherRawCarData(String type, String table) throws IOException, InterruptedException {
         ResultSet resultSet = getRawData(table);
@@ -107,6 +133,8 @@ public class Main {
                         model = resultSet.getString(i).toString();
                     }
                 }
+
+                downloadImage(make, model);
 
                 getSpecs(readJsonFromUrl("http://www.carqueryapi.com/api/0.3/?callback=?&cmd=getTrims&keyword=" + make.toLowerCase() + "%20" + model.toLowerCase() + "&year=" + year));
                 Iterator<?> keys = specs.keys();

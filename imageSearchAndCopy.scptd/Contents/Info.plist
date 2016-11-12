@@ -3,13 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleIdentifier</key>
-	<string>com.dougscripts.findalbumartwork</string>
+	<string>com.floris.imagecrawler</string>
 	<key>CFBundleName</key>
-	<string>Find Album Artwork with Google</string>
+	<string>Get image from Google Images</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.6</string>
-	<key>NSHumanReadableCopyright</key>
-	<string>© 2010, Doug Adams</string>
+	<string>1.0</string>
 	<key>WindowState</key>
 	<dict>
 		<key>bundleDividerCollapsed</key>
@@ -25,7 +23,7 @@
 		<key>positionOfDivider</key>
 		<real>467</real>
 		<key>savedFrame</key>
-		<string>20 125 1238 653 0 0 1440 878 </string>
+		<string>532 328 1238 653 0 0 2560 1418 </string>
 		<key>selectedTab</key>
 		<string>result</string>
 	</dict>

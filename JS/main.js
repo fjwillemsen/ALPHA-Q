@@ -36,8 +36,9 @@ function filter(query, res, getter, callback) {
 
 function editQuery(query, res, callback) {
     db.cypher({ query: query }, function (err, results) {
-            console.log('result: ' + results);
             var response = {ok: 'ok'};
+            console.log('response: ' + response);
+            console.log(res);
             res.send(200, response);
             callback(response);
         }
@@ -122,21 +123,10 @@ function loginRespond(req, res, next) {
 //Profile
 function registerRespond(req, res, next) {
     var data = JSON.parse(req.body.toString())
-    console.log(data['firstname']);
-    console.log(data['lastname']);
-    console.log(data['address']);
-    console.log(data['postalcode']);
-    console.log(data['country']);
-    console.log(data['shipaddress']);
-    console.log(data['shippostalcode']);
-    console.log(data['shipcountry']);
-    console.log(data['username']);
-    console.log(data['password']);
+    var query = '';
 
-    console.log(data)
-    
-    if (!data || data != undefined) {
-        var query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \'' + data['postalcode'] + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\'});';
+    if(data != undefined) {
+        query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \'' + data['postalcode'] + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\'});';
     }
     console.log('Query: ' + query);
     editQuery(query, res);
@@ -239,7 +229,6 @@ server.get('/wishlists', publicWishListsRespond); //Gives all of the public wish
 
 server.post('/login', loginRespond);
 server.post('/edituser', editProfileRespond);
-
 server.post('/register', registerRespond);
 
 server.post('/wladd', addWishListRespond) //Add to wishlist
