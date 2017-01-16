@@ -402,11 +402,12 @@ button {
 <body>
 
 <div id="header">
-    <a onclick="initial()">
+    <a onclick="getCars()">
     <img src="icons/Logo.svg">
     <p class="title">CarShop</p></a>
     <div id="navbar">
-        <a onclick="initial()">CARS -</a>
+        <a onclick="initial()">HOME -</a>
+        <a onclick="getCars()">CARS -</a>
         <a onclick="setLoginView()" id="accountButton">LOG IN -</a>
         <a onclick="setRegisterView()">REGISTER -</a>
         <a onclick="setContactView()">CONTACT</a>
@@ -434,7 +435,7 @@ button {
 
 
 <script>
-    var ip = '145.24.222.132'; //change this to use a localhost
+    var ip = '145.24.222.176'; //change this to use a localhost
     var port = '8080';
     var username = '';
     var password = '';
@@ -675,13 +676,19 @@ button {
         });
     }
 
-    function setJSONTable(value) {
+    function setJSONTable(value, first) {
         var url = 'http://' + ip + ':' + port + value;
         $.get(url, function(data) {
             var table = $('<table>');
 
             var row = $('<tr>');
-            for (var i = data.length - 1; i >= 0; i--) {
+            if (first!= undefined){
+                var i = 7;
+            }
+            else{
+                var i = data.length - 1;
+            }
+            for (i; i >= 0; i--) {
                 var itemcontainer = $('<a onclick="setDetailView(' + data[i]._id + ')"></a>');
                 var item = $('<td></td>');
                 item.append('<img src="/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png">');
@@ -1148,7 +1155,7 @@ button {
         });
     }
 
-    function initial() {
+    function getCars() {
         //Initial Setup
         setJSONTable('/filter/Car');
 
@@ -1164,6 +1171,9 @@ button {
         }); //Checks if the enter key is pressed on the login page to submit the form
     }
 
+    function initial() {
+        setJSONTable('/filter/Car', 1);
+    }
     initial();
 
 </script>
