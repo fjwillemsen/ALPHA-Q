@@ -435,13 +435,19 @@ button {
 
 
 <script>
-    var ip = '145.24.222.176'; //change this to use a localhost
+    var testing = true
+
+    var ip = '145.24.222.132';
     var port = '8080';
     var username = '';
     var password = '';
     var cartList = [];
     var user;
     var wishlist;
+
+    if(testing) {
+        port = '8081'
+    }
 
     function onRemoveCartItem() {
         $('#cList').find("option:selected").remove();
