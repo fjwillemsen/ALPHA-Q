@@ -584,7 +584,13 @@ button {
                 setWishListView();
             });
         } else {
-            alert('You must be logged in to remove items from your wishlist.');
+            //swal('You must be logged in to remove items from your wishlist.')
+            swal({
+                title: "Oops!",
+                text: "You must be logged in to remove items from your wishlist",
+                type: "warning",
+                timer: 2000
+            });
         }
     } //Remove items from wishlist
 
