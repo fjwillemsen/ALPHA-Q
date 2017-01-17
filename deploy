@@ -4,5 +4,6 @@ ssh ubuntu-0911853@145.24.132 <<EOF
  git pull origin master     
  npm install --production       
  pm2 restart all
+ nodejs main.js
  exit       
 EOF
