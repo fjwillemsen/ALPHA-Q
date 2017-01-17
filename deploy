@@ -1,5 +1,5 @@
 #!/bin/sh      
-ssh ubuntu-0911853@145.24.132 <<EOF        
+ssh -T ubuntu-0911853@145.24.132 <<EOF        
  cd /var/lib/jenkins/workspace/CarShop/ 
  git pull origin master     
  npm install --production       
