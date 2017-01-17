@@ -205,7 +205,7 @@ button {
 }
 
 #content td {
-    padding: 15px;
+    padding: 40px;
     border: 1px solid rgb(230,230,230);
     border-collapse: collapse;
     display: inline-block;
@@ -214,7 +214,7 @@ button {
 }
 
 #content td, img {
-    width: 17.5vw;
+    width: 32vw;
 }
 
 
@@ -437,7 +437,7 @@ button {
 <script>
     var testing = true
 
-    var ip = '145.24.222.132';
+    var ip = '145.24.222.150'; //change this to use a localhost
     var port = '8080';
     var username = '';
     var password = '';
@@ -521,26 +521,34 @@ button {
                 user.password = setIfNotEmpty(fo['password'], user.password);
                 user.firstname = setIfNotEmpty(fo['firstname'], user.firstname);
                 user.lastname = setIfNotEmpty(fo['lastname'], user.lastname);
+                user.address = setIfNotEmpty(fo['address'], user.address);
+                user.postalcode = setIfNotEmpty(fo['postalcode'], user.postalcode);
+                user.country = setIfNotEmpty(fo['country'], user.country);
+                user.shipaddress = setIfNotEmpty(fo['shipaddress'], user.shipaddress);
+                user.shippostalcode = setIfNotEmpty(fo['shippostalcode'], user.shippostalcode);
+                user.shipcountry = setIfNotEmpty(fo['shipcountry'], user.shipcountry);
                 user.role = setIfNotEmpty(fo['role'], user.role);
                 user.currentusername = setIfNotEmpty(fo['currentusername']);
                 user.currentpassword = setIfNotEmpty(fo['currentpassword']);
                 return true;
             } else {
-                swal({
-                    title: "Ooops!",
-                    text: "You forgot to enter a password!",
-                    type: "warning",
-                    timer: 2000
-                })
+//                swal({
+//                    title: "Ooops!",
+//                    text: "You forgot to enter a password!",
+//                    type: "error",
+//                    timer: 2000
+//                });
+                alert("lol");
             }
         } else {
-            console.log("No user");
-            swal({
-                title: "Ooops!",
-                text: "You forgot to enter a username!",
-                type: "warning",
-                timer: 2000
-            })
+            //console.log("No user");
+            alert("trolol");
+//            swal({
+//                title: "Ooops!",
+//                text: "You forgot to enter a username!",
+//                type: "error",
+//                timer: 2000
+//            });
         }
     } //Validity check for the Edit-form.
 
@@ -569,6 +577,12 @@ button {
                     list.append(line);
                 }
                 $('#wishlistlist').html(list);
+                swal({
+                    title: "Awesome!",
+                    text: "Car added to wishlist!",
+                    type: "Succes",
+                    timer: 2000
+                });
             });
         } else {
             //swal("You must be logged in to add items in your wishlist");
@@ -576,7 +590,7 @@ button {
                 title: "Ooops!",
                 text: "You have to login to add items in your wishlist!",
                 type: "warning",
-                closeOnConfirm: true
+                timer: 2000
             })
             //alert('You must be logged in to add items to your wishlist.');
         }
@@ -648,6 +662,12 @@ button {
             $('#name').append(user.firstname);
             $('#lastname').append(user.lastname);
             $('#username').append(user.username);
+            $('#address').append(user.address);
+            $('#postalcode').append(user.postalcode);
+            $('#country').append(user.country);
+            $('#shipaddress').append(user.shipaddress);
+            $('#shippostalcode').append(user.shippostalcode);
+            $('#shipcountry').append(user.shipcountry);
             $('#role').append(user.role);
         });
     }
@@ -942,7 +962,6 @@ button {
                     swal({
                         title: "Awesome!",
                         text: "Edit succesful",
-                        type: "Succes",
                         timer: 2000
                     })
                     setJSONTable('/filter/Car');
@@ -953,7 +972,6 @@ button {
                     swal({
                         title: "Ooops!",
                         text: "Something went terribly wrong... :(",
-                        type: "warning",
                         timer: 2000
                     });
                 }
@@ -1089,17 +1107,15 @@ button {
                     swal({
                         title: "Awesome!",
                         text: "Edit succesful",
-                        type: "Succes",
                         timer: 2000
                     })
-                    logOut();
-                    setContentTo('login.html');
+                    //logOut();
+                    setContentTo('profile.html');
                 },
                 error: function() {
                     swal({
                         title: "Ooops..!",
                         text: "Edit went wrong. Please Try again!",
-                        type: "warning",
                         timer: 2000
 
                     });
