@@ -435,7 +435,7 @@ button {
 
 
 <script>
-    var ip = '145.24.222.132'; //change this to use a localhost
+    var ip = '145.24.222.110'; //change this to use a localhost
     var port = '8080';
     var username = '';
     var password = '';
@@ -953,7 +953,7 @@ button {
     function validateRequiredFields() {
         var done = true;
         var fo = getFormObjects('#register');
-
+        var query = 'MATCH (o:User { username: \'' + username + '\' }) RETURN o';
 
         if (!fo['firstname'] || fo['firstname'] == '') {
             var el = document.getElementById("error-Firstname");
@@ -1039,9 +1039,14 @@ button {
             done = false;
         } else {
             var el = document.getElementById("error-Username");
-            el.innerHTML = "";
-
+            if (query != 1){
+                el.innerHTML = "Username already exist";
+                done = false;}
+            else{
+                el.innerHTML = "";
+            }
         }
+
         if (!fo['password'] || fo['password'] == '') {
             var el = document.getElementById("error-Password");
             el.innerHTML = "Fill in your password";
