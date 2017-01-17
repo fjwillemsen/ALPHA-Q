@@ -1,9 +1,9 @@
 #!/bin/sh      
-ssh -T ubuntu-0911853@145.24.132 <<EOF        
+ssh ubuntu-0911853@145.24.132 <<EOF        
  cd /var/lib/jenkins/workspace/CarShop/ 
  git pull origin master     
  npm install --production       
- pm2 restart all
+ lsof -i :8080 | grep "nodejs" | cut -d " " -f3 | xargs kill -9
  nodejs main.js
  exit       
 EOF

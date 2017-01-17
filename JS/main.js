@@ -3,6 +3,13 @@ var restify = require('restify');
 fs = require('fs');
 
 //Connects to the database
+var testing = true;
+var port = 8080
+
+if(testing) {
+    port = 8081
+}
+
 var db = new neo4j.GraphDatabase('http://neo4j:gZb-AFF-82n-CVo@145.24.222.132:80');
 
 //Executes a query on the database and returns the data to the original caller
@@ -245,6 +252,6 @@ server.get(/.*/, restify.serveStatic({
 }));
 
 //Listens for a connection
-server.listen(8080, function() {
+server.listen(port, function() {
     console.log('%s listening at %s', server.name, server.url);
 });
