@@ -435,7 +435,7 @@ button {
 
 
 <script>
-    var ip = '145.24.222.176'; //change this to use a localhost
+    var ip = '145.24.222.150'; //change this to use a localhost
     var port = '8080';
     var username = '';
     var password = '';
@@ -445,7 +445,13 @@ button {
 
     function onRemoveCartItem() {
         $('#cList').find("option:selected").remove();
-        swal("Shame on you!","Such a nice car is deleted from your list :(", "success");
+        //swal("Shame on you!","Such a nice car is deleted from your list :(", "success");
+        swal({
+            title: ":(!",
+            text: "The car was removed succesful",
+            type: "Succes",
+            timer: 2000
+        })
     }
     //  Modifiying functions
     function uArray(array) {
@@ -518,10 +524,7 @@ button {
                     title: "Ooops!",
                     text: "You forgot to enter a password!",
                     type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Retry",
-                    closeOnConfirm: true
+                    timer: 2000
                 })
             }
         } else {
@@ -530,10 +533,7 @@ button {
                 title: "Ooops!",
                 text: "You forgot to enter a username!",
                 type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Retry",
-                closeOnConfirm: true
+                timer: 2000
             })
         }
     } //Validity check for the Edit-form.
@@ -544,7 +544,12 @@ button {
         //item.append(JSON.stringify(cartList));
         $('#subbar').hide();
         // window.confirm(make + ' ' + model  +  ' added to your shopping cart!');
-        swal(make + ' ' + model + ' added to your shopping cart!')
+        //swal(make + ' ' + model + ' added to your shopping cart!')
+        swal({
+            title: "Yaay!",
+            text: make + '' + model + ' added to your shopping cart!',
+            timer: 2000
+        })
     } //Add items to cart
 
     function addToWishList(id) {
@@ -565,9 +570,6 @@ button {
                 title: "Ooops!",
                 text: "You have to login to add items in your wishlist!",
                 type: "warning",
-                showCancelButton: false,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Close",
                 closeOnConfirm: true
             })
             //alert('You must be logged in to add items to your wishlist.');
@@ -885,10 +887,7 @@ button {
                         title: "Ooops!",
                         text: "Wrong identification",
                         type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Retry",
-                        closeOnConfirm: true
+                        timer: 2000
                     })
                 }
             },
@@ -896,10 +895,7 @@ button {
                 title: "Ooops!",
                 text: "Something went terribly wrong... :(",
                 type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Close",
-                closeOnConfirm: true
+                timer: 2000
             }) }
         }); //Requests the account data from the server in a safe way
     }
@@ -930,7 +926,13 @@ button {
                 contentType: "application/x-www-form-urlencoded",
                 succes: function() {
                     console.log('Succes!');
-                    swal("Awesome!", "Edit successful", "success");
+                    //swal("Awesome!", "Edit successful", "success");
+                    swal({
+                        title: "Awesome!",
+                        text: "Edit succesful",
+                        type: "Succes",
+                        timer: 2000
+                    })
                     setJSONTable('/filter/Car');
                 },
                 error: function() {
@@ -940,10 +942,7 @@ button {
                         title: "Ooops!",
                         text: "Something went terribly wrong... :(",
                         type: "warning",
-                        showCancelButton: false,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Cancel",
-                        closeOnConfirm: true
+                        timer: 2000
                     });
                 }
             });
@@ -1069,7 +1068,13 @@ button {
                 datatype: 'json',
                 contentType: "application/x-www-form-urlencoded",
                 success: function() {
-                    swal("Awesome!", "Edit successful", "success");
+                    //swal("Awesome!", "Edit successful", "success");
+                    swal({
+                        title: "Awesome!",
+                        text: "Edit succesful",
+                        type: "Succes",
+                        timer: 2000
+                    })
                     logOut();
                     setContentTo('login.html');
                 },
@@ -1078,12 +1083,8 @@ button {
                         title: "Ooops..!",
                         text: "Edit went wrong. Please Try again!",
                         type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Try again",
-                        cancelButtonText: "Cancel",
-                        closeOnConfirm: false,
-                        closeOnCancel: false
+                        timer: 2000
+
                     });
                 }
             }); //Sends the account data to the server in a safe way
