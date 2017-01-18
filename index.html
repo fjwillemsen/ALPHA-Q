@@ -450,10 +450,10 @@ button {
     }
 
     var url = 'http://' + ip + ':' + port + '/port/';
-    console.log($.get(url, function (data) {
+    $.get(url, function (data) {
         console.log(data)
         $('.title').innerHTML = data
-    }))
+    })
 
     function onRemoveCartItem() {
         $('#cList').find("option:selected").remove();
