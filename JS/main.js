@@ -235,6 +235,11 @@ function publicWishListsRespond(req, res, next) {
     next();
 }
 
+function portF(req, res, next) {
+    return process.argv
+    next();
+}
+
 
 //Start the server
 var server = restify.createServer({
@@ -249,7 +254,7 @@ server.get('/search/:value', searchRespond); //Allows users to search by make, m
 server.get('/filter/:type', filterRespond); //Someone who goes to this link will get the result of filterRespond
 server.get('/detail/:id', detailRespond);
 server.get('/wishlists', publicWishListsRespond); //Gives all of the public wishlists usernames
-server.get('/port', process.argv)
+server.get('/port', portF)
 
 server.post('/login', loginRespond);
 server.post('/edituser', editProfileRespond);
