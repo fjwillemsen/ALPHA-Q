@@ -3,7 +3,7 @@ var restify = require('restify');
 fs = require('fs');
 
 //Connects to the database
-var testing = true;
+var testing = false;
 var port = 8080
 
 if(testing) {
