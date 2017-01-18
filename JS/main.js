@@ -259,7 +259,7 @@ server.post('/wl', viewWishListRespond) //View the wishlist
 
 //Files are made accessible to the user, HTML index page is made default
 server.get(/.*/, restify.serveStatic({
-    'directory': '/var/www/html',
+    'directory': '..',
     'default': 'index.html'
 }));
 
