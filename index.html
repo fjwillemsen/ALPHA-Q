@@ -435,7 +435,7 @@ button {
 
 
 <script>
-    var testing = false
+    var testing = true
 
     var ip = '145.24.222.132'; //change this to use a localhost
     var port = '8080';
@@ -538,23 +538,21 @@ button {
                 user.currentpassword = setIfNotEmpty(fo['currentpassword']);
                 return true;
             } else {
-//                swal({
-//                    title: "Ooops!",
-//                    text: "You forgot to enter a password!",
-//                    type: "error",
-//                    timer: 2000
-//                });
-                alert("lol");
+                swal({
+                    title: "Ooops!",
+                    text: "You forgot to enter you password! Please fill in your password",
+                    timer: 1500
+                });
+                //alert("lol");
             }
         } else {
             //console.log("No user");
-            alert("trolol");
-//            swal({
-//                title: "Ooops!",
-//                text: "You forgot to enter a username!",
-//                type: "error",
-//                timer: 2000
-//            });
+            //alert("trolol");
+            swal({
+                title: "Ooops!",
+                text: "You forgot to enter your username! Please fill in your username",
+                timer: 1500
+            });
         }
     } //Validity check for the Edit-form.
 
@@ -574,6 +572,11 @@ button {
 
     function addToWishList(id) {
         if(user) {
+            swal({
+                title: "Awesome!",
+                text: "You've added it to wishlist!",
+                timer: 2000
+            });
             var url = 'http://' + ip + ':' + port + '/wladd';
             user.addwishlistid = id;
             submitWishlistAjax(url, user, function() {
@@ -583,19 +586,12 @@ button {
                     list.append(line);
                 }
                 $('#wishlistlist').html(list);
-                swal({
-                    title: "Awesome!",
-                    text: "Car added to wishlist!",
-                    type: "Succes",
-                    timer: 2000
-                });
             });
         } else {
             //swal("You must be logged in to add items in your wishlist");
             swal({
                 title: "Ooops!",
                 text: "You have to login to add items in your wishlist!",
-                type: "warning",
                 timer: 2000
             })
             //alert('You must be logged in to add items to your wishlist.');
@@ -610,11 +606,9 @@ button {
                 setWishListView();
             });
         } else {
-            //swal('You must be logged in to remove items from your wishlist.')
             swal({
                 title: "Oops!",
                 text: "You must be logged in to remove items from your wishlist",
-                type: "warning",
                 timer: 2000
             });
         }
@@ -924,7 +918,6 @@ button {
                     swal({
                         title: "Ooops!",
                         text: "Wrong identification",
-                        type: "warning",
                         timer: 2000
                     })
                 }
@@ -932,7 +925,6 @@ button {
             error: function() { swal({
                 title: "Ooops!",
                 text: "Something went terribly wrong... :(",
-                type: "warning",
                 timer: 2000
             }) }
         }); //Requests the account data from the server in a safe way

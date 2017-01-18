@@ -6,7 +6,7 @@ console.log(process.argv)
 console.log(args)
 
 //Connects to the database
-var testing = false;
+var testing = true;
 var port = 8080
 
 if(testing) {
