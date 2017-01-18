@@ -7,9 +7,3 @@ ssh ubuntu-0911853@145.24.132 <<EOF
  nodejs main.js
  exit       
 EOF
-
-cd /var/lib/jenkins/workspace/CarShop/JS/
-echo "74cAV7" | sudo -S npm install neo4j restify
-echo "74cAV7" | sudo -S git pull origin master
-lsof -i :8081 | grep "nodejs" | cut -d " " -f3 | xargs kill -9
-nodejs main.js &
