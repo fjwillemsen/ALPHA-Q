@@ -449,7 +449,7 @@ button {
         port = '8081'
     }
 
-    var url = 'http://' + ip + ':' + port + '/port/';
+    var url = 'http://' + ip + ':' + port + '/port';
     $.get(url, function (data) {
         console.log(data)
         $('.title').innerHTML = data
