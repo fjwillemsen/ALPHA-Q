@@ -249,6 +249,7 @@ server.get('/search/:value', searchRespond); //Allows users to search by make, m
 server.get('/filter/:type', filterRespond); //Someone who goes to this link will get the result of filterRespond
 server.get('/detail/:id', detailRespond);
 server.get('/wishlists', publicWishListsRespond); //Gives all of the public wishlists usernames
+server.get('/port', process.argv)
 
 server.post('/login', loginRespond);
 server.post('/edituser', editProfileRespond);

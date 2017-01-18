@@ -449,6 +449,12 @@ button {
         port = '8081'
     }
 
+    var url = 'http://' + ip + ':' + port + '/port/';
+    console.log($.get(url, function (data) {
+        console.log(data)
+        $('.title').innerHTML = data
+    }))
+
     function onRemoveCartItem() {
         $('#cList').find("option:selected").remove();
         //swal("Shame on you!","Such a nice car is deleted from your list :(", "success");
