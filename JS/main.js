@@ -44,8 +44,8 @@ function filter(query, res, getter, callback) {
 function editQuery(query, res, callback) {
     db.cypher({ query: query }, function (err, results) {
             var response = {ok: 'ok'};
-            console.log('response: ' + response);
-            console.log(res);
+            //console.log('response: ' + response);
+            //console.log(res);
             res.send(200, response);
             callback(response);
         }
@@ -154,6 +154,17 @@ function editProfileRespond(req, res, next) {
     next();
 }
 
+function deleteUserRespond(req,res,next) {
+    var data = JSON.parse(req.body.toString());
+    console.log('lala');
+    //if(data != undefined) {
+        var query = 'MATCH (o:User { username: \'' + data['deletename'] + '\'}) detach delete o';
+    //}
+    console.log('Query: ' + query);
+    editQuery(query, res);
+    next();
+}
+
 //Wishlist
 function viewWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
@@ -180,7 +191,7 @@ function viewWishListRespond(req, res, next) {
     });
     next();
 }
-
+//uuuuuuuuuuuuuuuuuuuuuuuuuse this as an example
 function addWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
     var query = 'MATCH (u:User {username:\'' + data['username'] + '\', password: \'' + data['password'] + '\'}), (c:Car) where ID(c)=' + data['addwishlistid'] + ' CREATE (u)-[:WISHES]->(c)';
@@ -239,6 +250,7 @@ server.get('/wishlists', publicWishListsRespond); //Gives all of the public wish
 server.post('/login', loginRespond);
 server.post('/edituser', editProfileRespond);
 server.post('/register', registerRespond);
+server.post('/delete', deleteUserRespond);
 
 server.post('/wladd', addWishListRespond) //Add to wishlist
 server.post('/wldel', deleteWishListRespond); //Delete from wishlist

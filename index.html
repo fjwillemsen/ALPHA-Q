@@ -649,12 +649,18 @@ button {
             $('#lastname').append(user.lastname);
             $('#username').append(user.username);
             $('#role').append(user.role);
+            if (user.role == "admin"){
+                $('#profile').append('<button onclick="setDeleteAccountView()">Delete an account</button>')
+            }
         });
     }
 
+    function setDeleteAccountView(){
+        setContentTo('delete.html')
+    }
     function setEditProfileView() {
         setContentTo('editprofile.html', function() {
-            if(user.role === 'admin') {
+            if(user.role == 'admin') {
                 $('#currentpasswordinput').hide();
             } else {
                 $('#currentpasswordinput').show();
@@ -874,6 +880,37 @@ button {
 
 //  Data-requesting/changing functions
 
+    function deleteUser() {
+        var formobjects = getFormObjects('#deleteform');
+        var url = 'http://' + ip + ':' + port + '/delete';;
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify({'deletename':formobjects['deletename']}),
+            datatype: 'json',
+            contentType: "application/x-www-form-urlencoded",
+            succes: function() {
+                console.log('Succes!');
+                swal({
+                    title: "Awesome!",
+                    text: "Delete succesful",
+                    type: "Succes",
+                    timer: 1000
+                })
+                setJSONTable('/filter/Car');
+            },
+            error: function() {
+                console.log('Failure!');
+                swal({
+                    title: "Ooops!",
+                    text: "Something went terribly wrong... :(",
+                    type: "warning",
+                    timer: 1000
+                });
+            }
+        });console.log("ajaxed");
+
+    }
     function submitLogin() {
         var formobjects = getFormObjects('#loginform');
         username = formobjects['username'];
@@ -1177,6 +1214,11 @@ button {
         //Initial Setup
         setJSONTable('/filter/Car');
 
+    }
+
+    function initial() {
+        setJSONTable('/filter/Car', 1);
+
         jQuery(document).bind("keyup", function(e) {
             if(e.which == 13 || e.keycode == 13) {
                 e.preventDefault();
@@ -1187,10 +1229,6 @@ button {
                 }
             }
         }); //Checks if the enter key is pressed on the login page to submit the form
-    }
-
-    function initial() {
-        setJSONTable('/filter/Car', 1);
     }
     initial();
 
