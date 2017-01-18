@@ -1,6 +1,9 @@
 var neo4j = require('neo4j');
 var restify = require('restify');
 fs = require('fs');
+var args = process.argv.slice(2);
+console.log(process.argv)
+console.log(args)
 
 //Connects to the database
 var testing = true;
