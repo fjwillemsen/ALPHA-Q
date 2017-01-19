@@ -737,14 +737,15 @@ button {
                 var img = document.createElement('img');
                 img.setAttribute('src', '/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png');
 
-                var vibrant = new Vibrant(img);
-                var swatches = vibrant.swatches();
-                for (swatch in swatches)
-                    if (swatches.hasOwnProperty(swatch) && swatches[swatch])
-                        console.log(swatch, swatches[swatch].getHex());
-                    itemcontainer.css('background-color', swatches[swatch].getHex());
-
-                console.log(vibrant)
+                img.addEventListener('load', function() {
+                    var vibrant = new Vibrant(img);
+                    console.log(vibrant)
+                    var swatches = vibrant.swatches();
+                    for (swatch in swatches)
+                        if (swatches.hasOwnProperty(swatch) && swatches[swatch])
+                            console.log(swatch, swatches[swatch].getHex());
+                            itemcontainer.css('background-color', swatches[swatch].getHex());
+                });
 
 //                itemcontainer.css('background-color', 'blue');
                 itemcontainer.append(item);
