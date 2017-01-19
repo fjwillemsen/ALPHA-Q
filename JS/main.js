@@ -246,7 +246,6 @@ var server = restify.createServer({
 server.use(restify.bodyParser()); //Used for parsing the Request body
 server.use(restify.queryParser()); //Used for allowing "?variable=value" in the URL
 
-
 server.get('/search/:value', searchRespond); //Allows users to search by make, model and year
 server.get('/filter/:type', filterRespond); //Someone who goes to this link will get the result of filterRespond
 server.get('/detail/:id', detailRespond);

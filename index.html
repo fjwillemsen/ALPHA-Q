@@ -712,13 +712,14 @@ button {
             }
             for (i; i >= 0; i--) {
                 var itemcontainer = $('<a onclick="setDetailView(' + data[i]._id + ')"></a>');
-                var item = $('<td></td>');
-                item.append('<img src="/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png">');
+                var item = document.createElement('<td></td>')
+                item.append('<img src= "/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png">');
                 item.append(data[i].properties.make);
                 item.append(" " + data[i].properties.model);
                 item.append(" " + data[i].properties.year);
                 item.append("<br>&euro;" + data[i].properties.price);
-
+                itemcontainer.style.border = "none"
+                itemcontainer.style.backgroundColor = "red"
                 itemcontainer.append(item);
                 row.append(itemcontainer);
             }
@@ -729,6 +730,13 @@ button {
             $('#content').html('');
             $('#content').append(table);
         });
+    }
+
+    blurC = function() {
+        runFilter('blurC', Filters.convolute,
+            [ 1/9, 1/9, 1/9,
+                1/9, 1/9, 1/9,
+                1/9, 1/9, 1/9 ]);
     }
 
     function setFilters() {
