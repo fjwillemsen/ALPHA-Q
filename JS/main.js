@@ -2,14 +2,14 @@ var neo4j = require('neo4j');
 var restify = require('restify');
 fs = require('fs');
 
-//Connects to the database
-var testing = true;
-var port = 8080
-
-if(testing) {
-    port = 8081
+// Set the port number that's included in the launch arguments, if it is
+var port = 8081
+if(process.argv[2] && process.argv[2] != '') {
+    port = process.argv[2]
 }
+console.log(process.argv[2])
 
+//Connects to the database
 var db = new neo4j.GraphDatabase('http://neo4j:gZb-AFF-82n-CVo@145.24.222.132:80');
 
 //Executes a query on the database and returns the data to the original caller
@@ -245,6 +245,11 @@ function publicWishListsRespond(req, res, next) {
     next();
 }
 
+function portF(req, res, next) {
+    console.log(process.argv[2])
+    return process.argv[2]
+}
+
 
 //Start the server
 var server = restify.createServer({
@@ -259,6 +264,7 @@ server.get('/search/:value', searchRespond); //Allows users to search by make, m
 server.get('/filter/:type', filterRespond); //Someone who goes to this link will get the result of filterRespond
 server.get('/detail/:id', detailRespond);
 server.get('/wishlists', publicWishListsRespond); //Gives all of the public wishlists usernames
+server.get('/port', portF)
 server.get('/users/usernametaken/:username', checkUsername)
 
 server.post('/login', loginRespond);
