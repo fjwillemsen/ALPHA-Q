@@ -1,6 +1,9 @@
 var neo4j = require('neo4j');
 var restify = require('restify');
 fs = require('fs');
+var args = process.argv.slice(2);
+console.log(process.argv)
+console.log(args)
 
 //Connects to the database
 var testing = true;
@@ -160,7 +163,16 @@ function deleteUserRespond(req,res,next) {
         var query = 'MATCH (o:User { username: \'' + data['deletename'] + '\'}) detach delete o';
         editQuery(query, res);
     }
-    console.log("it failed");
+    console.log(data);
+    next();
+}
+
+function blockUserRespond(req,res,next){
+    var data = JSON.parse(req.body.toString());
+    if(data['blockname'] != '' ) {
+        var query = 'MATCH (o:User { username: \'' + data['blockname'] + '\'}) set o.status = blocked';
+        editQuery(query, res);
+    }
     console.log(data);
     next();
 }
@@ -232,6 +244,11 @@ function publicWishListsRespond(req, res, next) {
     next();
 }
 
+function portF(req, res, next) {
+    return process.argv
+    next();
+}
+
 
 //Start the server
 var server = restify.createServer({
@@ -245,11 +262,13 @@ server.get('/search/:value', searchRespond); //Allows users to search by make, m
 server.get('/filter/:type', filterRespond); //Someone who goes to this link will get the result of filterRespond
 server.get('/detail/:id', detailRespond);
 server.get('/wishlists', publicWishListsRespond); //Gives all of the public wishlists usernames
+server.get('/port', portF)
 
 server.post('/login', loginRespond);
 server.post('/edituser', editProfileRespond);
 server.post('/register', registerRespond);
 server.post('/delete', deleteUserRespond);
+server.post('/delete', blockUserRespond);
 
 server.post('/wladd', addWishListRespond) //Add to wishlist
 server.post('/wldel', deleteWishListRespond); //Delete from wishlist

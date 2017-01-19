@@ -404,7 +404,7 @@ button {
 <div id="header">
     <a onclick="getCars()">
     <img src="icons/Logo.svg">
-    <p class="title">CarShop</p></a>
+    <p class="title">Stelian Cars</p></a>
     <div id="navbar">
         <a onclick="initial()">HOME -</a>
         <a onclick="getCars()">CARS -</a>
@@ -448,6 +448,12 @@ button {
     if(testing) {
         port = '8081';
     }
+
+    var url = 'http://' + ip + ':' + port + '/port';
+    $.get(url, function (data) {
+        console.log(data)
+        $('.title').innerHTML = data
+    })
 
     function onRemoveCartItem() {
         $('#cList').find("option:selected").remove();
@@ -531,21 +537,21 @@ button {
                 user.currentpassword = setIfNotEmpty(fo['currentpassword']);
                 return true;
             } else {
-//                swal({
-//                    title: "Ooops!",
-//                    text: "You forgot to enter a password!",
-//                    timer: 2000
-//                });
-                alert("lol");
+                swal({
+                    title: "Ooops!",
+                    text: "You forgot to enter you password! Please fill in your password",
+                    timer: 1500
+                });
+                //alert("lol");
             }
         } else {
             //console.log("No user");
-            alert("trolol");
-//            swal({
-//                title: "Ooops!",
-//                text: "You forgot to enter a username!",
-//                timer: 2000
-//            });
+            //alert("trolol");
+            swal({
+                title: "Ooops!",
+                text: "You forgot to enter your username! Please fill in your username",
+                timer: 1500
+            });
         }
     } //Validity check for the Edit-form.
 
@@ -565,6 +571,11 @@ button {
 
     function addToWishList(id) {
         if(user) {
+            swal({
+                title: "Awesome!",
+                text: "You've added it to wishlist!",
+                timer: 2000
+            });
             var url = 'http://' + ip + ':' + port + '/wladd';
             user.addwishlistid = id;
             submitWishlistAjax(url, user, function() {
@@ -574,11 +585,6 @@ button {
                     list.append(line);
                 }
                 $('#wishlistlist').html(list);
-                swal({
-                    title: "Awesome!",
-                    text: "Car added to wishlist!",
-                    timer: 2000
-                });
             });
         } else {
             //swal("You must be logged in to add items in your wishlist");
@@ -599,7 +605,6 @@ button {
                 setWishListView();
             });
         } else {
-            //swal('You must be logged in to remove items from your wishlist.')
             swal({
                 title: "Oops!",
                 text: "You must be logged in to remove items from your wishlist",
@@ -665,6 +670,7 @@ button {
             $('#role').append(user.role);
             if (user.role == "admin"){
                 $('#profile').append('<button onclick="setDeleteAccountView()">Delete an account</button>')
+                $('#profile').append('<button onclick="setBlockAccountView()">Block an account</button>')
             }
         });
     }
@@ -672,6 +678,11 @@ button {
     function setDeleteAccountView(){
         setContentTo('delete.html')
     }
+
+    function setBlockAccountView(){
+        setContentTo('block.html')
+    }
+
     function setEditProfileView() {
         setContentTo('editprofile.html', function() {
             if(user.role == 'admin') {
@@ -896,7 +907,7 @@ button {
 
     function deleteUser() {
         var formobjects = getFormObjects('#deleteform');
-        var url = 'http://' + ip + ':' + port + '/delete';;
+        var url = 'http://' + ip + ':' + port + '/delete';
         $.ajax({
             url: url,
             type: 'POST',
@@ -924,6 +935,37 @@ button {
             }
         });console.log("ajaxed");
 
+    }
+
+    function blockUser(){
+        var formobjects = getFormObjects('#blockform');
+        var url = 'http://' + ip + ':' + port + '/block';
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify({'blockname':formobjects['blockname']}),
+            datatype: 'json',
+            contentType: "application/x-www-form-urlencoded",
+            succes: function() {
+                console.log('Succes!');
+                swal({
+                    title: "Awesome!",
+                    text: "Block succesful",
+                    type: "Succes",
+                    timer: 1000
+                })
+                setJSONTable('/filter/Car');
+            },
+            error: function() {
+                console.log('Failure!');
+                swal({
+                    title: "Ooops!",
+                    text: "Something went terribly wrong... :(",
+                    type: "warning",
+                    timer: 1000
+                });
+            }
+        });console.log("ajaxed");
     }
     function submitLogin() {
         var formobjects = getFormObjects('#loginform');
