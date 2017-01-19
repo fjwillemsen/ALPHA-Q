@@ -218,6 +218,10 @@ button {
     width: 32vw;
 }
 
+#itemcontainer {
+    background-color: aqua;
+}
+
 
 /*Details*/
 #content #currentcar {
@@ -712,19 +716,17 @@ button {
                 var i = data.length - 1;
             }
             for (i; i >= 0; i--) {
-                var itemcontainer = $('<a onclick="setDetailView(' + data[i]._id + ')"></a>');
-                var item = $('<td id="item"></td>');
+                var itemcontainer = $('<a id="itemcontainer" onclick="setDetailView(' + data[i]._id + ')"></a>');
+                var item = $('<td></td>');
                 item.append('<img src= "/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png">');
                 item.append(data[i].properties.make);
                 item.append(" " + data[i].properties.model);
                 item.append(" " + data[i].properties.year);
                 item.append("<br>&euro;" + data[i].properties.price);
-                item.backgroundBlur({
-                    imageURL : 'http://www.greycloaktech.com/wp-content/uploads/2015/07/url-small.jpg',
-                    blurAmount : 50,
-                    imageClass : 'bg-blur'
-                });
 
+                
+
+                itemcontainer.style.backgroundColor =
                 itemcontainer.append(item);
                 row.append(itemcontainer);
             }
