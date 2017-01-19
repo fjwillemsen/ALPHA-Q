@@ -735,11 +735,11 @@ button {
                 item.append(" " + data[i].properties.year);
                 item.append("<br>&euro;" + data[i].properties.price);
 
-//                var img = document.createElement('img');
+                var img = document.createElement('img');
 //                img.setAttribute('src', '/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png');
 
-                var image = new Image;
-                image.src = '/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png';
+//                var image = new Image;
+                img.src = '/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png';
 
 //                var vibrant = new Vibrant(img);
 //                var color = vibrant.swatches()['Vibrant'].getHex();
