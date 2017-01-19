@@ -735,19 +735,19 @@ button {
                 item.append("<br>&euro;" + data[i].properties.price);
 
                 var img = document.createElement('img');
-                img.setAttribute('src', "/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png")
+                img.setAttribute('src', '/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png');
 
                 img.addEventListener('load', function() {
                     var vibrant = new Vibrant(img);
-                    var swatches = vibrant.swatches()
+                    var swatches = vibrant.swatches();
                     for (swatch in swatches)
                         if (swatches.hasOwnProperty(swatch) && swatches[swatch])
-                            console.log(swatch, swatches[swatch].getHex())
+                            console.log(swatch, swatches[swatch].getHex());
 
                     console.log(vibrant)
                 });
 
-                itemcontainer.css('background-color', 'blue')
+                itemcontainer.css('background-color', 'blue');
                 itemcontainer.append(item);
                 row.append(itemcontainer);
             }
