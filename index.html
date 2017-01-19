@@ -656,10 +656,13 @@ button {
             $('#shippostalcode').append(user.shippostalcode);
             $('#shipcountry').append(user.shipcountry);
             $('#role').append(user.role);
+            $('#status').append(user.status);
             if (user.role == "admin"){
                 $('#profile').append('<button onclick="setDeleteAccountView()">Delete an account</button>')
                 $('#profile').append('<button onclick="setBlockAccountView()">Block an account</button>')
             }
+
+
         });
     }
 
@@ -991,6 +994,39 @@ button {
         }); //Requests the account data from the server in a safe way
     }
 
+    function validatePassword() {
+        var password = document.getElementById("password")
+        var password2 = document.getElementById("password2")
+        if(password.value != password2.value){
+            return false
+        }
+        else{
+            return true
+        }
+    }
+
+    function validateUsernameExist(){
+        var fo = getFormObjects('#register')
+        $.get('http://' + ip+":"+port+"/users/usernametaken/" + fo['username'], function (data) {
+            if (data == true){
+                return false
+            }
+            else{
+                return true
+            }
+        })
+    }
+
+
+    function btnClick(){
+        if (!validateRequiredFields() || !validatePassword() || !validateUsernameExist()){
+            return false
+        }
+        else{
+            return submitRegister()
+        }
+    }
+
     function submitRegister() {
         if (validateRequiredFields()) { // als alle velden zijn ingevuld
             var fo = getFormObjects('#register') // form object
@@ -1005,7 +1041,10 @@ button {
                 'shipcountry': fo['shipcountry'],
                 'shippostalcode': fo['shippostalcode'],
                 'username': fo['username'],
-                'password': fo['password']
+                'password': fo['password'],
+                'password2': fo['password2'],
+                'role': 'customer',
+                'status': 'unblocked'
             });
             console.log(data);
 
@@ -1127,14 +1166,19 @@ button {
             done = false;
         } else {
             var el = document.getElementById("error-Username");
-            if (query != 1){
-                el.innerHTML = "Username already exist";
-                done = false;}
-            else{
-                el.innerHTML = "";
-            }
-        }
 
+            $.get('http://' + ip+":"+port+"/users/usernametaken/" + fo['username'], function (data) {
+                console.log(data)
+                if(data == true) {
+                    el.innerHTML = "Username already exist";
+                    console.log("ertyui");
+                    done = false;
+                }
+                else{
+                    el.innerHTML = "";
+                }
+            })
+        }
         if (!fo['password'] || fo['password'] == '') {
             var el = document.getElementById("error-Password");
             el.innerHTML = "Fill in your password";
@@ -1142,7 +1186,21 @@ button {
         } else {
             var el = document.getElementById("error-Password");
             el.innerHTML = "";
+        }
 
+        if (!fo['password2'] || fo['password2'] == '') {
+            var el = document.getElementById("error-Password2");
+            el.innerHTML = "Fill in your password";
+            done = false;
+        }else if(fo['password'] != fo['password2']) {
+            var el = document.getElementById("error-Password2");
+            console.log("ja, ik doe het")
+            el.innerHTML = "Doe je password hetzelfde sukkel";
+            console.log("Nee, ik doe het niet")
+        }
+        else{
+            var el = document.getElementById("error-Password2");
+            el.innerHTML = "";
         }
 
         if (done == false) {
