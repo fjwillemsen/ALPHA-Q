@@ -43,7 +43,9 @@ function filter(query, res, getter, callback) {
 
 function checkUsername(req, res, getter, callback) {
     var query = 'MATCH (o:User { username: \'' + req.params.username + '\' }) RETURN COUNT(o)';
+    console.log('hiii');
     db.cypher({ query: query}, function (err, results) {
+        console.log('hooo');
         console.log(results[0]['COUNT(o)'])
         if(results[0]['COUNT(o)'] < 1) {
             res.send(200, false)

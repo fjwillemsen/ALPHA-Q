@@ -969,8 +969,8 @@ button {
         }
     }
 
-    function validateUsernameExist(){
-        var fo = getFormObjects('#register')
+    function validateUsernameExist(id){
+        var fo = getFormObjects(id)
         $.get('http://' + ip+":"+port+"/users/usernametaken/" + fo['username'], function (data) {
             console.log(data + 'validatemethod')
             if (data == true){
@@ -983,7 +983,7 @@ button {
     }
 
     function btnClick(){
-        if (!validateRequiredFields() || !validatePassword() || validateUsernameExist()){
+        if (!validateRequiredFields() || !validatePassword() || validateUsernameExist('#register')){
             console.log('in here?');
             return false
         }
@@ -993,15 +993,15 @@ button {
     }
 
     function deleteUserValid(){
-        if(validateUsernameExist()){
+        if(validateUsernameExist('#delete')){
             console.log("deletetime")
             deleteUser()
-            var id = document.getElementById('error-deleteuser');
-            id.innerHTML = ""
+            var id = document.getElementById("error-deleteuser");
+            id.innerHTML = "Delete succesfull"
         }
         else{
             console.log("cant delete QQ")
-            var id = document.getElementById('error-deleteuser');
+            var id = document.getElementById("error-deleteuser");
             id.innerHTML = "Username doesn't exist"
         }
     }
@@ -1157,7 +1157,21 @@ button {
         } else {
             var el = document.getElementById("error-Password");
             el.innerHTML = "";
+        }
 
+        if (!fo['password2'] || fo['password2'] == '') {
+            var el = document.getElementById("error-Password2");
+            el.innerHTML = "Fill in your password";
+            done = false;
+        }else if(fo['password'] != fo['password2']) {
+            var el = document.getElementById("error-Password2");
+            console.log("ja, ik doe het")
+            el.innerHTML = "Doe je password hetzelfde sukkel";
+            console.log("Nee, ik doe het niet")
+        }
+        else{
+            var el = document.getElementById("error-Password2");
+            el.innerHTML = "";
         }
 
         if (done == false) {
