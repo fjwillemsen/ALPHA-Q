@@ -904,30 +904,11 @@ button {
             type: 'POST',
             data: JSON.stringify({'deletename':formobjects['deletename']}),
             datatype: 'json',
-            contentType: "application/x-www-form-urlencoded",
-            succes: function() {
-                console.log('Succes!');
-                swal({
-                    title: "Awesome!",
-                    text: "Delete succesful",
-                    type: "Succes",
-                    timer: 1000
-                })
-                setJSONTable('/filter/Car');
-            },
-            error: function() {
-                console.log('Failure!');
-                swal({
-                    title: "Ooops!",
-                    text: "Something went terribly wrong... :(",
-                    type: "warning",
-                    timer: 1000
-                });
-            }
+            contentType: "application/x-www-form-urlencoded"
         });console.log("ajaxed");
 
     }
-
+    //block not done yet
     function blockUser(){
         var formobjects = getFormObjects('#blockform');
         var url = 'http://' + ip + ':' + port + '/block';
@@ -936,26 +917,7 @@ button {
             type: 'POST',
             data: JSON.stringify({'blockname':formobjects['blockname']}),
             datatype: 'json',
-            contentType: "application/x-www-form-urlencoded",
-            succes: function() {
-                console.log('Succes!');
-                swal({
-                    title: "Awesome!",
-                    text: "Block succesful",
-                    type: "Succes",
-                    timer: 1000
-                })
-                setJSONTable('/filter/Car');
-            },
-            error: function() {
-                console.log('Failure!');
-                swal({
-                    title: "Ooops!",
-                    text: "Something went terribly wrong... :(",
-                    type: "warning",
-                    timer: 1000
-                });
-            }
+            contentType: "application/x-www-form-urlencoded"
         });console.log("ajaxed");
     }
     function submitLogin() {
@@ -1008,22 +970,37 @@ button {
     function validateUsernameExist(){
         var fo = getFormObjects('#register')
         $.get('http://' + ip+":"+port+"/users/usernametaken/" + fo['username'], function (data) {
+            console.log(data + 'validatemethod')
             if (data == true){
-                return false
+                return true
             }
             else{
-                return true
+                return false
             }
         })
     }
 
-
     function btnClick(){
-        if (!validateRequiredFields() || !validatePassword() || !validateUsernameExist()){
+        if (!validateRequiredFields() || !validatePassword() || validateUsernameExist()){
+            console.log('in here?');
             return false
         }
         else{
             return submitRegister()
+        }
+    }
+
+    function deleteUserValid(){
+        if(validateUsernameExist()){
+            console.log("deletetime")
+            deleteUser()
+            var id = document.getElementById('error-deleteuser');
+            id.innerHTML = ""
+        }
+        else{
+            console.log("cant delete QQ")
+            var id = document.getElementById('error-deleteuser');
+            id.innerHTML = "Username doesn't exist"
         }
     }
 
