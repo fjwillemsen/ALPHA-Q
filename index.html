@@ -739,12 +739,17 @@ button {
 
                 img.addEventListener('load', function() {
                     var vibrant = new Vibrant(img);
-                    console.log(vibrant)
+                    console.log('i');
+                    console.log(vibrant);
                     var swatches = vibrant.swatches();
+                    console.log(p)
+                    console.log(swatches)
                     for (swatch in swatches)
                         if (swatches.hasOwnProperty(swatch) && swatches[swatch])
-                            console.log(swatch, swatches[swatch].getHex());
-                            itemcontainer.css('background-color', swatches[swatch].getHex());
+                            console.log('j');
+                            console.log(swatch)
+//                            console.log(swatch, swatches[swatch].getHex());
+//                            itemcontainer.css('background-color', swatches[swatch].getHex());
                 });
 
 //                itemcontainer.css('background-color', 'blue');
