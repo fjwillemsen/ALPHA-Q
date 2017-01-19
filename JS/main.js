@@ -7,6 +7,7 @@ var port = 8081
 if(process.argv[2] && process.argv[2] != '') {
     port = process.argv[2]
 }
+console.log(process.argv[2])
 
 //Connects to the database
 var db = new neo4j.GraphDatabase('http://neo4j:gZb-AFF-82n-CVo@145.24.222.132:80');
