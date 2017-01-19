@@ -169,11 +169,10 @@ function editProfileRespond(req, res, next) {
 
 function deleteUserRespond(req,res,next) {
     var data = JSON.parse(req.body.toString());
-    if(data['deletename'] != '' ) {
-        var query = 'MATCH (o:User { username: \'' + data['deletename'] + '\'}) detach delete o';
-        editQuery(query, res);
-    }
+    var query = 'MATCH (o:User { username: \'' + data['deletename'] + '\'}) detach delete o';
+    editQuery(query, res);
     console.log(data);
+    console.log("deleterepsond");
     next();
 }
 

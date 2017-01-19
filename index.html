@@ -890,6 +890,30 @@ button {
 
 //  Data-requesting/changing functions
 
+    function deleteUser() {
+        var formobjects = getFormObjects('#deleteform');
+        var url = 'http://' + ip + ':' + port + '/delete';
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify({'deletename':formobjects['deletename']}),
+            datatype: 'json',
+            contentType: "application/x-www-form-urlencoded"
+        });console.log("ajaxed");
+
+    }
+    //block not done yet
+    function blockUser(){
+        var formobjects = getFormObjects('#blockform');
+        var url = 'http://' + ip + ':' + port + '/block';
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify({'blockname':formobjects['blockname']}),
+            datatype: 'json',
+            contentType: "application/x-www-form-urlencoded"
+        });console.log("ajaxed");
+    }
     function submitLogin() {
         var formobjects = getFormObjects('#loginform');
         username = formobjects['username'];
@@ -924,6 +948,54 @@ button {
                 timer: 2000
             }) }
         }); //Requests the account data from the server in a safe way
+    }
+
+    function validatePassword() {
+        var password = document.getElementById("password")
+        var password2 = document.getElementById("password2")
+        if(password.value != password2.value){
+            return false
+        }
+        else{
+            return true
+        }
+    }
+
+    function validateUsernameExist(){
+        var fo = getFormObjects('#register')
+        $.get('http://' + ip+":"+port+"/users/usernametaken/" + fo['username'], function (data) {
+            console.log(data + 'validatemethod')
+            if (data == true){
+                return true
+            }
+            else{
+                return false
+            }
+        })
+    }
+
+    function btnClick(){
+        if (!validateRequiredFields() || !validatePassword() || validateUsernameExist()){
+            console.log('in here?');
+            return false
+        }
+        else{
+            return submitRegister()
+        }
+    }
+
+    function deleteUserValid(){
+        if(validateUsernameExist()){
+            console.log("deletetime")
+            deleteUser()
+            var id = document.getElementById('error-deleteuser');
+            id.innerHTML = ""
+        }
+        else{
+            console.log("cant delete QQ")
+            var id = document.getElementById('error-deleteuser');
+            id.innerHTML = "Username doesn't exist"
+        }
     }
 
     function submitRegister() {
