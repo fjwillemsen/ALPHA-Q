@@ -735,7 +735,7 @@ button {
                 item.append("<br>&euro;" + data[i].properties.price);
 
                 var img = document.createElement('img');
-                img.setAttribute('src', 'http://www.w3schools.com/css/trolltunga.jpg')
+                img.setAttribute('src', "/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png")
 
                 img.addEventListener('load', function() {
                     var vibrant = new Vibrant(img);
