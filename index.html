@@ -726,7 +726,7 @@ button {
                 var i = data.length - 1;
             }
             for (i; i >= 0; i--) {
-                var itemcontainer = $('<a id="itemcontainer" onclick="setDetailView(' + data[i]._id + ')"></a>');
+                var itemcontainer = $('<a onclick="setDetailView(' + data[i]._id + ')"></a>');
                 var item = $('<td></td>');
                 item.append('<img src= "/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png">');
                 item.append(data[i].properties.make);
@@ -742,14 +742,12 @@ button {
                     console.log('i');
                     console.log(vibrant);
                     var swatches = vibrant.swatches();
-                    console.log('p');
-                    console.log(swatches);
                     for (swatch in swatches) {
                         if (swatches.hasOwnProperty(swatch) && swatches[swatch]) {
                             console.log('j');
                             console.log(swatches[swatch].getHex())
 //                            console.log(swatch, swatches[swatch].getHex());
-//                            itemcontainer.css('background-color', swatches[swatch].getHex());
+                            itemcontainer.css('background-color', swatches[swatch].getHex());
                         }
                     }
                 });
