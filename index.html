@@ -737,13 +737,10 @@ button {
                 var img = document.createElement('img');
                 img.setAttribute('src', '/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png');
 
-                img.addEventListener('load', function() {
-                    var vibrant = new Vibrant(img);
-                    console.log('i');
-                    var color = vibrant.swatches()['Vibrant'].getHex();
-                    console.log(color);
-                    itemcontainer.css('background-color', color);
-                });
+                var vibrant = new Vibrant(img);
+                var color = vibrant.swatches()['Vibrant'].getHex();
+                console.log(color);
+                item.css('background-color', color);
 
                 itemcontainer.append(item);
                 row.append(itemcontainer);
