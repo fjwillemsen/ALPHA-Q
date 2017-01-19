@@ -426,7 +426,7 @@ button {
 <div id="subbar"></div>
 
 <div id="content">
-    <p>7268 Cars For Sale <p>
+    <p>Over 7000 Cars For Sale<p>
 </div>
 </div>
 
@@ -448,8 +448,7 @@ button {
         //swal("Shame on you!","Such a nice car is deleted from your list :(", "success");
         swal({
             title: ":(!",
-            text: "The car was removed succesfully",
-            type: "Succes",
+            text: "The car was removed succesful",
             timer: 2000
         })
     }
@@ -657,12 +656,27 @@ button {
             $('#shippostalcode').append(user.shippostalcode);
             $('#shipcountry').append(user.shipcountry);
             $('#role').append(user.role);
+            $('#status').append(user.status);
+            if (user.role == "admin"){
+                $('#profile').append('<button onclick="setDeleteAccountView()">Delete an account</button>')
+                $('#profile').append('<button onclick="setBlockAccountView()">Block an account</button>')
+            }
+
+
         });
+    }
+
+    function setDeleteAccountView(){
+        setContentTo('delete.html')
+    }
+
+    function setBlockAccountView(){
+        setContentTo('block.html')
     }
 
     function setEditProfileView() {
         setContentTo('editprofile.html', function() {
-            if(user.role === 'admin') {
+            if(user.role == 'admin') {
                 $('#currentpasswordinput').hide();
             } else {
                 $('#currentpasswordinput').show();
@@ -890,6 +904,68 @@ button {
 
 //  Data-requesting/changing functions
 
+    function deleteUser() {
+        var formobjects = getFormObjects('#deleteform');
+        var url = 'http://' + ip + ':' + port + '/delete';
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify({'deletename':formobjects['deletename']}),
+            datatype: 'json',
+            contentType: "application/x-www-form-urlencoded",
+            succes: function() {
+                console.log('Succes!');
+                swal({
+                    title: "Awesome!",
+                    text: "Delete succesful",
+                    type: "Succes",
+                    timer: 1000
+                })
+                setJSONTable('/filter/Car');
+            },
+            error: function() {
+                console.log('Failure!');
+                swal({
+                    title: "Ooops!",
+                    text: "Something went terribly wrong... :(",
+                    type: "warning",
+                    timer: 1000
+                });
+            }
+        });console.log("ajaxed");
+
+    }
+
+    function blockUser(){
+        var formobjects = getFormObjects('#blockform');
+        var url = 'http://' + ip + ':' + port + '/block';
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify({'blockname':formobjects['blockname']}),
+            datatype: 'json',
+            contentType: "application/x-www-form-urlencoded",
+            succes: function() {
+                console.log('Succes!');
+                swal({
+                    title: "Awesome!",
+                    text: "Block succesful",
+                    type: "Succes",
+                    timer: 1000
+                })
+                setJSONTable('/filter/Car');
+            },
+            error: function() {
+                console.log('Failure!');
+                swal({
+                    title: "Ooops!",
+                    text: "Something went terribly wrong... :(",
+                    type: "warning",
+                    timer: 1000
+                });
+            }
+        });console.log("ajaxed");
+    }
     function submitLogin() {
         var formobjects = getFormObjects('#loginform');
         username = formobjects['username'];
@@ -926,6 +1002,39 @@ button {
         }); //Requests the account data from the server in a safe way
     }
 
+    function validatePassword() {
+        var password = document.getElementById("password")
+        var password2 = document.getElementById("password2")
+        if(password.value != password2.value){
+            return false
+        }
+        else{
+            return true
+        }
+    }
+
+    function validateUsernameExist(){
+        var fo = getFormObjects('#register')
+        $.get('http://' + ip+":"+port+"/users/usernametaken/" + fo['username'], function (data) {
+            if (data == true){
+                return false
+            }
+            else{
+                return true
+            }
+        })
+    }
+
+
+    function btnClick(){
+        if (!validateRequiredFields() || !validatePassword() || !validateUsernameExist()){
+            return false
+        }
+        else{
+            return submitRegister()
+        }
+    }
+
     function submitRegister() {
         if (validateRequiredFields()) { // als alle velden zijn ingevuld
             var fo = getFormObjects('#register') // form object
@@ -940,7 +1049,10 @@ button {
                 'shipcountry': fo['shipcountry'],
                 'shippostalcode': fo['shippostalcode'],
                 'username': fo['username'],
-                'password': fo['password']
+                'password': fo['password'],
+                'password2': fo['password2'],
+                'role': 'customer',
+                'status': 'unblocked'
             });
             console.log(data);
 
@@ -1062,14 +1174,19 @@ button {
             done = false;
         } else {
             var el = document.getElementById("error-Username");
-            if (query != 1){
-                el.innerHTML = "Username already exist";
-                done = false;}
-            else{
-                el.innerHTML = "";
-            }
-        }
 
+            $.get('http://' + ip+":"+port+"/users/usernametaken/" + fo['username'], function (data) {
+                console.log(data)
+                if(data == true) {
+                    el.innerHTML = "Username already exist";
+                    console.log("ertyui");
+                    done = false;
+                }
+                else{
+                    el.innerHTML = "";
+                }
+            })
+        }
         if (!fo['password'] || fo['password'] == '') {
             var el = document.getElementById("error-Password");
             el.innerHTML = "Fill in your password";
@@ -1077,7 +1194,21 @@ button {
         } else {
             var el = document.getElementById("error-Password");
             el.innerHTML = "";
+        }
 
+        if (!fo['password2'] || fo['password2'] == '') {
+            var el = document.getElementById("error-Password2");
+            el.innerHTML = "Fill in your password";
+            done = false;
+        }else if(fo['password'] != fo['password2']) {
+            var el = document.getElementById("error-Password2");
+            console.log("ja, ik doe het")
+            el.innerHTML = "Doe je password hetzelfde sukkel";
+            console.log("Nee, ik doe het niet")
+        }
+        else{
+            var el = document.getElementById("error-Password2");
+            el.innerHTML = "";
         }
 
         if (done == false) {
@@ -1104,7 +1235,7 @@ button {
                         timer: 2000
                     })
                     //logOut();
-                    setContentTo('profile.html');
+                    //setContentTo('profile.html');
                 },
                 error: function() {
                     swal({
@@ -1187,6 +1318,11 @@ button {
         //Initial Setup
         setJSONTable('/filter/Car');
 
+    }
+
+    function initial() {
+        setJSONTable('/filter/Car', 1);
+
         jQuery(document).bind("keyup", function(e) {
             if(e.which == 13 || e.keycode == 13) {
                 e.preventDefault();
@@ -1197,10 +1333,6 @@ button {
                 }
             }
         }); //Checks if the enter key is pressed on the login page to submit the form
-    }
-
-    function initial() {
-        setJSONTable('/filter/Car', 1);
     }
     initial();
 

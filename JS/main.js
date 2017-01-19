@@ -41,11 +41,23 @@ function filter(query, res, getter, callback) {
     });
 }
 
+function checkUsername(req, res, getter, callback) {
+    var query = 'MATCH (o:User { username: \'' + req.params.username + '\' }) RETURN COUNT(o)';
+    db.cypher({ query: query}, function (err, results) {
+        console.log(results[0]['COUNT(o)'])
+        if(results[0]['COUNT(o)'] < 1) {
+            res.send(200, false)
+        } else {
+            res.send(200, true)
+        }
+    })
+}
+
 function editQuery(query, res, callback) {
     db.cypher({ query: query }, function (err, results) {
             var response = {ok: 'ok'};
-            //console.log('response: ' + response);
-            //console.log(res);
+            // console.log('response: ' + response);
+            // console.log(res);
             res.send(200, response);
             callback(response);
         }
@@ -134,7 +146,8 @@ function registerRespond(req, res, next) {
     var query = '';
 
     if(data != undefined) {
-        query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \'' + data['postalcode'] + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\'});';
+        query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \''
+            + data['postalcode'] + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\', password2: \'' + data['password2'] + '\', role: \'' + data['role'] + '\', status: \'' + data['status']+'});';
     }
     console.log('Query: ' + query);
     editQuery(query, res);
@@ -156,12 +169,21 @@ function editProfileRespond(req, res, next) {
 
 function deleteUserRespond(req,res,next) {
     var data = JSON.parse(req.body.toString());
-    console.log('lala');
-    //if(data != undefined) {
+    if(data['deletename'] != '' ) {
         var query = 'MATCH (o:User { username: \'' + data['deletename'] + '\'}) detach delete o';
-    //}
-    console.log('Query: ' + query);
-    editQuery(query, res);
+        editQuery(query, res);
+    }
+    console.log(data);
+    next();
+}
+
+function blockUserRespond(req,res,next){
+    var data = JSON.parse(req.body.toString());
+    if(data['blockname'] != '' ) {
+        var query = 'MATCH (o:User { username: \'' + data['blockname'] + '\'}) set o.status = blocked';
+        editQuery(query, res);
+    }
+    console.log(data);
     next();
 }
 
@@ -191,7 +213,7 @@ function viewWishListRespond(req, res, next) {
     });
     next();
 }
-//use this as an example (for what?)
+//use this as an example callback(for what?)
 function addWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
     var query = 'MATCH (u:User {username:\'' + data['username'] + '\', password: \'' + data['password'] + '\'}), (c:Car) where ID(c)=' + data['addwishlistid'] + ' CREATE (u)-[:WISHES]->(c)';
@@ -251,11 +273,13 @@ server.get('/filter/:type', filterRespond); //Someone who goes to this link will
 server.get('/detail/:id', detailRespond);
 server.get('/wishlists', publicWishListsRespond); //Gives all of the public wishlists usernames
 server.get('/port', portF)
+server.get('/users/usernametaken/:username', checkUsername)
 
 server.post('/login', loginRespond);
 server.post('/edituser', editProfileRespond);
 server.post('/register', registerRespond);
 server.post('/delete', deleteUserRespond);
+server.post('/delete', blockUserRespond);
 
 server.post('/wladd', addWishListRespond) //Add to wishlist
 server.post('/wldel', deleteWishListRespond); //Delete from wishlist
