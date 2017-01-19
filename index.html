@@ -658,9 +658,19 @@ button {
             $('#shippostalcode').append(user.shippostalcode);
             $('#shipcountry').append(user.shipcountry);
             $('#role').append(user.role);
+            if (user.role == 'admin'){
+                $('#profile').append('<button onclick="setDeleteAccountView()">Delete an account</button>')
+                $('#profile').append('<button onclick="setBlockAccountView()">Block an account</button>')
+            }
         });
     }
+    function setDeleteAccountView(){
+        setContentTo('delete.html')
+    }
 
+    function setBlockAccountView(){
+        setContentTo('block.html')
+    }
     function setEditProfileView() {
         setContentTo('editprofile.html', function() {
             if(user.role === 'admin') {
