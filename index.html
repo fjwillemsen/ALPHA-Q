@@ -7,6 +7,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="icons/favicon.ico">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="sweetalert.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/background-blur/0.1.3/background-blur.min.js"></script>
 <link rel="stylesheet" href="sweetalert.css" />
 <style>
 
@@ -426,7 +427,7 @@ button {
 <div id="subbar"></div>
 
 <div id="content">
-    <p>Over 7000 Cars For Sale<p>
+    <p>7268 Cars For Sale <p>
 </div>
 </div>
 
@@ -448,7 +449,8 @@ button {
         //swal("Shame on you!","Such a nice car is deleted from your list :(", "success");
         swal({
             title: ":(!",
-            text: "The car was removed succesful",
+            text: "The car was removed succesfully",
+            type: "Succes",
             timer: 2000
         })
     }
@@ -656,27 +658,12 @@ button {
             $('#shippostalcode').append(user.shippostalcode);
             $('#shipcountry').append(user.shipcountry);
             $('#role').append(user.role);
-            $('#status').append(user.status);
-            if (user.role == "admin"){
-                $('#profile').append('<button onclick="setDeleteAccountView()">Delete an account</button>')
-                $('#profile').append('<button onclick="setBlockAccountView()">Block an account</button>')
-            }
-
-
         });
-    }
-
-    function setDeleteAccountView(){
-        setContentTo('delete.html')
-    }
-
-    function setBlockAccountView(){
-        setContentTo('block.html')
     }
 
     function setEditProfileView() {
         setContentTo('editprofile.html', function() {
-            if(user.role == 'admin') {
+            if(user.role === 'admin') {
                 $('#currentpasswordinput').hide();
             } else {
                 $('#currentpasswordinput').show();
@@ -726,12 +713,17 @@ button {
             }
             for (i; i >= 0; i--) {
                 var itemcontainer = $('<a onclick="setDetailView(' + data[i]._id + ')"></a>');
-                var item = $('<td></td>');
-                item.append('<img src="/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png">');
+                var item = $('<td id="item"></td>');
+                item.append('<img src= "/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png">');
                 item.append(data[i].properties.make);
                 item.append(" " + data[i].properties.model);
                 item.append(" " + data[i].properties.year);
                 item.append("<br>&euro;" + data[i].properties.price);
+                item.backgroundBlur({
+                    imageURL : 'http://www.greycloaktech.com/wp-content/uploads/2015/07/url-small.jpg',
+                    blurAmount : 50,
+                    imageClass : 'bg-blur'
+                });
 
                 itemcontainer.append(item);
                 row.append(itemcontainer);
@@ -1018,10 +1010,7 @@ button {
                 'shipcountry': fo['shipcountry'],
                 'shippostalcode': fo['shippostalcode'],
                 'username': fo['username'],
-                'password': fo['password'],
-                'password2': fo['password2'],
-                'role': 'customer',
-                'status': 'unblocked'
+                'password': fo['password']
             });
             console.log(data);
 
@@ -1143,19 +1132,14 @@ button {
             done = false;
         } else {
             var el = document.getElementById("error-Username");
-
-            $.get('http://' + ip+":"+port+"/users/usernametaken/" + fo['username'], function (data) {
-                console.log(data)
-                if(data == true) {
-                    el.innerHTML = "Username already exist";
-                    console.log("ertyui");
-                    done = false;
-                }
-                else{
-                    el.innerHTML = "";
-                }
-            })
+            if (query != 1){
+                el.innerHTML = "Username already exist";
+                done = false;}
+            else{
+                el.innerHTML = "";
+            }
         }
+
         if (!fo['password'] || fo['password'] == '') {
             var el = document.getElementById("error-Password");
             el.innerHTML = "Fill in your password";
@@ -1163,21 +1147,7 @@ button {
         } else {
             var el = document.getElementById("error-Password");
             el.innerHTML = "";
-        }
 
-        if (!fo['password2'] || fo['password2'] == '') {
-            var el = document.getElementById("error-Password2");
-            el.innerHTML = "Fill in your password";
-            done = false;
-        }else if(fo['password'] != fo['password2']) {
-            var el = document.getElementById("error-Password2");
-            console.log("ja, ik doe het")
-            el.innerHTML = "Doe je password hetzelfde sukkel";
-            console.log("Nee, ik doe het niet")
-        }
-        else{
-            var el = document.getElementById("error-Password2");
-            el.innerHTML = "";
         }
 
         if (done == false) {
@@ -1204,7 +1174,7 @@ button {
                         timer: 2000
                     })
                     //logOut();
-                    //setContentTo('profile.html');
+                    setContentTo('profile.html');
                 },
                 error: function() {
                     swal({
@@ -1287,11 +1257,6 @@ button {
         //Initial Setup
         setJSONTable('/filter/Car');
 
-    }
-
-    function initial() {
-        setJSONTable('/filter/Car', 1);
-
         jQuery(document).bind("keyup", function(e) {
             if(e.which == 13 || e.keycode == 13) {
                 e.preventDefault();
@@ -1302,6 +1267,10 @@ button {
                 }
             }
         }); //Checks if the enter key is pressed on the login page to submit the form
+    }
+
+    function initial() {
+        setJSONTable('/filter/Car', 1);
     }
     initial();
 
