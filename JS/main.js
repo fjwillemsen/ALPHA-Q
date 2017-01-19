@@ -1,18 +1,15 @@
 var neo4j = require('neo4j');
 var restify = require('restify');
 fs = require('fs');
-var args = process.argv.slice(2);
-console.log(process.argv)
-console.log(args)
+
+// Set the port number that's included in the launch arguments, if it is
+var port = 8081
+if(process.argv[2] && process.argv[2] != '') {
+    port = process.argv[2]
+}
+console.log(process.argv[2])
 
 //Connects to the database
-var testing = true;
-var port = 8080
-
-if(testing) {
-    port = 8081
-}
-
 var db = new neo4j.GraphDatabase('http://neo4j:gZb-AFF-82n-CVo@145.24.222.132:80');
 
 //Executes a query on the database and returns the data to the original caller
@@ -245,8 +242,8 @@ function publicWishListsRespond(req, res, next) {
 }
 
 function portF(req, res, next) {
-    return process.argv
-    next();
+    console.log(process.argv[2])
+    return process.argv[2]
 }
 
 

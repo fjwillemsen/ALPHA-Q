@@ -404,7 +404,7 @@ button {
 <div id="header">
     <a onclick="getCars()">
     <img src="icons/Logo.svg">
-    <p class="title">Stelian Cars</p></a>
+    <p class="title">CarShop</p></a>
     <div id="navbar">
         <a onclick="initial()">HOME -</a>
         <a onclick="getCars()">CARS -</a>
@@ -435,25 +435,13 @@ button {
 
 
 <script>
-    var testing = true
-
-    var ip = '145.24.222.132'; //change this to use a localhost
-    var port = '8080';
+    var ip = window.location.hostname;
+    var port = window.location.port;
     var username = '';
     var password = '';
     var cartList = [];
     var user;
     var wishlist;
-
-    if(testing) {
-        port = '8081';
-    }
-
-    var url = 'http://' + ip + ':' + port + '/port';
-    $.get(url, function (data) {
-        console.log(data)
-        $('.title').innerHTML = data
-    })
 
     function onRemoveCartItem() {
         $('#cList').find("option:selected").remove();
