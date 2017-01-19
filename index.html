@@ -740,9 +740,10 @@ button {
                 img.addEventListener('load', function() {
                     var vibrant = new Vibrant(img);
                     console.log('i');
-                    console.log(vibrant);
+                    console.log(vibrant.swatches()[VibrantSwatch]);
                     var swatches = vibrant.swatches();
                     for (swatch in swatches) {
+                        console.log(swatch)
                         if (swatches.hasOwnProperty(swatch) && swatches[swatch]) {
                             console.log('j');
                             console.log(swatches[swatch].getHex())
