@@ -747,6 +747,7 @@ button {
 //                item.css('background-color', color);
 
                 var colorThief = new ColorThief();
+                colorThief.getColor('<img src= "/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png">');
 //                console.log(colorThief.getColor(img));
 
                 itemcontainer.append(item);
