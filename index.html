@@ -718,6 +718,8 @@ button {
                 item.append(" " + data[i].properties.model);
                 item.append(" " + data[i].properties.year);
                 item.append("<br>&euro;" + data[i].properties.price);
+
+                itemcontainer.style = document.createElement("STYLE");
                 itemcontainer.style.border = "none"
                 itemcontainer.style.background = "red"
                 itemcontainer.append(item);
