@@ -7,7 +7,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="icons/favicon.ico">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="sweetalert.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/background-blur/0.1.3/background-blur.min.js"></script>
+<script src="https://raw.githubusercontent.com/jariz/vibrant.js/master/dist/Vibrant.min.js"></script>
 <link rel="stylesheet" href="sweetalert.css" />
 <style>
 
@@ -726,7 +726,7 @@ button {
                 var i = data.length - 1;
             }
             for (i; i >= 0; i--) {
-                var itemcontainer = $('<a id="itemcontainer" onclick="setDetailView(' + data[i]._id + ')"></a>');
+                var itemcontainer = $('<a onclick="setDetailView(' + data[i]._id + ')"></a>');
                 var item = $('<td></td>');
                 item.append('<img src= "/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png">');
                 item.append(data[i].properties.make);
@@ -734,7 +734,26 @@ button {
                 item.append(" " + data[i].properties.year);
                 item.append("<br>&euro;" + data[i].properties.price);
 
-                itemcontainer.style.backgroundColor = "red"
+                var img = document.createElement('img');
+                img.setAttribute('src', '/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png');
+
+                img.addEventListener('load', function() {
+                    var vibrant = new Vibrant(img);
+                    console.log('i');
+                    console.log(vibrant.swatches()['Vibrant']);
+                    var swatches = vibrant.swatches();
+                    for (swatch in swatches) {
+                        console.log(swatch)
+                        if (swatches.hasOwnProperty(swatch) && swatches[swatch]) {
+                            console.log('j');
+                            console.log(swatches[swatch].getHex())
+//                            console.log(swatch, swatches[swatch].getHex());
+                            itemcontainer.css('background-color', swatches[swatch].getHex());
+                        }
+                    }
+                });
+
+//                itemcontainer.css('background-color', 'blue');
                 itemcontainer.append(item);
                 row.append(itemcontainer);
             }
