@@ -719,9 +719,9 @@ button {
                 item.append(" " + data[i].properties.year);
                 item.append("<br>&euro;" + data[i].properties.price);
 
-                itemcontainer.style = document.createElement("STYLE");
-                itemcontainer.style.border = "none"
-                itemcontainer.style.background = "red"
+                item.style = document.createElement("STYLE");
+                item.style.border = "none"
+                item.style.background = "red"
                 itemcontainer.append(item);
                 row.append(itemcontainer);
             }
