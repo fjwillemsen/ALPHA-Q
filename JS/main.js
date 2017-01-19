@@ -44,8 +44,8 @@ function filter(query, res, getter, callback) {
 function editQuery(query, res, callback) {
     db.cypher({ query: query }, function (err, results) {
             var response = {ok: 'ok'};
-            //console.log('response: ' + response);
-            //console.log(res);
+            // console.log('response: ' + response);
+            // console.log(res);
             res.send(200, response);
             callback(response);
         }
@@ -156,12 +156,12 @@ function editProfileRespond(req, res, next) {
 
 function deleteUserRespond(req,res,next) {
     var data = JSON.parse(req.body.toString());
-    console.log('lala');
-    //if(data != undefined) {
+    if(data['deletename'] != '' ) {
         var query = 'MATCH (o:User { username: \'' + data['deletename'] + '\'}) detach delete o';
-    //}
-    console.log('Query: ' + query);
-    editQuery(query, res);
+        editQuery(query, res);
+    }
+    console.log("it failed");
+    console.log(data);
     next();
 }
 
@@ -191,7 +191,7 @@ function viewWishListRespond(req, res, next) {
     });
     next();
 }
-//use this as an example (for what?)
+//use this as an example callback(for what?)
 function addWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
     var query = 'MATCH (u:User {username:\'' + data['username'] + '\', password: \'' + data['password'] + '\'}), (c:Car) where ID(c)=' + data['addwishlistid'] + ' CREATE (u)-[:WISHES]->(c)';
@@ -240,7 +240,6 @@ var server = restify.createServer({
 
 server.use(restify.bodyParser()); //Used for parsing the Request body
 server.use(restify.queryParser()); //Used for allowing "?variable=value" in the URL
-
 
 server.get('/search/:value', searchRespond); //Allows users to search by make, model and year
 server.get('/filter/:type', filterRespond); //Someone who goes to this link will get the result of filterRespond
