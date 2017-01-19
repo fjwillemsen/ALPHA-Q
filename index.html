@@ -719,8 +719,7 @@ button {
                 item.append(" " + data[i].properties.model);
                 item.append(" " + data[i].properties.year);
                 item.append("<br>&euro;" + data[i].properties.price);
-
-                $('#item').backgroundBlur({
+                item.backgroundBlur({
                     imageURL : 'http://www.greycloaktech.com/wp-content/uploads/2015/07/url-small.jpg',
                     blurAmount : 50,
                     imageClass : 'bg-blur'
