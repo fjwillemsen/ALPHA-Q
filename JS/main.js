@@ -211,7 +211,7 @@ function viewWishListRespond(req, res, next) {
 
 function getUserWishlistRespond(req, res, next) {
     console.log(req.params.username);
-    var query = 'MATCH (u:User { username: \'' + req.params.username + '\', wishlist: \'public\'})-[:WISHES]-(c:Car) return c';
+    var query = 'MATCH (u:User { username: \'' + req.params.user + '\', wishlist: \'public\'})-[:WISHES]-(c:Car) return c';
     console.log(query);
     db.cypher({ query: query }, function(err, results) {
         var response = { length: results.length.toString() };
