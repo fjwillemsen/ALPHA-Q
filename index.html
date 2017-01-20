@@ -661,7 +661,7 @@ button {
         $.get('http://' + ip + ':' + port + '/wishlists', function(data){
             var list = $('<div></div>');
             for (var i = data.length - 1; i >= 0; i--) {
-                var line = $('<p onclick="showPublicWistList(' + data[i] + ')">' + data[i] + '</p>');
+                var line = $('<p onclick="showPublicWishList(data[i])">' + data[i] + '</p>');
                 list.append(line)
             }
 
@@ -670,7 +670,7 @@ button {
         });
     }
 
-    function showPublicWistList(username) {
+    function showPublicWishList(username) {
         console.log(username)
     }
 
