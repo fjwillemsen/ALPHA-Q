@@ -158,7 +158,7 @@ function registerRespond(req, res, next) {
 
     if(data != undefined) {
         query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \''
-            + data['postalcode'] + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\', password2: \'' + data['password2'] + '\', role: \'' + data['role'] + '\', status: \'' + data['status']+'});';
+            + data['postalcode'] + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\', password2: \'' + data['password2'] + '\', role: \'' + data['role'] + '\', status: \'' + data['status']+'\'});';
     }
     console.log('Query: ' + query);
     editQuery(query, res);

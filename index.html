@@ -1031,14 +1031,14 @@ button {
 
     }
 
-    function validatePassword() {
+    function validatePasswordCorrect() {
         var password = document.getElementById("password")
         var password2 = document.getElementById("password2")
-        if(password.value != password2.value){
-            return false
+        if(password.value == password2.value){
+            return true
         }
         else{
-            return true
+            return false
         }
     }
 
@@ -1053,6 +1053,11 @@ button {
                 else if (action == 'block'){
                     blockUser();
                 }
+                else if (action == 'registreren'){
+                    var id = document.getElementById("error-Username");
+                    id.innerHTML = "Username already exist"
+                }
+
             }
             else{
                 if (action == 'delete'){
@@ -1063,20 +1068,14 @@ button {
                     var id = document.getElementById("error-blockuser");
                     id.innerHTML = "Username doesn't exist"
                 }
+                else if (action == 'registreren'){
+                    var id = document.getElementById("error-Username");
+                    id.innerHTML = ""
+                    submitRegister();
+                }
 
             }
         })
-    }
-
-
-    function btnClick(){
-        if (!validateRequiredFields() || !validatePassword() || validateUsernameExist('#register','username')){
-            console.log('in here?');
-            return false
-        }
-        else{
-            return submitRegister()
-        }
     }
 
     function submitDelete(){
@@ -1087,8 +1086,13 @@ button {
         validateUsernameExist('#blockform','blockname','block');
     }
 
+    function submitValidatedRegister(){
+        validateUsernameExist('#register','username','registreren');
+    }
+
     function submitRegister() {
-        if (validateRequiredFields()) { // als alle velden zijn ingevuld
+        console.log("im usbmitted");
+        if (validateRequiredFields() && validatePasswordCorrect) {
             var fo = getFormObjects('#register') // form object
             var url = 'http://' + ip + ':' + port + '/register';
             var data = JSON.stringify({
@@ -1111,7 +1115,7 @@ button {
                 data: data,
                 datatype: 'json',
                 contentType: "application/x-www-form-urlencoded",
-                succes: function() {
+                succes: function () {
                     console.log('Succes!');
                     //swal("Awesome!", "Edit successful", "success");
                     swal({
@@ -1121,7 +1125,7 @@ button {
                     })
                     setJSONTable('/filter/Car');
                 },
-                error: function() {
+                error: function () {
                     console.log('Failure!');
                     //alert('Failure!');
                     swal({
@@ -1222,13 +1226,7 @@ button {
             el.innerHTML = "Fill in your username";
             done = false;
         } else {
-            var el = document.getElementById("error-Username");
-            if (query != 1){
-                el.innerHTML = "Username already exist";
-                done = false;}
-            else{
                 el.innerHTML = "";
-            }
         }
 
         if (!fo['password'] || fo['password'] == '') {
@@ -1244,11 +1242,6 @@ button {
             var el = document.getElementById("error-Password2");
             el.innerHTML = "Fill in your password";
             done = false;
-        }else if(fo['password'] != fo['password2']) {
-            var el = document.getElementById("error-Password2");
-            console.log("ja, ik doe het")
-            el.innerHTML = "Doe je password hetzelfde sukkel";
-            console.log("Nee, ik doe het niet")
         }
         else{
             var el = document.getElementById("error-Password2");
