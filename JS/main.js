@@ -276,7 +276,7 @@ server.get('/filter/:type', filterRespond); //Someone who goes to this link will
 server.get('/detail/:id', detailRespond);
 server.get('/wishlists', publicWishListsRespond); //Gives all of the public wishlists usernames
 server.get('/users/usernametaken/:username', checkUsername);
-server.get('/user/:user/wishlist', getUserWishlist) //Gives the public wishlist of a specific user
+server.get('/user/:user/wishlist', getUserWishlistRespond) //Gives the public wishlist of a specific user
 
 server.post('/login', loginRespond);
 server.post('/edituser', editProfileRespond);
