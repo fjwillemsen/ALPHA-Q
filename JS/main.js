@@ -180,7 +180,6 @@ function blockUserRespond(req,res,next){
     var data = JSON.parse(req.body.toString());
     var query = 'MATCH (o:User { username: \'' + data['blockname'] + '\'}) set o.status = \'blocked\'';
     editQuery(query, res);
-    console.log(data);
     next();
 }
 

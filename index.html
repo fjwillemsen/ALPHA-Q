@@ -663,20 +663,27 @@ button {
 
     function setProfileView(user) {
         setContentTo('profile.html', function() {
-            $('#name').append(user.firstname);
-            $('#lastname').append(user.lastname);
-            $('#username').append(user.username);
-            $('#address').append(user.address);
-            $('#postalcode').append(user.postalcode);
-            $('#country').append(user.country);
-            $('#shipaddress').append(user.shipaddress);
-            $('#shippostalcode').append(user.shippostalcode);
-            $('#shipcountry').append(user.shipcountry);
-            $('#role').append(user.role);
-            $('#profile').append('<button onclick="setEditProfileView()">Edit Profile</button>');
-            if (user.role == 'admin'){
-                $('#profile').append('<button onclick="setDeleteAccountView()">Delete an account</button>')
-                $('#profile').append('<button onclick="setBlockAccountView()">Block an account</button>')
+            if(user.status != 'blocked'){
+                $('#name').append(user.firstname);
+                $('#lastname').append(user.lastname);
+                $('#username').append(user.username);
+                $('#address').append(user.address);
+                $('#postalcode').append(user.postalcode);
+                $('#country').append(user.country);
+                $('#shipaddress').append(user.shipaddress);
+                $('#shippostalcode').append(user.shippostalcode);
+                $('#shipcountry').append(user.shipcountry);
+                $('#role').append(user.role);
+                $('#profile').append('<button onclick="setEditProfileView()">Edit Profile</button>');
+                if (user.role == 'admin'){
+                    $('#profile').append('<button onclick="setDeleteAccountView()">Delete an account</button>')
+                    $('#profile').append('<button onclick="setBlockAccountView()">Block an account</button>')
+                }
+            }
+            else{
+                var id = document.getElementById('profile');
+                id.innerHTML = "Sorry but you have been blocked"
+                $('#profile').append('<button onclick="logOut()">Log Out</button>');
             }
 
         });
@@ -934,7 +941,7 @@ button {
     function deleteUser() {
         var formobjects = getFormObjects('#deleteform');
         var id = document.getElementById("error-deleteuser");
-        id.innerHTML = "Delete succesful"
+        id.innerHTML = "Delete succesful";
         var url = 'http://' + ip + ':' + port + '/delete';
         $.ajax({
             url: url,
@@ -946,9 +953,10 @@ button {
 
     }
 
-    //block not done yet
     function blockUser(){
         var formobjects = getFormObjects('#blockform');
+        var bid = document.getElementById("error-blockuser");
+        bid.innerHTML = "Block succesful";
         var url = 'http://' + ip + ':' + port + '/block';
         $.ajax({
             url: url,
@@ -1014,10 +1022,17 @@ button {
                 if (action == 'delete'){
                     deleteUser();
                 }
+                else if (action == 'block'){
+                    blockUser();
+                }
             }
             else{
                 if (action == 'delete'){
                     var id = document.getElementById("error-deleteuser");
+                    id.innerHTML = "Username doesn't exist"
+                }
+                else if (action == 'block'){
+                    var id = document.getElementById("error-blockuser");
                     id.innerHTML = "Username doesn't exist"
                 }
 
@@ -1036,9 +1051,11 @@ button {
     }
 
     function submitDelete(){
-        validateUsernameExist('#deleteform','deletename', 'delete')
+        validateUsernameExist('#deleteform','deletename', 'delete');
     }
-
+    function submitBlock(){
+        validateUsernameExist('#blockform','blockname','block');
+    }
     function submitRegister() {
         if (validateRequiredFields()) { // als alle velden zijn ingevuld
             var fo = getFormObjects('#register') // form object
