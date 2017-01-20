@@ -142,6 +142,9 @@ button {
 #wishlistbutton {
     background-image: url('icons/WishList.svg');
 }
+#allwishlistsbutton{
+    background-image: url('icons/WL1.png');
+}
 
 /*Subbar*/
 #subbar {
@@ -355,6 +358,10 @@ button {
     color: black;
 }
 
+#profile p {
+    font-size: 1em;
+}
+
 @media screen and (max-width: 1060px) {
     #title {
         font-size: 1.5em;
@@ -425,6 +432,7 @@ button {
         <div class="imagebutton" id="searchbutton" onclick="showSearch()"></div>
         <div class="imagebutton" id="cartbutton" onclick= "showCart()"></div>
         <div class="imagebutton" id="wishlistbutton" onclick= "showWishList()"></div>
+        <div class="imagebutton" id="allwishlistsbutton" onclick="setPublicWishlistView()" ></div>
     </div>
 </div>
 
@@ -568,7 +576,7 @@ button {
             swal({
                 title: "Awesome!",
                 text: "You've added it to wishlist!",
-                timer: 2000
+                timer: 1500
             });
             var url = 'http://' + ip + ':' + port + '/wladd';
             user.addwishlistid = id;
@@ -644,6 +652,9 @@ button {
         } else {
             setProfileView(user);
         }
+    }
+    function setPublicWishlistView(){
+        setContentTo('allWishLists.html');
     }
 
     function setRegisterView() {
@@ -830,7 +841,7 @@ button {
             submitViewWishList(username, function() {
                 var list = $('<div></div>');
                 for (var i = (wishlist.length - 1) / 2; i >= 0; i--) {
-                    var line = $('<p onclick="setDetailView(\'' + wishlist[i]._id+ '\')" style="display: inline-block">' + wishlist[i].properties.make + ' ' + wishlist[i].properties.model + ' ' + wishlist[i].properties.year + ' - </p><button onclick="addCarToCart(\'' + wishlist[i]._id + '\', \'' + wishlist[i].properties.make + '\', \'' + wishlist[i].properties.model + '\', \'' + wishlist[i].properties.year + '\')" style="display: inline-block">Add To Cart</button><button onclick="removeFromWishList(' + wishlist[i]._id + ')" style="display: inline-block">Remove</button><br>');
+                    var line = $('<p onclick="setDetailView(wishlist[i]._id)" style="display: inline-block">' + wishlist[i].properties.make + ' ' + wishlist[i].properties.model + ' ' + wishlist[i].properties.year + ' - </p><button onclick="addCarToCart(\'' + wishlist[i]._id + '\', \'' + wishlist[i].properties.make + '\', \'' + wishlist[i].properties.model + '\', \'' + wishlist[i].properties.year + '\')" style="display: inline-block">Add To Cart</button><button onclick="removeFromWishList(' + wishlist[i]._id + ')" style="display: inline-block">Remove</button><br>');
                     list.append(line);
                 }
                 $('#wishlistlist').html(list);
