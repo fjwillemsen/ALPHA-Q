@@ -664,7 +664,7 @@ button {
             console.log(data)
 
             for (var i = data.length - 1; i >= 0; i--) {
-                var line = '<a>' + data[i] + '</a>';
+                var line = '<p>' + data[i] + '</p>';
                 console.log(data[i])
                 users.append(line)
             }
@@ -864,7 +864,6 @@ button {
                 }
                 $('#wishlistlist').html(list);
                 $('#wishlist #visibility').show();
-                setPublicWishLists();
             });
 
         } else {
