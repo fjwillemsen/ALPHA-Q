@@ -95,7 +95,6 @@ function matchRandom(type) {
     return result;
 }
 
-
 function search(value) {
     return 'MATCH (o:Car) WHERE o.make =~ \'(?i)' + value + '\' OR o.model =~ \'(?i)' + value + '\' OR o.year =~ \'(?i)' + value + '\' return o ORDER BY o.year;';
 }

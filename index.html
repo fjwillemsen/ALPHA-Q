@@ -359,7 +359,7 @@ button {
 }
 
 #profile p {
-    font-size: 1em;
+    font-size: 1.5em;
 }
 
 @media screen and (max-width: 1060px) {
@@ -466,7 +466,9 @@ button {
             timer: 2000
         })
     }
+
     //  Modifiying functions
+    
     function uArray(array) {
         return array.filter(function(itm,i,array) {
             return i==array.indexOf(itm);
@@ -653,8 +655,24 @@ button {
             setProfileView(user);
         }
     }
+
     function setPublicWishlistView(){
         setContentTo('allWishLists.html');
+        $.get('http://' + ip + ':' + port + '/wishlists', function(data){
+            var users = $('<div></div>');
+
+            console.log(data)
+
+            for (var i = data.length - 1; i >= 0; i--) {
+                var line = $('<p>' + data[i] + '</p>');
+                console.log(data[i])
+                users.append(line)
+            }
+
+            console.log(users)
+
+            $('#publicWishlistUsers').html(users);
+        });
     }
 
     function setRegisterView() {
@@ -847,39 +865,17 @@ button {
 
             submitViewWishList(username, function() {
                 var list = $('<div></div>');
-                for (var i = (wishlist.length - 1) / 2; i >= 0; i--) {
+                for (var i = wishlist.length - 1; i >= 0; i--) {
                     var line = $('<p onclick="setDetailView(wishlist[i]._id)" style="display: inline-block">' + wishlist[i].properties.make + ' ' + wishlist[i].properties.model + ' ' + wishlist[i].properties.year + ' - </p><button onclick="addCarToCart(\'' + wishlist[i]._id + '\', \'' + wishlist[i].properties.make + '\', \'' + wishlist[i].properties.model + '\', \'' + wishlist[i].properties.year + '\')" style="display: inline-block">Add To Cart</button><button onclick="removeFromWishList(' + wishlist[i]._id + ')" style="display: inline-block">Remove</button><br>');
                     list.append(line);
                 }
                 $('#wishlistlist').html(list);
                 $('#wishlist #visibility').show();
-                setPublicWishLists();
             });
 
         } else {
             $('#wishlistlist').html('<a onclick="setLoginView()"><b style="color: white">Log in</b></a> before you can use the wishlist.');
         }
-    }
-
-    function setPublicWishLists() {
-        $.get('http://' + ip + ':' + port + '/wishlists', function(data){
-            var array = [];
-            array.push('<option value="" disabled selected style="display:none;">Users</option>');
-
-            for (var i = data.length - 1; i >= 0; i--) {
-                array.push('<option value="" onclick="setWishListView(' + data[i] + ')">' + data[i] + '</option>');
-            }
-
-            array = uArray(array);
-            var list = $('<p>Wishlists by other users:</p><select id="publicwishlists" onchange="if (this.selectedIndex) setPublicWishListView()">')
-            list.append(array.join(''));
-            $('#publicwls').html(list);
-            $('#publicwls').show();
-        });
-    }
-
-    function setPublicWishListView() {
-        setWishListView($("#publicwishlists option:selected").text());
     }
 
 
