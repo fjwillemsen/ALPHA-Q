@@ -210,6 +210,7 @@ function viewWishListRespond(req, res, next) {
     });
     next();
 }
+
 //use this as an example callback(for what?)
 function addWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
@@ -280,7 +281,7 @@ server.post('/block', blockUserRespond);
 
 server.post('/wladd', addWishListRespond) //Add to wishlist
 server.post('/wldel', deleteWishListRespond); //Delete from wishlist
-server.post('/wlvis', visibilityWishListRespond); //Set wishlist visibility ('public' or 'private'
+server.post('/wlvis', visibilityWishListRespond); //Set wishlist visibility ('public' or 'private')
 server.post('/wl', viewWishListRespond) //View the wishlist
 
 //Files are made accessible to the user, HTML index page is made default

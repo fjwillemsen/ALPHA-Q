@@ -8,6 +8,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="sweetalert.min.js"></script>
 <script src="https://raw.githubusercontent.com/jariz/vibrant.js/master/dist/Vibrant.min.js"></script>
+<script src="https://raw.githubusercontent.com/lokesh/color-thief/master/dist/color-thief.min.js"></script>
 <link rel="stylesheet" href="sweetalert.css" />
 <style>
 
@@ -234,7 +235,7 @@ button {
 }
 
 #content #detailimage img {
-    width: 50vw;
+    width: 45vw;
     display: inline-block;
 }
 
@@ -437,7 +438,6 @@ button {
 
 </body>
 </html>
-
 
 <script>
     var ip = window.location.hostname;
@@ -670,6 +670,7 @@ button {
 
         });
     }
+
     function setDeleteAccountView(){
         setContentTo('delete.html')
     }
@@ -677,6 +678,7 @@ button {
     function setBlockAccountView(){
         setContentTo('block.html')
     }
+
     function setEditProfileView() {
         setContentTo('editprofile.html', function() {
             if(user.role === 'admin') {
@@ -736,26 +738,23 @@ button {
                 item.append(" " + data[i].properties.year);
                 item.append("<br>&euro;" + data[i].properties.price);
 
-                var img = document.createElement('img');
-                img.setAttribute('src', '/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png');
+                // For creating beautiful images
 
-                img.addEventListener('load', function() {
-                    var vibrant = new Vibrant(img);
-                    console.log('i');
-                    console.log(vibrant.swatches()['Vibrant'].getHex());
-                    var swatches = vibrant.swatches();
-                    for (swatch in swatches) {
-                        console.log(swatch)
-                        if (swatches.hasOwnProperty(swatch) && swatches[swatch]) {
-                            console.log('j');
-                            console.log(swatches[swatch].getHex())
-//                            console.log(swatch, swatches[swatch].getHex());
-                            itemcontainer.css('background-color', swatches[swatch].getHex());
-                        }
-                    }
-                });
+//                var img = document.createElement('img');
+//                img.setAttribute('src', '/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png');
 
-//                itemcontainer.css('background-color', 'blue');
+//                var image = new Image;
+//                img.src = '/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png';
+
+//                var vibrant = new Vibrant(img);
+//                var color = vibrant.swatches()['Vibrant'].getHex();
+//                console.log(color);
+//                item.css('background-color', color);
+
+//                var colorThief = new ColorThief();
+//                colorThief.getColor('<img src= "/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png">');
+//                console.log(colorThief.getColor(img));
+
                 itemcontainer.append(item);
                 row.append(itemcontainer);
             }
@@ -822,6 +821,7 @@ button {
 
     function setWishListView(uname) {
         if(user) {
+            $("#wlsetvisibility").val(user.wishlist);
             var username = user.username;
             if(uname || uname != undefined) {
                 username = uname;
@@ -829,14 +829,15 @@ button {
 
             submitViewWishList(username, function() {
                 var list = $('<div></div>');
-                for (var i = wishlist.length - 1; i >= 0; i--) {
-                    var line = $('<p style="display: inline-block">' + wishlist[i].properties.make + ' ' + wishlist[i].properties.model + ' ' + wishlist[i].properties.year + ' - </p><button onclick="addCarToCart(\'' + wishlist[i]._id + '\', \'' + wishlist[i].properties.make + '\', \'' + wishlist[i].properties.model + '\', \'' + wishlist[i].properties.year + '\')" style="display: inline-block">Add To Cart</button><button onclick="removeFromWishList(' + wishlist[i]._id + ')" style="display: inline-block">Remove</button><br>');
+                for (var i = (wishlist.length - 1) / 2; i >= 0; i--) {
+                    var line = $('<p onclick="setDetailView(\'' + wishlist[i]._id+ '\')" style="display: inline-block">' + wishlist[i].properties.make + ' ' + wishlist[i].properties.model + ' ' + wishlist[i].properties.year + ' - </p><button onclick="addCarToCart(\'' + wishlist[i]._id + '\', \'' + wishlist[i].properties.make + '\', \'' + wishlist[i].properties.model + '\', \'' + wishlist[i].properties.year + '\')" style="display: inline-block">Add To Cart</button><button onclick="removeFromWishList(' + wishlist[i]._id + ')" style="display: inline-block">Remove</button><br>');
                     list.append(line);
                 }
                 $('#wishlistlist').html(list);
                 $('#wishlist #visibility').show();
                 setPublicWishLists();
             });
+
         } else {
             $('#wishlistlist').html('<a onclick="setLoginView()"><b style="color: white">Log in</b></a> before you can use the wishlist.');
         }
@@ -931,6 +932,7 @@ button {
         });console.log("ajaxed");
 
     }
+
     //block not done yet
     function blockUser(){
         var formobjects = getFormObjects('#blockform');
@@ -943,6 +945,7 @@ button {
             contentType: "application/x-www-form-urlencoded"
         });console.log("ajaxed");
     }
+
     function submitLogin() {
         var formobjects = getFormObjects('#loginform');
         username = formobjects['username'];
