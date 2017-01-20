@@ -270,8 +270,8 @@ server.get('/search/:value', searchRespond); //Allows users to search by make, m
 server.get('/filter/:type', filterRespond); //Someone who goes to this link will get the result of filterRespond
 server.get('/detail/:id', detailRespond);
 server.get('/wishlists', publicWishListsRespond); //Gives all of the public wishlists usernames
-server.get('/port', portF)
-server.get('/users/usernametaken/:username', checkUsername)
+server.get('/port', portF);
+server.get('/users/usernametaken/:username', checkUsername);
 
 server.post('/login', loginRespond);
 server.post('/edituser', editProfileRespond);
@@ -279,10 +279,10 @@ server.post('/register', registerRespond);
 server.post('/delete', deleteUserRespond);
 server.post('/block', blockUserRespond);
 
-server.post('/wladd', addWishListRespond) //Add to wishlist
+server.post('/wladd', addWishListRespond); //Add to wishlist
 server.post('/wldel', deleteWishListRespond); //Delete from wishlist
 server.post('/wlvis', visibilityWishListRespond); //Set wishlist visibility ('public' or 'private')
-server.post('/wl', viewWishListRespond) //View the wishlist
+server.post('/wl', viewWishListRespond); //View the wishlist
 
 //Files are made accessible to the user, HTML index page is made default
 server.get(/.*/, restify.serveStatic({

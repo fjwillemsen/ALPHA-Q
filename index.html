@@ -922,6 +922,8 @@ button {
 
     function deleteUser() {
         var formobjects = getFormObjects('#deleteform');
+        var id = document.getElementById("error-deleteuser");
+        id.innerHTML = "Delete succesful"
         var url = 'http://' + ip + ':' + port + '/delete';
         $.ajax({
             url: url,
@@ -993,16 +995,21 @@ button {
         }
     }
 
-    function validateUsernameExist(id, fieldname){
+    function validateUsernameExist(id, fieldname, action){
         var fo = getFormObjects(id)
         console.log(fo[fieldname]);
         $.get('http://' + ip+":"+port+"/users/usernametaken/" + fo[fieldname], function (data) {
-            console.log(data + 'validatemethod')
             if (data == true){
-                return true
+                if (action == 'delete'){
+                    deleteUser();
+                }
             }
             else{
-                return false
+                if (action == 'delete'){
+                    var id = document.getElementById("error-deleteuser");
+                    id.innerHTML = "Username doesn't exist"
+                }
+
             }
         })
     }
@@ -1017,18 +1024,8 @@ button {
         }
     }
 
-    function deleteUserValid(){
-        if(validateUsernameExist('#delete','deletename')){
-            console.log("deletetime")
-            deleteUser()
-            var id = document.getElementById("error-deleteuser");
-            id.innerHTML = "Delete succesfull"
-        }
-        else{
-            console.log("cant delete QQ")
-            var id = document.getElementById("error-deleteuser");
-            id.innerHTML = "Username doesn't exist"
-        }
+    function submitDelete(){
+        validateUsernameExist('#deleteform','deletename', 'delete')
     }
 
     function submitRegister() {
