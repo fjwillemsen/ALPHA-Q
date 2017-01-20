@@ -662,10 +662,12 @@ button {
             $('#shippostalcode').append(user.shippostalcode);
             $('#shipcountry').append(user.shipcountry);
             $('#role').append(user.role);
+            $('#profile').append('<button onclick="setEditProfileView()">Edit Profile</button>');
             if (user.role == 'admin'){
                 $('#profile').append('<button onclick="setDeleteAccountView()">Delete an account</button>')
                 $('#profile').append('<button onclick="setBlockAccountView()">Block an account</button>')
             }
+
         });
     }
     function setDeleteAccountView(){
@@ -988,9 +990,10 @@ button {
         }
     }
 
-    function validateUsernameExist(id){
+    function validateUsernameExist(id, fieldname){
         var fo = getFormObjects(id)
-        $.get('http://' + ip+":"+port+"/users/usernametaken/" + fo['username'], function (data) {
+        console.log(fo[fieldname]);
+        $.get('http://' + ip+":"+port+"/users/usernametaken/" + fo[fieldname], function (data) {
             console.log(data + 'validatemethod')
             if (data == true){
                 return true
@@ -1002,7 +1005,7 @@ button {
     }
 
     function btnClick(){
-        if (!validateRequiredFields() || !validatePassword() || validateUsernameExist('#register')){
+        if (!validateRequiredFields() || !validatePassword() || validateUsernameExist('#register','username')){
             console.log('in here?');
             return false
         }
@@ -1012,7 +1015,7 @@ button {
     }
 
     function deleteUserValid(){
-        if(validateUsernameExist('#delete')){
+        if(validateUsernameExist('#delete','deletename')){
             console.log("deletetime")
             deleteUser()
             var id = document.getElementById("error-deleteuser");
