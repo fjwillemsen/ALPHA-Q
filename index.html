@@ -432,7 +432,7 @@ button {
         <div class="imagebutton" id="searchbutton" onclick="showSearch()"></div>
         <div class="imagebutton" id="cartbutton" onclick= "showCart()"></div>
         <div class="imagebutton" id="wishlistbutton" onclick= "showWishList()"></div>
-        <div class="imagebutton" id="allwishlistsbutton" onclick="setWishlistView()" ></div>
+        <div class="imagebutton" id="allwishlistsbutton" onclick="setPublicWishlistView()" ></div>
     </div>
 </div>
 
@@ -655,7 +655,7 @@ button {
             setProfileView(user);
         }
     }
-    function setWishlistView(){
+    function setPublicWishlistView(){
         setContentTo('allWishLists.html');
     }
 
