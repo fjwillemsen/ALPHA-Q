@@ -41,15 +41,15 @@ function filter(query, res, getter, callback) {
     });
 }
 
-function checkUsername(req, res, getter, callback) {
-    var query = 'MATCH (o:User { username: \'' + req.params.username + '\' }) RETURN COUNT(o)';
-    console.log('hiii');
+function checkUsername(req, res) {
+    var query = 'MATCH (o:User { username: \'' + req.params.username + '\' }) RETURN o.username';
+
     db.cypher({ query: query}, function (err, results) {
-        console.log('hooo');
-        console.log(results[0]['COUNT(o)'])
-        if(results[0]['COUNT(o)'] < 1) {
+        if(results[0] == undefined) {
+            console.log('doesnt exist');
             res.send(200, false)
         } else {
+            console.log('exist');
             res.send(200, true)
         }
     })
@@ -173,17 +173,13 @@ function deleteUserRespond(req,res,next) {
     var data = JSON.parse(req.body.toString());
     var query = 'MATCH (o:User { username: \'' + data['deletename'] + '\'}) detach delete o';
     editQuery(query, res);
-    console.log(data);
-    console.log("deleterepsond");
     next();
 }
 
 function blockUserRespond(req,res,next){
     var data = JSON.parse(req.body.toString());
-    if(data['blockname'] != '' ) {
-        var query = 'MATCH (o:User { username: \'' + data['blockname'] + '\'}) set o.status = blocked';
-        editQuery(query, res);
-    }
+    var query = 'MATCH (o:User { username: \'' + data['blockname'] + '\'}) set o.status = \'blocked\'';
+    editQuery(query, res);
     console.log(data);
     next();
 }
@@ -281,7 +277,7 @@ server.post('/login', loginRespond);
 server.post('/edituser', editProfileRespond);
 server.post('/register', registerRespond);
 server.post('/delete', deleteUserRespond);
-server.post('/delete', blockUserRespond);
+server.post('/block', blockUserRespond);
 
 server.post('/wladd', addWishListRespond) //Add to wishlist
 server.post('/wldel', deleteWishListRespond); //Delete from wishlist
