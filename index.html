@@ -142,6 +142,9 @@ button {
 #wishlistbutton {
     background-image: url('icons/WishList.svg');
 }
+#allwishlistsbutton{
+    background-image: url('icons/WL1.png');
+}
 
 /*Subbar*/
 #subbar {
@@ -425,6 +428,7 @@ button {
         <div class="imagebutton" id="searchbutton" onclick="showSearch()"></div>
         <div class="imagebutton" id="cartbutton" onclick= "showCart()"></div>
         <div class="imagebutton" id="wishlistbutton" onclick= "showWishList()"></div>
+        <div class="imagebutton" id="allwishlistsbutton" onclick="setWishlistView()" ></div>
     </div>
 </div>
 
@@ -568,7 +572,7 @@ button {
             swal({
                 title: "Awesome!",
                 text: "You've added it to wishlist!",
-                timer: 2000
+                timer: 1500
             });
             var url = 'http://' + ip + ':' + port + '/wladd';
             user.addwishlistid = id;
@@ -644,6 +648,9 @@ button {
         } else {
             setProfileView(user);
         }
+    }
+    function setWishlistView(){
+        setContentTo('allWishLists.html');
     }
 
     function setRegisterView() {
