@@ -46,15 +46,25 @@ function checkUsername(req, res) {
 
     db.cypher({ query: query}, function (err, results) {
         if(results[0] == undefined) {
-            console.log('doesnt exist');
             res.send(200, false)
         } else {
-            console.log('exist');
             res.send(200, true)
         }
     })
 }
 
+function denyAccesRespond(req,res){
+    var query = 'MATCH (o:User { username: \'' + req.params.username + '\' }) RETURN o.status';
+
+    db.cypher({ query: query}, function (err, results) {
+            if (results[0]['o.status'] == 'blocked') {
+                res.send(200, true)
+            } else {
+                res.send(200, false)
+            }
+        }
+    )
+}
 function editQuery(query, res, callback) {
     db.cypher({ query: query }, function (err, results) {
             var response = {ok: 'ok'};
@@ -270,6 +280,7 @@ server.get('/detail/:id', detailRespond);
 server.get('/wishlists', publicWishListsRespond); //Gives all of the public wishlists usernames
 server.get('/port', portF);
 server.get('/users/usernametaken/:username', checkUsername);
+server.get('/users/usernameblocked/:username', denyAccesRespond);
 
 server.post('/login', loginRespond);
 server.post('/edituser', editProfileRespond);

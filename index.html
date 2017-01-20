@@ -677,30 +677,30 @@ button {
 
     function setProfileView(user) {
         setContentTo('profile.html', function() {
-            if(user.status != 'blocked'){
-                $('#name').append(user.firstname);
-                $('#lastname').append(user.lastname);
-                $('#username').append(user.username);
-                $('#address').append(user.address);
-                $('#postalcode').append(user.postalcode);
-                $('#country').append(user.country);
-                $('#shipaddress').append(user.shipaddress);
-                $('#shippostalcode').append(user.shippostalcode);
-                $('#shipcountry').append(user.shipcountry);
-                $('#role').append(user.role);
-                $('#profile').append('<button onclick="setEditProfileView()">Edit Profile</button>');
-                if (user.role == 'admin'){
-                    $('#profile').append('<button onclick="setDeleteAccountView()">Delete an account</button>')
-                    $('#profile').append('<button onclick="setBlockAccountView()">Block an account</button>')
-                }
-            }
-            else{
-                var id = document.getElementById('profile');
-                id.innerHTML = "Sorry but you have been blocked"
-                $('#profile').append('<button onclick="logOut()">Log Out</button>');
-            }
 
+            $('#name').append(user.firstname);
+            $('#lastname').append(user.lastname);
+            $('#username').append(user.username);
+            $('#address').append(user.address);
+            $('#postalcode').append(user.postalcode);
+            $('#country').append(user.country);
+            $('#shipaddress').append(user.shipaddress);
+            $('#shippostalcode').append(user.shippostalcode);
+            $('#shipcountry').append(user.shipcountry);
+            $('#role').append(user.role);
+            $('#profile').append('<button onclick="setEditProfileView()">Edit Profile</button>');
+            if (user.role == 'admin'){
+                $('#profile').append('<button onclick="setDeleteAccountView()">Delete an account</button>')
+                $('#profile').append('<button onclick="setBlockAccountView()">Block an account</button>')
+            }
         });
+    }
+
+    function setBlockedProfileView(){
+        setContentTo('profile.html', function(){
+            var id = document.getElementById('profile');
+            id.innerHTML = "Sorry, but you have been blocked"
+        })
     }
 
     function setDeleteAccountView(){
@@ -963,36 +963,44 @@ button {
         var formobjects = getFormObjects('#loginform');
         username = formobjects['username'];
         password = formobjects['password'];
+        var fo = getFormObjects('#loginform');
+        $.get('http://' + ip+":"+port+"/users/usernameblocked/" + fo['username'], function (data) {
+            if(data == true){
+                setBlockedProfileView();
+            }
+            else{
+                var url = 'http://' + ip + ':' + port + '/login';
 
-        var url = 'http://' + ip + ':' + port + '/login';
-
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: JSON.stringify({'username':username, 'password':password}),
-            datatype: 'json',
-            contentType: "application/x-www-form-urlencoded",
-            success: function(data) {
-                if(data.length != '0') {
-                    user = data[0].properties;
-                    setProfileView(user);
-                    submitViewWishList();
-                    $('#accountButton').text('ACCOUNT -');
-                } else {
-                  //  alert('Wrong identification.');
-                    swal({
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: JSON.stringify({'username':username, 'password':password}),
+                    datatype: 'json',
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function(data) {
+                        if(data.length != '0') {
+                            user = data[0].properties;
+                            setProfileView(user);
+                            submitViewWishList();
+                            $('#accountButton').text('ACCOUNT -');
+                        } else {
+                            //  alert('Wrong identification.');
+                            swal({
+                                title: "Ooops!",
+                                text: "Wrong identification",
+                                timer: 2000
+                            })
+                        }
+                    },
+                    error: function() { swal({
                         title: "Ooops!",
-                        text: "Wrong identification",
+                        text: "Something went terribly wrong... :(",
                         timer: 2000
-                    })
-                }
-            },
-            error: function() { swal({
-                title: "Ooops!",
-                text: "Something went terribly wrong... :(",
-                timer: 2000
-            }) }
-        }); //Requests the account data from the server in a safe way
+                    }) }
+                }); //Requests the account data from the server in a safe way
+            }
+        })
+
     }
 
     function validatePassword() {
@@ -1007,7 +1015,7 @@ button {
     }
 
     function validateUsernameExist(id, fieldname, action){
-        var fo = getFormObjects(id)
+        var fo = getFormObjects(id);
         console.log(fo[fieldname]);
         $.get('http://' + ip+":"+port+"/users/usernametaken/" + fo[fieldname], function (data) {
             if (data == true){
@@ -1031,6 +1039,7 @@ button {
             }
         })
     }
+
 
     function btnClick(){
         if (!validateRequiredFields() || !validatePassword() || validateUsernameExist('#register','username')){
