@@ -235,7 +235,7 @@ button {
 }
 
 #content #detailimage img {
-    width: 50vw;
+    width: 45vw;
     display: inline-block;
 }
 
@@ -438,7 +438,6 @@ button {
 
 </body>
 </html>
-
 
 <script>
     var ip = window.location.hostname;
@@ -821,8 +820,6 @@ button {
     function setWishListView(uname) {
         if(user) {
             $("#wlsetvisibility").val(user.wishlist);
-            console.log('Visibility: ');
-            console.log(user.wishlist);
             var username = user.username;
             if(uname || uname != undefined) {
                 username = uname;
@@ -830,10 +827,9 @@ button {
 
             submitViewWishList(username, function() {
                 var list = $('<div></div>');
-                for (var i = wishlist.length - 1; i >= 0; i--) {
-                    var line = $('<p onclick="setDetailView(\'' + wishlist[i]._id+ '\')" style="display: inline-block">'+ i + ' ' + wishlist[i].properties.make + ' ' + wishlist[i].properties.model + ' ' + wishlist[i].properties.year + ' - </p><button onclick="addCarToCart(\'' + wishlist[i]._id + '\', \'' + wishlist[i].properties.make + '\', \'' + wishlist[i].properties.model + '\', \'' + wishlist[i].properties.year + '\')" style="display: inline-block">Add To Cart</button><button onclick="removeFromWishList(' + wishlist[i]._id + ')" style="display: inline-block">Remove</button><br>');
+                for (var i = (wishlist.length - 1) / 2; i >= 0; i--) {
+                    var line = $('<p onclick="setDetailView(\'' + wishlist[i]._id+ '\')" style="display: inline-block">' + wishlist[i].properties.make + ' ' + wishlist[i].properties.model + ' ' + wishlist[i].properties.year + ' - </p><button onclick="addCarToCart(\'' + wishlist[i]._id + '\', \'' + wishlist[i].properties.make + '\', \'' + wishlist[i].properties.model + '\', \'' + wishlist[i].properties.year + '\')" style="display: inline-block">Add To Cart</button><button onclick="removeFromWishList(' + wishlist[i]._id + ')" style="display: inline-block">Remove</button><br>');
                     list.append(line);
-                    console.log("Added " + wishlist[i]._id)
                 }
                 $('#wishlistlist').html(list);
                 $('#wishlist #visibility').show();

@@ -214,6 +214,7 @@ function viewWishListRespond(req, res, next) {
     });
     next();
 }
+
 //use this as an example callback(for what?)
 function addWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
