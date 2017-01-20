@@ -409,6 +409,22 @@ button {
     }
 }
 
+/*Wishlist*/
+
+#publicWishlists {
+    display: inline-block;
+}
+
+#publicWishlistUsers {
+    background-color: dodgerblue;
+    width: 35em;
+}
+
+#publicWishListCurrent {
+    background-color: lightgrey;
+    width: 35em;
+}
+
 </style>
 
 <head>
@@ -665,7 +681,6 @@ button {
                 list.append(line);
             }
 
-            console.log(list);
             $('#publicWishlistUsers').html(list);
         });
     }
@@ -1067,9 +1082,11 @@ button {
     function submitDelete(){
         validateUsernameExist('#deleteform','deletename', 'delete');
     }
+
     function submitBlock(){
         validateUsernameExist('#blockform','blockname','block');
     }
+
     function submitRegister() {
         if (validateRequiredFields()) { // als alle velden zijn ingevuld
             var fo = getFormObjects('#register') // form object
