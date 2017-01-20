@@ -671,7 +671,17 @@ button {
     }
 
     function showPublicWishList(username) {
-        console.log(username)
+        console.log(username);
+        $.get('http://' + ip + ':' + port + '/user/' + username + '/wishlist', function (data) {
+            var list = $('<div></div>');
+            for (var i = data.length - 1; i >= 0; i--) {
+                var line = $('<p onclick="setDetailView(data[i]._id)" style="display: inline-block">' + data[i].properties.make + ' ' + data[i].properties.model + ' ' + data[i].properties.year + ' - </p>');
+                list.append(line);
+            }
+
+            console.log(list);
+            $('#publicWishListCurrent').html(list);
+        });
     }
 
     function setRegisterView() {
