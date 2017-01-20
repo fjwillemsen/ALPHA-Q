@@ -659,19 +659,15 @@ button {
     function setPublicWishlistView(){
         setContentTo('allWishLists.html');
         $.get('http://' + ip + ':' + port + '/wishlists', function(data){
-            var users = $('<div></div>');
-
-            console.log(data)
-
+            var list = $('<div></div>');
             for (var i = data.length - 1; i >= 0; i--) {
                 var line = $('<p>' + data[i] + '</p>');
-                console.log(data[i])
-                users.append(line)
+                list.append(line)
             }
 
-            console.log(users)
-
-            $('#publicWishlistUsers').html(users);
+            console.log(list);
+            $('#publicWishlistUsers').html('');
+            $('#publicWishlistUsers').append(list);
         });
     }
 
