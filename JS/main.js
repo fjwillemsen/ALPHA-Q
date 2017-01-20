@@ -210,12 +210,16 @@ function viewWishListRespond(req, res, next) {
 }
 
 function getUserWishlistRespond(req, res, next) {
+    console.log(req.params.username);
     var query = 'MATCH (u:User { username: \'' + req.params.username + '\', wishlist: \'public\'})-[:WISHES]-(c:Car) return c';
+    console.log(query);
     db.cypher({ query: query }, function(err, results) {
         var response = { length: results.length.toString() };
         for (var i = results.length - 1; i >= 0; i--) {
             response[i] = results[i]['c'];
         }
+        console.log(results);
+        console.log(response);
         res.send(200, response);
     });
     next();
