@@ -219,6 +219,18 @@ function viewWishListRespond(req, res, next) {
     next();
 }
 
+function getUserWishlistRespond(req, res, next) {
+    var query = 'MATCH (u:User { username: \'' + req.params.username + '\', wishlist: \'public\'})-[:WISHES]-(c:Car) return c';
+    db.cypher({ query: query }, function(err, results) {
+        var response = { length: results.length.toString() };
+        for (var i = results.length - 1; i >= 0; i--) {
+            response[i] = results[i]['c'];
+        }
+        res.send(200, response);
+    });
+    next();
+}
+
 //use this as an example callback(for what?)
 function addWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
@@ -260,11 +272,6 @@ function publicWishListsRespond(req, res, next) {
     next();
 }
 
-function portF(req, res, next) {
-    console.log(process.argv[2])
-    return process.argv[2]
-}
-
 
 //Start the server
 var server = restify.createServer({
@@ -278,9 +285,9 @@ server.get('/search/:value', searchRespond); //Allows users to search by make, m
 server.get('/filter/:type', filterRespond); //Someone who goes to this link will get the result of filterRespond
 server.get('/detail/:id', detailRespond);
 server.get('/wishlists', publicWishListsRespond); //Gives all of the public wishlists usernames
-server.get('/port', portF);
 server.get('/users/usernametaken/:username', checkUsername);
 server.get('/users/usernameblocked/:username', denyAccesRespond);
+server.get('/user/:user/wishlist', getUserWishlistRespond) //Gives the public wishlist of a specific user
 
 server.post('/login', loginRespond);
 server.post('/edituser', editProfileRespond);
