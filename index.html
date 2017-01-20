@@ -818,6 +818,7 @@ button {
 
     function setWishListView(uname) {
         if(user) {
+            $("#wlsetvisibility").val(user.wlvisibility);
             var username = user.username;
             if(uname || uname != undefined) {
                 username = uname;
@@ -834,6 +835,7 @@ button {
                 $('#wishlist #visibility').show();
                 setPublicWishLists();
             });
+
         } else {
             $('#wishlistlist').html('<a onclick="setLoginView()"><b style="color: white">Log in</b></a> before you can use the wishlist.');
         }
@@ -928,6 +930,7 @@ button {
         });console.log("ajaxed");
 
     }
+
     //block not done yet
     function blockUser(){
         var formobjects = getFormObjects('#blockform');
@@ -940,6 +943,7 @@ button {
             contentType: "application/x-www-form-urlencoded"
         });console.log("ajaxed");
     }
+
     function submitLogin() {
         var formobjects = getFormObjects('#loginform');
         username = formobjects['username'];
