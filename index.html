@@ -820,9 +820,9 @@ button {
 
     function setWishListView(uname) {
         if(user) {
-            $("#wlsetvisibility").val(user.wlvisibility);
+            $("#wlsetvisibility").val(user.wishlist);
             console.log('Visibility: ');
-            console.log(user.wlvisibility);
+            console.log(user.wishlist);
             var username = user.username;
             if(uname || uname != undefined) {
                 username = uname;
