@@ -781,7 +781,7 @@ button {
                 img.addEventListener('load', function() {
                     var vibrant = new Vibrant(img);
                     var swatches = vibrant.swatches();
-                    $('#content')
+                    $('#detailpage')
                         .css('background-color', '')
                         .css('background-color', swatches['Vibrant'].getHex());
                 });
@@ -809,16 +809,6 @@ button {
                 item.append(" " + data[i].properties.model);
                 item.append(" " + data[i].properties.year);
                 item.append("<br>&euro;" + data[i].properties.price);
-
-                var img = document.createElement('img');
-                img.setAttribute('src', '/images/' + data[0].properties.make.toString() + '/' + data[0].properties.model.toString() + '.png')
-                img.addEventListener('load', function() {
-                    var vibrant = new Vibrant(img);
-                    var swatches = vibrant.swatches();
-                    $('#cell' + i)
-                        .css('background-color', '')
-                        .css('background-color', swatches['Vibrant'].getHex());
-                });
 
                 itemcontainer.append(item);
                 row.append(itemcontainer);
