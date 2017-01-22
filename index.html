@@ -654,6 +654,7 @@ button {
     function setContentTo(file, callback) {
         $('subbar').hide();
         var url = 'http://' + ip + ':' + port + '/views/' + file;
+        $('#content').css('background-color', '');
         $.get(url, function(data) {
             $('#content').html(data);
             $('#subbar').hide();
@@ -801,7 +802,7 @@ button {
                 var i = data.length - 1;
             }
             for (i; i >= 0; i--) {
-                var itemcontainer = $('<a onclick="setDetailView(' + data[i]._id + ')"></a>');
+                var itemcontainer = $('<a id="cell"' + i + ' onclick="setDetailView(' + data[i]._id + ')"></a>');
                 var item = $('<td></td>');
                 item.append('<img src= "/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png">');
                 item.append(data[i].properties.make);
@@ -814,7 +815,7 @@ button {
                 img.addEventListener('load', function() {
                     var vibrant = new Vibrant(img);
                     var swatches = vibrant.swatches();
-                    $('#content')
+                    $('#cell' + i)
                         .css('background-color', '')
                         .css('background-color', swatches['Vibrant'].getHex());
                 });
