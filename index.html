@@ -773,6 +773,15 @@ button {
                 }
 
                 $('#speclist').html(list);
+
+                colorThief = new ColorThief();
+                image = $('detailimage');
+                color = colorThief.getColor(image[0]);
+                console.log(color);
+
+                $('#details')
+                    .css('background-color', '')
+                    .css('background-color', color);
             });
         });
     }
@@ -797,23 +806,6 @@ button {
                 item.append(" " + data[i].properties.model);
                 item.append(" " + data[i].properties.year);
                 item.append("<br>&euro;" + data[i].properties.price);
-
-                // For creating beautiful images
-
-//                var img = document.createElement('img');
-//                img.setAttribute('src', '/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png');
-
-//                var image = new Image;
-//                img.src = '/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png';
-
-//                var vibrant = new Vibrant(img);
-//                var color = vibrant.swatches()['Vibrant'].getHex();
-//                console.log(color);
-//                item.css('background-color', color);
-
-//                var colorThief = new ColorThief();
-//                colorThief.getColor('<img src= "/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png">');
-//                console.log(colorThief.getColor(img));
 
                 itemcontainer.append(item);
                 row.append(itemcontainer);
