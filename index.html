@@ -782,8 +782,12 @@ button {
                     var vibrant = new Vibrant(img);
                     var swatches = vibrant.swatches();
                     $('#detailpage')
-                        .css('background-color', '')
-                        .css('background-color', swatches['Vibrant'].getHex());
+                        .css('background', '')
+                        .css('background', swatches['Vibrant'].getHex())
+                        .css('background', '-webkit-linear-gradient(white, ' + swatches['Vibrant'].getHex()) + ')'
+                        .css('background', '-o-linear-gradient(white, ' + swatches['Vibrant'].getHex()) + ')'
+                        .css('background', '-moz-linear-gradient(white, ' + swatches['Vibrant'].getHex()) + ')'
+                        .css('background', 'linear-gradient(white, ' + swatches['Vibrant'].getHex()) + ')';
                 });
             });
         });
