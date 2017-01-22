@@ -705,30 +705,30 @@ button {
 
     function setProfileView(user) {
         setContentTo('profile.html', function() {
-            if(user.status != 'blocked'){
-                $('#name').append(user.firstname);
-                $('#lastname').append(user.lastname);
-                $('#username').append(user.username);
-                $('#address').append(user.address);
-                $('#postalcode').append(user.postalcode);
-                $('#country').append(user.country);
-                $('#shipaddress').append(user.shipaddress);
-                $('#shippostalcode').append(user.shippostalcode);
-                $('#shipcountry').append(user.shipcountry);
-                $('#role').append(user.role);
-                $('#profile').append('<button onclick="setEditProfileView()">Edit Profile</button>');
-                if (user.role == 'admin'){
-                    $('#profile').append('<button onclick="setDeleteAccountView()">Delete an account</button>')
-                    $('#profile').append('<button onclick="setBlockAccountView()">Block an account</button>')
-                }
-            }
-            else{
-                var id = document.getElementById('profile');
-                id.innerHTML = "Sorry but you have been blocked"
-                $('#profile').append('<button onclick="logOut()">Log Out</button>');
-            }
 
+            $('#name').append(user.firstname);
+            $('#lastname').append(user.lastname);
+            $('#username').append(user.username);
+            $('#address').append(user.address);
+            $('#postalcode').append(user.postalcode);
+            $('#country').append(user.country);
+            $('#shipaddress').append(user.shipaddress);
+            $('#shippostalcode').append(user.shippostalcode);
+            $('#shipcountry').append(user.shipcountry);
+            $('#role').append(user.role);
+            $('#profile').append('<button onclick="setEditProfileView()">Edit Profile</button>');
+            if (user.role == 'admin'){
+                $('#profile').append('<button onclick="setDeleteAccountView()">Delete an account</button>')
+                $('#profile').append('<button onclick="setBlockAccountView()">Block an account</button>')
+            }
         });
+    }
+
+    function setBlockedProfileView(){
+        setContentTo('profile.html', function(){
+            var id = document.getElementById('profile');
+            id.innerHTML = "Sorry, but you have been blocked"
+        })
     }
 
     function setDeleteAccountView(){
@@ -983,51 +983,59 @@ button {
         var formobjects = getFormObjects('#loginform');
         username = formobjects['username'];
         password = formobjects['password'];
+        var fo = getFormObjects('#loginform');
+        $.get('http://' + ip+":"+port+"/users/usernameblocked/" + fo['username'], function (data) {
+            if(data == true){
+                setBlockedProfileView();
+            }
+            else{
+                var url = 'http://' + ip + ':' + port + '/login';
 
-        var url = 'http://' + ip + ':' + port + '/login';
-
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: JSON.stringify({'username':username, 'password':password}),
-            datatype: 'json',
-            contentType: "application/x-www-form-urlencoded",
-            success: function(data) {
-                if(data.length != '0') {
-                    user = data[0].properties;
-                    setProfileView(user);
-                    submitViewWishList();
-                    $('#accountButton').text('ACCOUNT -');
-                } else {
-                  //  alert('Wrong identification.');
-                    swal({
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: JSON.stringify({'username':username, 'password':password}),
+                    datatype: 'json',
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function(data) {
+                        if(data.length != '0') {
+                            user = data[0].properties;
+                            setProfileView(user);
+                            submitViewWishList();
+                            $('#accountButton').text('ACCOUNT -');
+                        } else {
+                            //  alert('Wrong identification.');
+                            swal({
+                                title: "Ooops!",
+                                text: "Wrong identification",
+                                timer: 2000
+                            })
+                        }
+                    },
+                    error: function() { swal({
                         title: "Ooops!",
-                        text: "Wrong identification",
+                        text: "Something went terribly wrong... :(",
                         timer: 2000
-                    })
-                }
-            },
-            error: function() { swal({
-                title: "Ooops!",
-                text: "Something went terribly wrong... :(",
-                timer: 2000
-            }) }
-        }); //Requests the account data from the server in a safe way
+                    }) }
+                }); //Requests the account data from the server in a safe way
+            }
+        })
+
     }
 
-    function validatePassword() {
+    function validatePasswordCorrect() {
         var password = document.getElementById("password")
         var password2 = document.getElementById("password2")
-        if(password.value != password2.value){
-            return false
+        if(password.value == password2.value){
+            return true
         }
         else{
-            return true
+            return false
         }
     }
 
     function validateUsernameExist(id, fieldname, action){
-        var fo = getFormObjects(id)
+        var fo = getFormObjects(id);
         console.log(fo[fieldname]);
         $.get('http://' + ip+":"+port+"/users/usernametaken/" + fo[fieldname], function (data) {
             if (data == true){
@@ -1037,6 +1045,11 @@ button {
                 else if (action == 'block'){
                     blockUser();
                 }
+                else if (action == 'registreren'){
+                    var id = document.getElementById("error-Username");
+                    id.innerHTML = "Username already exist"
+                }
+
             }
             else{
                 if (action == 'delete'){
@@ -1047,19 +1060,14 @@ button {
                     var id = document.getElementById("error-blockuser");
                     id.innerHTML = "Username doesn't exist"
                 }
+                else if (action == 'registreren'){
+                    var id = document.getElementById("error-Username");
+                    id.innerHTML = ""
+                    submitRegister();
+                }
 
             }
         })
-    }
-
-    function btnClick(){
-        if (!validateRequiredFields() || !validatePassword() || validateUsernameExist('#register','username')){
-            console.log('in here?');
-            return false
-        }
-        else{
-            return submitRegister()
-        }
     }
 
     function submitDelete(){
@@ -1070,8 +1078,13 @@ button {
         validateUsernameExist('#blockform','blockname','block');
     }
 
+    function submitValidatedRegister(){
+        validateUsernameExist('#register','username','registreren');
+    }
+
     function submitRegister() {
-        if (validateRequiredFields()) { // als alle velden zijn ingevuld
+        console.log("im usbmitted");
+        if (validateRequiredFields() && validatePasswordCorrect) {
             var fo = getFormObjects('#register') // form object
             var url = 'http://' + ip + ':' + port + '/register';
             var data = JSON.stringify({
@@ -1094,7 +1107,7 @@ button {
                 data: data,
                 datatype: 'json',
                 contentType: "application/x-www-form-urlencoded",
-                succes: function() {
+                succes: function () {
                     console.log('Succes!');
                     //swal("Awesome!", "Edit successful", "success");
                     swal({
@@ -1104,7 +1117,7 @@ button {
                     })
                     setJSONTable('/filter/Car');
                 },
-                error: function() {
+                error: function () {
                     console.log('Failure!');
                     //alert('Failure!');
                     swal({
@@ -1205,13 +1218,7 @@ button {
             el.innerHTML = "Fill in your username";
             done = false;
         } else {
-            var el = document.getElementById("error-Username");
-            if (query != 1){
-                el.innerHTML = "Username already exist";
-                done = false;}
-            else{
                 el.innerHTML = "";
-            }
         }
 
         if (!fo['password'] || fo['password'] == '') {
@@ -1227,11 +1234,6 @@ button {
             var el = document.getElementById("error-Password2");
             el.innerHTML = "Fill in your password";
             done = false;
-        }else if(fo['password'] != fo['password2']) {
-            var el = document.getElementById("error-Password2");
-            console.log("ja, ik doe het")
-            el.innerHTML = "Doe je password hetzelfde sukkel";
-            console.log("Nee, ik doe het niet")
         }
         else{
             var el = document.getElementById("error-Password2");
