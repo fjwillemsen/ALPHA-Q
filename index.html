@@ -8,7 +8,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="sweetalert.min.js"></script>
 <script src="https://raw.githubusercontent.com/jariz/vibrant.js/master/dist/Vibrant.min.js"></script>
-<script src="https://raw.githubusercontent.com/lokesh/color-thief/master/dist/color-thief.min.js"></script>
 <link rel="stylesheet" href="sweetalert.css" />
 <style>
 
@@ -431,7 +430,7 @@ button {
 <body>
 
 <div id="header">
-    <a onclick="getCars()">
+    <a onclick="initial()">
     <img src="icons/Logo.svg">
     <p class="title">CarShop</p></a>
     <div id="navbar">
@@ -648,6 +647,7 @@ button {
     function setContentTo(file, callback) {
         $('subbar').hide();
         var url = 'http://' + ip + ':' + port + '/views/' + file;
+        $('#content').css('background-color', '');
         $.get(url, function(data) {
             $('#content').html(data);
             $('#subbar').hide();
@@ -767,6 +767,19 @@ button {
                 }
 
                 $('#speclist').html(list);
+
+                var img = document.createElement('img');
+                img.setAttribute('src', '/images/' + data[0].properties.make.toString() + '/' + data[0].properties.model.toString() + '.png')
+
+                img.addEventListener('load', function() {
+                    var vibrant = new Vibrant(img);
+                    var swatches = vibrant.swatches();
+                    $('#detailpage')
+                        .css('background', '')
+                        .css('background', swatches['Vibrant'].getHex())
+                        .css('background', '-webkit-linear-gradient(white, ' + swatches['Vibrant'].getHex() + ')')
+                        .css('background', 'linear-gradient(white, ' + swatches['Vibrant'].getHex() + ')');
+                });
             });
         });
     }
@@ -784,30 +797,13 @@ button {
                 var i = data.length - 1;
             }
             for (i; i >= 0; i--) {
-                var itemcontainer = $('<a onclick="setDetailView(' + data[i]._id + ')"></a>');
+                var itemcontainer = $('<a id="cell"' + i + ' onclick="setDetailView(' + data[i]._id + ')"></a>');
                 var item = $('<td></td>');
                 item.append('<img src= "/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png">');
                 item.append(data[i].properties.make);
                 item.append(" " + data[i].properties.model);
                 item.append(" " + data[i].properties.year);
                 item.append("<br>&euro;" + data[i].properties.price);
-
-                // For creating beautiful images
-
-//                var img = document.createElement('img');
-//                img.setAttribute('src', '/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png');
-
-//                var image = new Image;
-//                img.src = '/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png';
-
-//                var vibrant = new Vibrant(img);
-//                var color = vibrant.swatches()['Vibrant'].getHex();
-//                console.log(color);
-//                item.css('background-color', color);
-
-//                var colorThief = new ColorThief();
-//                colorThief.getColor('<img src= "/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png">');
-//                console.log(colorThief.getColor(img));
 
                 itemcontainer.append(item);
                 row.append(itemcontainer);
