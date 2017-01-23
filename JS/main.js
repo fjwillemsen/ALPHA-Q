@@ -303,6 +303,7 @@ var server = restify.createServer({
 
 server.use(restify.bodyParser()); //Used for parsing the Request body
 server.use(restify.queryParser()); //Used for allowing "?variable=value" in the URL
+server.use(restify.CORS({ credentials: true })); // Used for allowing Access-Control-Allow-Origin
 
 server.get('/search/:value', searchRespond); //Allows users to search by make, model and year
 server.get('/filter/:type', filterRespond); //Someone who goes to this link will get the result of filterRespond
