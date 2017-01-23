@@ -285,14 +285,11 @@ function publicWishListsRespond(req, res, next) {
 
 function newUsersPerDate(req, res, next) {
     var query = 'MATCH (u:User) RETURN count(u.username), u.createDay, u.createMonth, u.createYear ORDER BY u.createDay, u.createMonth, u.createYear ASC;';
-    console.log(query);
     db.cypher({ query: query }, function(err, results) {
         var response = { length: results.length.toString() };
         for (var i = results.length - 1; i >= 0; i--) {
-            response[i] = results[i]['count(u.username)'];
+            response[i] = results[i];
         }
-        console.log(results);
-        console.log(response);
         res.send(200, response);
     });
     next();
