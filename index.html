@@ -672,9 +672,9 @@ button {
         } else {
             setProfileView(user);
             if(user.role = 'admin') {
-                $('#chartsButton').show();
+                $('#chartsButton').css('visibility', 'visible');
             } else {
-                $('#chartsButton').hide();
+                $('#chartsButton').css('visibility', 'hidden');
             }
         }
     }
