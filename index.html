@@ -368,6 +368,29 @@ button {
     font-size: 1.5em;
 }
 
+/*Wishlist*/
+
+#publicWishlists {
+    display: inline-block;
+}
+
+#publicWishlistUsers {
+    background-color: dodgerblue;
+    width: 35em;
+}
+
+#publicWishListCurrent {
+    background-color: lightgrey;
+    width: 35em;
+}
+
+/*Charts*/
+#charts {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*Responsive*/
 @media screen and (max-width: 1060px) {
     #title {
         font-size: 1.5em;
@@ -413,22 +436,6 @@ button {
     #details #price {
         font-size: 1.5em;
     }
-}
-
-/*Wishlist*/
-
-#publicWishlists {
-    display: inline-block;
-}
-
-#publicWishlistUsers {
-    background-color: dodgerblue;
-    width: 35em;
-}
-
-#publicWishListCurrent {
-    background-color: lightgrey;
-    width: 35em;
 }
 
 </style>
@@ -636,12 +643,17 @@ button {
         }
     }               // Remove items from wishlist
 
+    function adminLoggedIn() {
+        $('#chartsButton').css('visibility', 'visible');
+    }                      // Triggered when an admin has logged in
+
     function logOut() {
         var empty;
         user = empty;
         $('#accountButton').text('LOG IN -');
+        $('#chartsButton').css('visibility', 'hidden');
         setJSONTable('/filter/Car');
-    }
+    }                             // Log out the user, go back to initial state
 
 
     // View-making functions
@@ -1017,9 +1029,15 @@ button {
                     success: function(data) {
                         if(data.length != '0') {
                             user = data[0].properties;
-                            setProfileView(user);
-                            submitViewWishList();
-                            $('#accountButton').text('ACCOUNT -');
+                            if(user && user != undefined) {
+                                setProfileView(user);
+                                submitViewWishList();
+                                $('#accountButton').text('ACCOUNT -');
+
+                                if (user.role = "admin") {
+                                    adminLoggedIn();
+                                }
+                            }
                         } else {
                             swal({
                                 title: "Ooops!",
@@ -1036,15 +1054,6 @@ button {
                 }); //Requests the account data from the server in a safe way
             }
         })
-
-        if(user || user != undefined) {
-            if (user.role = "admin") {
-                $('#chartsButton').css('visibility', 'visible');
-            } else {
-                $('#chartsButton').css('visibility', 'hidden');
-            }
-        }
-
     }
 
     function validatePasswordCorrect() {
