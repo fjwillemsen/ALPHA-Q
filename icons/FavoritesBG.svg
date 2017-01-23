@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1100px" height="950px" viewBox="0 0 1100 950" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>FavoritesBG</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="FavoritesBG">
+            <circle id="Oval-10" stroke="#979797" fill="#26B7AD" cx="551" cy="475" r="474"></circle>
+            <path d="M714.542971,140 C647.4751,140 587.859214,173.529547 550.599285,225.68662 C513.339357,173.529547 453.723471,140 386.6556,140 C271.149821,140 178,233.137631 178,348.628292 C178,512.550522 550.599285,810.59094 550.599285,810.59094 C550.599285,810.59094 923.198571,512.550522 923.198571,348.628292 C923.198571,233.137631 830.048749,140 714.542971,140 L714.542971,140 Z" id="Heart" fill="#FFFFFF"></path>
+        </g>
+    </g>
+</svg>
