@@ -1,34 +1,75 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <div id="charts">
+    <br><p>New users registered per day:</p>
     <canvas id="chart1" width="400" height="400"></canvas>
+
+    <br><p>Number of cars viewed per day:</p>
+    <canvas id="chart2" width="400" height="400"></canvas>
+
+    <br><p>Number of cars bought per day:</p>
+    <canvas id="chart3" width="400" height="400"></canvas>
+
+    <br><p>Conversion (cars viewed vs cars bought):</p>
+    <canvas id="chart4" width="400" height="400"></canvas>
 </div>
 <script>
     Chart.defaults.global.maintainAspectRatio = false;
-    var ctx = document.getElementById("chart1");
 
     var ip = '145.24.222.132';
     var port = '8081';
 
+    var canvasChart1 = document.getElementById("chart1");
     var url = 'http://' + ip + ':' + port + '/stats/newUsersPerDate';
     $.get(url, function(rdata) {
         var numberOfNewUserslist = [];
         var dateList = [];
         for (i = 0; i < rdata.length; i++) {
-            numberOfNewUserslist.push(rdata[i]['count(u.username)']);
-            dateList.push(rdata[i]['u.createDay'] + '-' + rdata[i]['u.createMonth'] + '-' + rdata[i]['u.createYear']);
+            numberOfNewUserslist.push(rdata[i]['count(n.username)']);
+            dateList.push(rdata[i]['n.createDay'] + '-' + rdata[i]['n.createMonth'] + '-' + rdata[i]['n.createYear']);
         }
 
-        console.log(dateList);
-        console.log(numberOfNewUserslist);
-
-        var chart1 = new Chart(ctx, {
+        var chart1 = new Chart(canvasChart1, {
             type: 'line',
             data: {
                 labels: dateList,
                 datasets: [{
                     label: '# of new users',
                     data: numberOfNewUserslist,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255,99,132,1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+    });
+
+    var canvasChart2 = document.getElementById("chart2");
+    var url = 'http://' + ip + ':' + port + '/stats/numberOfCarsViewed';
+    $.get(url, function(rdata) {
+        var numberOfCarsViewedList = [];
+        var dateList = [];
+        for (i = 0; i < rdata.length; i++) {
+            numberOfCarsViewedList.push(rdata[i]['count(n.carsviewed)']);
+            dateList.push(rdata[i]['n.day'] + '-' + rdata[i]['n.month'] + '-' + rdata[i]['u.year']);
+        }
+
+        var chart2 = new Chart(canvasChart2, {
+            type: 'line',
+            data: {
+                labels: dateList,
+                datasets: [{
+                    label: '# of cars viewed',
+                    data: numberOfCarsViewedList,
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     borderColor: 'rgba(255,99,132,1)',
                     borderWidth: 1

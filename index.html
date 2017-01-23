@@ -478,34 +478,25 @@ button {
     var user;
     var wishlist;
 
-    function onRemoveCartItem() {
-        $('#cList').find("option:selected").remove();
-        //swal("Shame on you!","Such a nice car is deleted from your list :(", "success");
-        swal({
-            title: ":(",
-            text: "The car was removed succesfully",
-            timer: 1700
-        })
-    }
 
-    //  Modifiying functions
+    // Modifiying functions
     
     function uArray(array) {
         return array.filter(function(itm,i,array) {
             return i==array.indexOf(itm);
         });
-    } //Returns an array with only unique values
+    }                        // Returns an array with only unique values
 
     function toUpperCaseFirst(string) {
         string = string.toLowerCase().replace(/\b[a-z]/g, function(letter) {
             return letter.toUpperCase();
         });
         return string;
-    } //Makes the first letter of the string upper-cased
+    }             // Makes the first letter of the string upper-cased
 
     function jString(value) {
         return '\'' + value + '\'';
-    } //Puts single quotes around a given string
+    }                       // Puts single quotes around a given string
 
     function showKey(string) {
         string = string.split('_');
@@ -516,7 +507,7 @@ button {
             }
         }
         return result;
-    } //Edits the String data so it gets prettier to look at (for example, from "model_key" to "Key")
+    }                      // Edits the String data so it gets prettier to look at (for example, from "model_key" to "Key")
 
     function getFormObjects(formId) {
         var formObj = {};
@@ -525,7 +516,7 @@ button {
             formObj[input.name] = input.value;
         });
         return formObj;
-    } //Seperates individual parts of forms into key-value pairs
+    }               // Seperates individual parts of forms into key-value pairs
 
     function empty(value) {
         if(value != '' && value != undefined && value != null && value && value.trim()) {
@@ -533,7 +524,7 @@ button {
         } else {
             return true;
         }
-    } //Checks if a String is empty
+    }                         // Checks if a String is empty
 
     function setIfNotEmpty(value, fallback) {
         if(!empty(value)) {
@@ -541,7 +532,7 @@ button {
         } else {
             return fallback;
         }
-    } //Returns a value if it is not empty, otherwise it returns the fallback
+    }       // Returns a value if it is not empty, otherwise it returns the fallback
 
     function processEditForm() {
         var fo = getFormObjects('#editform');
@@ -577,7 +568,7 @@ button {
                 timer: 1700
             });
         }
-    } //Validity check for the Edit-form.
+    }                    // Validity check for the Edit-form.
 
     function addCarToCart(id, make, model, year) {
         var item = $('<option value="">'+ make + " " + model+ " " + year + '</option>');
@@ -589,7 +580,17 @@ button {
             text: make + '' + model + ' added to your shopping cart!',
             timer: 1700
         })
-    } //Add items to cart
+    }  // Add items to the cart
+
+    function onRemoveCartItem() {
+        $('#cList').find("option:selected").remove();
+        //swal("Shame on you!","Such a nice car is deleted from your list :(", "success");
+        swal({
+            title: ":(",
+            text: "The car was removed succesfully",
+            timer: 1700
+        })
+    }                   // Removes an item from the cart
 
     function addToWishList(id) {
         if(user) {
@@ -615,7 +616,7 @@ button {
                 timer: 1700
             })
         }
-    } //Add items to wishlist
+    }                    // Add items to wishlist
 
     function removeFromWishList(id) {
         if(user) {
@@ -631,7 +632,7 @@ button {
                 timer: 1700
             });
         }
-    } //Remove items from wishlist
+    }               // Remove items from wishlist
 
     function logOut() {
         var empty;
@@ -640,7 +641,9 @@ button {
         setJSONTable('/filter/Car');
     }
 
-    //  View-making functions
+
+    // View-making functions
+
     function setSubbarTo(file, callback) {
         var url = 'http://' + ip + ':' + port + '/views/' + file;
         $.get(url, function(data) {
@@ -664,7 +667,9 @@ button {
         });
     }
 
-    //  View-setting functions
+
+    // View-setting functions
+
     function setLoginView() {
         if(!user || user == undefined) {
             setContentTo('login.html');
@@ -796,6 +801,7 @@ button {
                 });
             });
         });
+        $.get('http://' + ip + ':' + port + '/carViewed'); // Adds one to the number of cars viewed today in the database
     }
 
     function setJSONTable(value, first) {
@@ -858,7 +864,7 @@ button {
 
             $('#filter').show();
         });
-    } //Sets all filters (Warning: Deprecated. Use the "setFilter" instead)
+    }                         // Sets all filters (Warning: Deprecated. Use the "setFilter" instead)
 
     function setFilter(property, extra) {
         var string = property;
@@ -877,7 +883,7 @@ button {
             array = uArray(array);
             $('#select' + property).html(array.join(''));
         });
-    } //Sets a filter to the values obtained trough the database
+    }           // Sets a filter to the values obtained trough the database
 
     function setContactView() {
         setContentTo('contact.html');
@@ -911,7 +917,7 @@ button {
     }
 
 
-//  View-changing functions
+    // View-changing functions
 
     function toggleAndSetSubbar(id, page, fn) {
         if($('#subbar').css('display') == 'none' || !$('#' + id).length) {
@@ -964,7 +970,7 @@ button {
     }
 
 
-//  Data-requesting/changing functions
+    // Data-requesting/changing functions
 
     function deleteUser() {
         var formobjects = getFormObjects('#deleteform');
@@ -1333,7 +1339,7 @@ button {
     }
 
 
-//  General Functions
+    // General Functions
 
     function addListeners(value) {
         var property = false;
