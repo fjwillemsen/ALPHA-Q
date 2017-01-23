@@ -1,8 +1,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<div id="charts">
+<div id="charts" style="height: 25vh; width: 50%">
     <br><p>New users registered per day:</p>
-    <canvas id="chart1" width="400" height="400"></canvas>
+    <canvas id="chart1"></canvas>
 
     <br><p>Number of cars viewed per day:</p>
     <canvas id="chart2" width="400" height="400"></canvas>
@@ -10,11 +10,12 @@
     <br><p>Number of cars bought per day:</p>
     <canvas id="chart3" width="400" height="400"></canvas>
 
-    <br><p>Conversion (cars viewed vs cars bought):</p>
+    <br><p>Conversion (cars viewed VS cars bought):</p>
     <canvas id="chart4" width="400" height="400"></canvas>
 </div>
 <script>
     Chart.defaults.global.maintainAspectRatio = false;
+    Chart.defaults.global.responsive = true;
 
     var ip = '145.24.222.132';
     var port = '8081';
