@@ -475,10 +475,9 @@ button {
         $('#cList').find("option:selected").remove();
         //swal("Shame on you!","Such a nice car is deleted from your list :(", "success");
         swal({
-            title: ":(!",
+            title: ":(",
             text: "The car was removed succesfully",
-            type: "Succes",
-            timer: 2000
+            timer: 1700
         })
     }
 
@@ -558,18 +557,17 @@ button {
             } else {
                 swal({
                     title: "Ooops!",
-                    text: "You forgot to enter you password! Please fill in your password",
-                    timer: 1500
+                    text: "You forgot to enter your password! Please fill in your password",
+                    timer: 1700
                 });
                 //alert("lol");
             }
         } else {
             //console.log("No user");
-            //alert("trolol");
             swal({
                 title: "Ooops!",
                 text: "You forgot to enter your username! Please fill in your username",
-                timer: 1500
+                timer: 1700
             });
         }
     } //Validity check for the Edit-form.
@@ -579,21 +577,19 @@ button {
         cartList.push(item);
         //item.append(JSON.stringify(cartList));
         $('#subbar').hide();
-        // window.confirm(make + ' ' + model  +  ' added to your shopping cart!');
-        //swal(make + ' ' + model + ' added to your shopping cart!')
         swal({
-            title: "Yaay!",
+            title: "Wonderful!",
             text: make + '' + model + ' added to your shopping cart!',
-            timer: 2000
+            timer: 1700
         })
     } //Add items to cart
 
     function addToWishList(id) {
         if(user) {
             swal({
-                title: "Awesome!",
+                title: "Wonderful!",
                 text: "You've added it to wishlist!",
-                timer: 1500
+                timer: 1700
             });
             var url = 'http://' + ip + ':' + port + '/wladd';
             user.addwishlistid = id;
@@ -606,13 +602,11 @@ button {
                 $('#wishlistlist').html(list);
             });
         } else {
-            //swal("You must be logged in to add items in your wishlist");
             swal({
                 title: "Ooops!",
-                text: "You have to login to add items in your wishlist!",
-                timer: 2000
+                text: "You have to login in order to add items in your wishlist!",
+                timer: 1700
             })
-            //alert('You must be logged in to add items to your wishlist.');
         }
     } //Add items to wishlist
 
@@ -626,8 +620,8 @@ button {
         } else {
             swal({
                 title: "Oops!",
-                text: "You must be logged in to remove items from your wishlist",
-                timer: 2000
+                text: "You have to log in, in order to remove items from your wishlist",
+                timer: 1700
             });
         }
     } //Remove items from wishlist
@@ -1008,18 +1002,17 @@ button {
                             submitViewWishList();
                             $('#accountButton').text('ACCOUNT -');
                         } else {
-                            //  alert('Wrong identification.');
                             swal({
                                 title: "Ooops!",
-                                text: "Wrong identification",
-                                timer: 2000
+                                text: "Wrong identification. Please try again.",
+                                timer: 1700
                             })
                         }
                     },
                     error: function() { swal({
                         title: "Ooops!",
-                        text: "Something went terribly wrong... :(",
-                        timer: 2000
+                        text: "Something went terribly wrong. Please try again.",
+                        timer: 1700
                     }) }
                 }); //Requests the account data from the server in a safe way
             }
@@ -1068,6 +1061,7 @@ button {
                     var id = document.getElementById("error-Username");
                     id.innerHTML = ""
                     submitRegister();
+
                 }
 
             }
@@ -1087,7 +1081,7 @@ button {
     }
 
     function submitRegister() {
-        console.log("im usbmitted");
+        console.log("im submitted");
         if (validateRequiredFields() && validatePasswordCorrect) {
             var fo = getFormObjects('#register') // form object
             var url = 'http://' + ip + ':' + port + '/register';
@@ -1103,6 +1097,11 @@ button {
                 'username': fo['username'],
                 'password': fo['password']
             });
+            swal({
+                title: "Wonderful",
+                text: "You are now registred at CarShop!",
+                timer: 1700
+            })
             console.log(data);
 
             $.ajax({
@@ -1113,21 +1112,19 @@ button {
                 contentType: "application/x-www-form-urlencoded",
                 succes: function () {
                     console.log('Succes!');
-                    //swal("Awesome!", "Edit successful", "success");
-                    swal({
-                        title: "Awesome!",
-                        text: "Edit succesful",
-                        timer: 2000
-                    })
+//                    swal({
+//                        title: "Wonderful!",
+//                        text: "Edit succesful",
+//                        timer: 1700
+//                    })
                     setJSONTable('/filter/Car');
                 },
                 error: function () {
                     console.log('Failure!');
-                    //alert('Failure!');
                     swal({
                         title: "Ooops!",
-                        text: "Something went terribly wrong... :(",
-                        timer: 2000
+                        text: "Something went terribly wrong. Please try again.",
+                        timer: 1700
                     });
                 }
             });
@@ -1261,11 +1258,10 @@ button {
                 datatype: 'json',
                 contentType: "application/x-www-form-urlencoded",
                 success: function() {
-                    //swal("Awesome!", "Edit successful", "success");
                     swal({
-                        title: "Awesome!",
+                        title: "Wonderful!",
                         text: "Edit succesful",
-                        timer: 2000
+                        timer: 1700
                     })
                     //logOut();
                     setContentTo('profile.html');
@@ -1273,8 +1269,8 @@ button {
                 error: function() {
                     swal({
                         title: "Ooops..!",
-                        text: "Edit went wrong. Please Try again!",
-                        timer: 2000
+                        text: "Edit went wrong. Please try again!",
+                        timer: 1700
 
                     });
                 }
