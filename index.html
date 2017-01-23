@@ -7,6 +7,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="icons/favicon.ico">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="sweetalert.min.js"></script>
+<script src="Chart.js"></script>
 <script src="https://raw.githubusercontent.com/jariz/vibrant.js/master/dist/Vibrant.min.js"></script>
 <link rel="stylesheet" href="sweetalert.css" />
 <style>
@@ -141,8 +142,14 @@ button {
 #wishlistbutton {
     background-image: url('icons/WishList.svg');
 }
+
 #allwishlistsbutton{
     background-image: url('icons/WL1.png');
+}
+
+#chartsButton {
+    background-image: url('icons/charts.svg');
+    display: none;
 }
 
 /*Subbar*/
@@ -448,6 +455,7 @@ button {
         <div class="imagebutton" id="cartbutton" onclick= "showCart()"></div>
         <div class="imagebutton" id="wishlistbutton" onclick= "showWishList()"></div>
         <div class="imagebutton" id="allwishlistsbutton" onclick="setPublicWishlistView()" ></div>
+        <div class="imagebutton" id="chartsButton" onclick=""></div>
     </div>
 </div>
 
@@ -663,6 +671,11 @@ button {
             setContentTo('login.html');
         } else {
             setProfileView(user);
+            if(user.role = 'admin') {
+                $('#chartsButton').show();
+            } else {
+                $('#chartsButton').hide();
+            }
         }
     }
 
@@ -890,6 +903,10 @@ button {
         } else {
             $('#wishlistlist').html('<a onclick="setLoginView()"><b style="color: white">Log in</b></a> before you can use the wishlist.');
         }
+    }
+
+    function setChartsView() {
+        setContentTo('charts.html');
     }
 
 
