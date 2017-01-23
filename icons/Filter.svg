@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="26.4pt" height="21.6pt" viewBox="0 0 26.4 21.6" version="1.1">
-<g id="surface1">
-<path style=" stroke:none;fill-rule:nonzero;fill:rgb(87%,87%,87%);fill-opacity:1;" d="M 10.3125 21.421875 L 16 17.867188 L 16 12.179688 L 25.953125 0.0898438 L 0.355469 0.0898438 L 10.3125 12.179688 Z M 10.3125 21.421875 "/>
-</g>
+<svg width="33px" height="27px" viewBox="0 0 33 27" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>Filter_black</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Filter_black" transform="translate(-9.000000, -12.000000)">
+            <g id="Page-1">
+                <g id="Filter">
+                    <rect id="Rectangle" x="0" y="0" width="50" height="50"></rect>
+                    <polygon id="Shape" fill="#FFFFFF" points="21.8888889 38.7777778 29 34.3333333 29 27.2222222 41.4435556 12.1111111 25.4337778 12.1111111 9.44444444 12.1111111 21.8888889 27.2222222"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
 </svg>
