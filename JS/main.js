@@ -163,7 +163,7 @@ function registerRespond(req, res, next) {
             data['role'] = 'customer'
         }
         query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \'' + data['postalcode']
-                + '\', createDay: \'' + d.getDate() + '\', createMonth: \'' + d.getMonth() + '\', createYear: \'' + d.getYear() + 1900
+                + '\', createDay: \'' + d.getDate() + '\', createMonth: \'' + (d.getMonth() + 1) + '\', createYear: \'' + (d.getYear() + 1900)
                 + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\', role: \'' + data['role'] + '\', status: \'' + data['status']+'\'});';
     }
     console.log('Query: ' + query);
