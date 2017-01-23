@@ -1,6 +1,6 @@
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<div id="charts" style="height: 25vh; width: 75vw">
+<div id="charts">
     <br><p>New users registered per day:</p>
     <canvas id="chart1"></canvas>
 
@@ -55,22 +55,22 @@
     });
 
     var canvasChart2 = document.getElementById("chart2");
-    var url = 'http://' + ip + ':' + port + '/stats/numberOfCarsViewed';
+    url = 'http://' + ip + ':' + port + '/stats/numberOfCarsViewed';
     $.get(url, function(rdata) {
-        var numberOfCarsViewedList = [];
-        var dateList = [];
+        var numberOfCarsViewedList2 = [];
+        var dateList2 = [];
         for (i = 0; i < rdata.length; i++) {
-            numberOfCarsViewedList.push(rdata[i]['n.carsviewed']);
-            dateList.push(rdata[i]['n.day'] + '-' + rdata[i]['n.month'] + '-' + rdata[i]['n.year']);
+            numberOfCarsViewedList2.push(rdata[i]['n.carsviewed']);
+            dateList2.push(rdata[i]['n.day'] + '-' + rdata[i]['n.month'] + '-' + rdata[i]['n.year']);
         }
 
         var chart2 = new Chart(canvasChart2, {
-            type: 'line',
+            type: 'bar',
             data: {
-                labels: dateList,
+                labels: dateList2,
                 datasets: [{
                     label: '# of cars viewed',
-                    data: numberOfCarsViewedList,
+                    data: numberOfCarsViewedList2,
                     backgroundColor: 'rgba(99, 99, 255, 0.2)',
                     borderColor: 'rgba(99,99,200,1)',
                     borderWidth: 3
@@ -86,5 +86,65 @@
                 }
             }
         });
+
+        var canvasChart3 = document.getElementById("chart3");
+        var url = 'http://' + ip + ':' + port + '/stats/numberOfCarsBought';
+        $.get(url, function(rdata) {
+            var numberOfCarsBoughtList3 = [];
+            var dateList3 = [];
+            for (i = 0; i < rdata.length; i++) {
+                numberOfCarsBoughtList3.push(rdata[i]['n.carsbought']);
+                dateList3.push(rdata[i]['n.day'] + '-' + rdata[i]['n.month'] + '-' + rdata[i]['n.year']);
+            }
+
+            var chart3 = new Chart(canvasChart3, {
+                type: 'bar',
+                data: {
+                    labels: dateList3,
+                    datasets: [{
+                        label: '# of cars bought',
+                        data: numberOfCarsBoughtList3,
+                        backgroundColor: 'rgba(99, 255, 99, 0.2)',
+                        borderColor: 'rgba(99,200,99,1)',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+
+            console.log(chart2.data.datasets);
+
+            var canvasChart4 = document.getElementById("chart4");
+            var chart4 = new Chart(canvasChart4, {
+                type: 'line',
+                data: {
+                    labels: dateList3,
+                    datasets: [chart2.data.datasets[0], chart3.data.datasets[0]]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+        });
     });
+
+
+
+
+
+
 </script>
