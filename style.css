@@ -1,0 +1,427 @@
+*:not(button, select, input) {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+	font-size: 1em;
+	font-family: 'Titillium Web', sans-serif;
+}
+
+a {
+	color: black;
+	text-decoration:none;
+}
+
+hr {
+	border: 0;
+	clear:both;
+	display:block;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	width: inherit;
+	background-color: black;
+	height: 1px;
+}
+
+button {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+#view {
+	width: 100vw;
+}
+
+#header {
+	background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+	font-family: 'Titillium Web', sans-serif;
+	text-align: center;
+	color: white;
+	margin: 0;
+	width: 80vw;
+	padding-left: 10vw;
+	padding-right: 10vw;
+}
+
+#header img {
+	width: 15em;
+	padding: 1em;
+}
+
+.title {
+	font-size: 3.5em;
+	color: white;
+	letter-spacing: 0.5em;
+}
+
+.subtitle {
+	font-size: 1.5em;
+	color: white;
+	letter-spacing: 0.3em;
+}
+
+#navbar {
+	display: inline-block;
+}
+
+#navbar a {
+	font-size: 2em;
+	color: rgb(255,255,255);
+}
+
+#navbar a:hover {
+	color: rgb(230,230,230);
+}
+
+#view .title {
+	font-family: 'Titillium Web', sans-serif;
+	text-align: center;
+	font-size: 5em;
+	letter-spacing: 0.1em;
+}
+
+/*Buttonbar*/
+#buttonbar {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+#buttonbar div {
+	margin-left: auto;
+	margin-right: auto;
+	display: inline-block;
+}
+
+.imagebutton {
+	background-color: rgba(255,255,255,0.4);
+	width: 3em;
+	height: 3em;
+	border-radius: 100%;
+	overflow: hidden;
+	background-size: 75%;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-origin: content-box;
+}
+
+.imagebutton:hover {
+	background-color: rgba(255,255,255,0.7);
+}
+
+#filterbutton {
+	background-image: url('icons/Filter.svg');
+}
+
+#searchbutton {
+	background-image: url('icons/Search.svg');
+}
+
+#cartbutton {
+	background-image: url('icons/Cart.svg');
+}
+
+#wishlistbutton {
+	background-image: url('icons/WishList.svg');
+}
+
+#allwishlistsbutton{
+	background-image: url('icons/WL.svg');
+}
+
+#chartsButton {
+	background-image: url('icons/Charts.svg');
+	visibility: hidden;
+}
+
+/*Subbar*/
+#subbar {
+	display: inline-block;
+	text-align: center;
+	width: 100vw;
+	padding: 10px;
+	margin-bottom: 20px;
+	background-color: rgba(0, 0, 0, 0.8);
+	color: white;
+	display: none;
+}
+
+#subbar div {
+	padding: 10px;
+}
+
+/*Filter*/
+#filterbar p {
+	display: inline-block;
+	padding-right: 10px;
+}
+
+#filtermakemodel, #filteryear {
+	display: block;
+}
+
+/*Wishlist*/
+#wishlist #visibility {
+	display: none;
+}
+
+#wishlist #visibility p, select {
+	display: inline-block;
+}
+
+#publicwls {
+	display: none;
+}
+
+#publicwls p, select {
+	display: inline-block;
+}
+
+/*Content*/
+#content {
+	margin-top: 20px;
+}
+
+/*Overviews*/
+#content p {
+	font-family: 'Titillium Web', sans-serif;
+	text-align: center;
+	font-size: 2em;
+}
+
+#content table {
+	width: 80vw;
+	margin-left: auto;
+	margin-right: auto;
+	table-layout: fixed;
+	display: block;
+}
+
+#content td {
+	padding: 40px;
+	border: 1px solid rgb(230,230,230);
+	border-collapse: collapse;
+	display: inline-block;
+	text-align: center;
+	overflow: hidden;
+}
+
+#content td, img {
+	width: 32vw;
+}
+
+#itemcontainer {
+	background-color: aqua;
+}
+
+
+/*Details*/
+#content #currentcar {
+	display: none;
+}
+
+#content #detailimage {
+	width: 50vw;
+	display: inline-block;
+}
+
+#content #detailimage img {
+	width: 45vw;
+	display: inline-block;
+}
+
+#content #details {
+	width: 45vw;
+	margin-left: 3vw;
+	display: inline-block;
+}
+
+#details .title {
+	font-size: 3.5em;
+	color: black;
+	letter-spacing: 0.6em;
+}
+
+#details #subtitle {
+	font-size: 2em;
+	color: black;
+}
+
+#details #price {
+	color: white;
+	font-size: 3em;
+	letter-spacing: 0.6em;
+	background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+	border-radius: 20px;
+	min-width: 500px;
+}
+
+#details #optionsbar div {
+	display: inline-block;
+	width: 7em;
+	height: 7em;
+}
+
+#details #addtocartbutton {
+	background-image: url('icons/addToCartBG.svg');
+}
+
+#details #addtocartbutton:hover {
+	background-image: url('icons/addedToCartBG.svg');
+}
+
+#details #addtowishlistbutton {
+	background-image: url('icons/addToWishListBG.svg');
+}
+
+#details #addtowishlistbutton:hover {
+	background-image: url('icons/addedToWishListBG.svg');
+}
+
+#details ul {
+	margin-left: auto;
+	margin-right: auto;
+	list-style-type: circle;
+	padding-top: 10px;
+	padding-bottom: 20px;
+}
+
+/*Login*/
+#login {
+	width: 30vw;
+	min-width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	color: black;
+}
+
+#login .title {
+	color: black;
+}
+
+#login form {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+/*Register*/
+#registerpage {
+	width: 30vw;
+	min-width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	color: black;
+}
+
+#registerpage p, #registerpage input {
+	display: inline-block;
+	font-size: 1.3em;
+}
+
+#registerpage .title {
+	color: black;
+}
+
+#registerpage form {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	line-height: 120%;
+}
+
+/*Profile*/
+#profile {
+	width: 30vw;
+	min-width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	color: black;
+}
+
+#profile .title {
+	color: black;
+}
+
+#profile p {
+	font-size: 1.5em;
+}
+
+/*Wishlist*/
+
+#publicWishlists {
+	display: inline-block;
+}
+
+#publicWishlistUsers {
+	background-color: dodgerblue;
+	width: 35em;
+}
+
+#publicWishListCurrent {
+	background-color: lightgrey;
+	width: 35em;
+}
+
+/*Charts*/
+#charts {
+	margin-left: auto;
+	margin-right: auto;
+	width: 75vw;
+	height: 25vh;
+}
+
+/*Responsive*/
+@media screen and (max-width: 1060px) {
+	#title {
+		font-size: 1.5em;
+	}
+
+	#navbar a {
+		font-size: 1em;
+	}
+}
+
+@media screen and (max-width: 700px) {
+	#title {
+		font-size: 1em;
+	}
+
+	.subject .title {
+		font-size: 1.5em;
+	}
+
+	#navbar a {
+		font-size: 1em;
+	}
+
+	#content #image, #content #details {
+		min-width: 300px;
+	}
+
+	#content #image {
+		width: 90vw;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	#content #details {
+		width: 90vw;
+		padding-left: 25px;
+	}
+
+	#details #title {
+		font-size: 2em;
+	}
+
+	#details #price {
+		font-size: 1.5em;
+	}
+}
