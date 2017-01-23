@@ -65,6 +65,7 @@ function denyAccesRespond(req,res){
         }
     )
 }
+
 function editQuery(query, res, callback) {
     db.cypher({ query: query }, function (err, results) {
             var response = {ok: 'ok'};
@@ -155,10 +156,15 @@ function loginRespond(req, res, next) {
 function registerRespond(req, res, next) {
     var data = JSON.parse(req.body.toString())
     var query = '';
+    var d = new Date();
 
     if(data != undefined) {
-        query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \''
-            + data['postalcode'] + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\', password2: \'' + data['password2'] + '\', role: \'' + data['role'] + '\', status: \'' + data['status']+'\'});';
+        if(!data['role'] || data['role'] == '') {
+            data['role'] = 'customer'
+        }
+        query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \'' + data['postalcode']
+                + '\', createDay: \'' + d.getDate() + '\', createMonth: \'' + d.getMonth() + '\', createYear: \'' + d.getYear() + 1900
+                + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\', role: \'' + data['role'] + '\', status: \'' + data['status']+'\'});';
     }
     console.log('Query: ' + query);
     editQuery(query, res);
