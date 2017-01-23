@@ -11,38 +11,26 @@
     var port = '8081';
 
     var url = 'http://' + ip + ':' + port + '/stats/newUsersPerDate';
-    $.get(url, function(retrievedData) {
-        var i = retrievedData.length - 1;
+    $.get(url, function(rdata) {
         var numberOfNewUserslist = [];
         var dateList = [];
-        for (i; i >= 0; i--) {
-            numberOfNewUserslist.push(data[i]['count(u.username']);
-            dateList.push(data[i]['u.createDay'] + ', ' + data[i]['u.createMonth'] + data[i]['u.createYear']);
+        for (i = 0; i < rdata.length; i++) {
+            numberOfNewUserslist.push(rdata[i]['count(u.username)']);
+            dateList.push(rdata[i]['u.createDay'] + '-' + rdata[i]['u.createMonth'] + '-' + rdata[i]['u.createYear']);
         }
 
+        console.log(dateList);
+        console.log(numberOfNewUserslist);
+
         var chart1 = new Chart(ctx, {
-            type: 'bar',
+            type: 'line',
             data: {
                 labels: dateList,
                 datasets: [{
                     label: '# of new users',
                     data: numberOfNewUserslist,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255,99,132,1)',
                     borderWidth: 1
                 }]
             },
