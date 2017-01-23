@@ -348,7 +348,7 @@ server.get('/stats/newUsersPerDate', newUsersPerDate);          // Gives the num
 server.get('/stats/numberOfCarsViewed', numberOfCarsViewed);    // Gives the number of cars viewed per date
 server.get('/stats/numberOfCarsBought', numberOfCarsBought);    // Gives the number of cars bought per date
 
-server.get('/stats/carViewed', carViewed);                      // Adds one to the number of cars viewed per date
+server.get('/stats/carViewed', carViewed());                      // Adds one to the number of cars viewed per date
 server.get('/stats/carBought', carBought);                      // Adds one to the number of cars bought per date
 
 
