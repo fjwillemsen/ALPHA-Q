@@ -312,7 +312,10 @@ function numberOfCarsBought(req, res, next) {
 
 function carViewed() {
     var query = "MERGE (n:Statistic { day: " + new Date().getDate() + ", month: " + (new Date().getMonth() + 1) + ", year: " + (new Date().getYear() + 1900) + "}) ON CREATE SET n.carsviewed = 1, n.carsbought = 0 ON MATCH SET n.carsviewed = n.carsviewed + 1;";
-    db.cypher({ query: query});
+    console.log(query);
+    db.cypher({ query: query }, function(err, results) {
+        pass
+    });
 }
 
 function carBought() {
