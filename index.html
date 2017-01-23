@@ -667,18 +667,17 @@ button {
 
     //  View-setting functions
     function setLoginView() {
-        if(user.role = "admin") {
-            console.log("true");
-            $('#chartsButton').css('visibility', 'visible');
-        } else {
-            console.log("false");
-            $('#chartsButton').css('visibility', 'hidden');
-        }
-
         if(!user || user == undefined) {
             setContentTo('login.html');
         } else {
             setProfileView(user);
+            if(user.role = "admin") {
+                console.log("true");
+                $('#chartsButton').css('visibility', 'visible');
+            } else {
+                console.log("false");
+                $('#chartsButton').css('visibility', 'hidden');
+            }
         }
     }
 
