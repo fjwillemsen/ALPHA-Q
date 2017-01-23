@@ -226,7 +226,6 @@ function viewWishListRespond(req, res, next) {
 }
 
 function getUserWishlistRespond(req, res, next) {
-    console.log(req.params.username);
     var query = 'MATCH (u:User { username: \'' + req.params.user + '\', wishlist: \'public\'})-[:WISHES]-(c:Car) return c';
     console.log(query);
     db.cypher({ query: query }, function(err, results) {
@@ -282,6 +281,23 @@ function publicWishListsRespond(req, res, next) {
     next();
 }
 
+// Statistics
+
+function newUsersPerDate(req, res, next) {
+    var query = 'MATCH (u:User) RETURN count(u.username), u.createDay, u.createMonth, u.createYear ORDER BY u.createDay, u.createMonth, u.createYear ASC;';
+    console.log(query);
+    db.cypher({ query: query }, function(err, results) {
+        var response = { length: results.length.toString() };
+        for (var i = results.length - 1; i >= 0; i--) {
+            response[i] = results[i]['count(u.username)'];
+        }
+        console.log(results);
+        console.log(response);
+        res.send(200, response);
+    });
+    next();
+}
+
 
 //Start the server
 var server = restify.createServer({
@@ -298,6 +314,9 @@ server.get('/wishlists', publicWishListsRespond); //Gives all of the public wish
 server.get('/users/usernametaken/:username', checkUsername);
 server.get('/users/usernameblocked/:username', denyAccesRespond);
 server.get('/user/:user/wishlist', getUserWishlistRespond) //Gives the public wishlist of a specific user
+
+// Statistics
+server.get('/stats/newUsersPerDate', newUsersPerDate) //Gives the number of new users created per date
 
 server.post('/login', loginRespond);
 server.post('/edituser', editProfileRespond);
