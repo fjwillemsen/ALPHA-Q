@@ -7,6 +7,6 @@ ssh ubuntu-0911853@145.24.222.57 <<EOF
     pm2 start -f main.js --name="Development" -- 8081
     echo "Unit tests:"
     sleep 3
-    env KEY1='57' KEY2='8081' mocha tests/websiteTest.js > test-reports.xml
+    env KEY1='57' KEY2='8081' mocha tests/websiteTest.js
 EOF
 open http://145.24.222.57:8081/

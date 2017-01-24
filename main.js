@@ -335,7 +335,7 @@ server.use(restify.CORS({ credentials: true }));                // Used for allo
 
 server.get('/search/:value', searchRespond);                    // Allows users to search by make, model and year
 server.get('/filter/:type', filterRespond);                     // Someone who goes to this link will get the result of filterRespond
-server.get('/detail/:id', detailRespond);
+server.get('/detail/:id', detailRespond);                       // Gives back the properties of the NodeJS ID
 server.get('/users/usernametaken/:username', checkUsername);
 server.get('/users/usernameblocked/:username', denyAccesRespond);
 server.get('/wishlists', publicWishListsRespond);               // Gives all of the public wishlists usernames
