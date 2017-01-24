@@ -206,3 +206,129 @@ describe('detail', function () {
             });
     });
 });
+
+describe('newUsersPerDate', function () {
+    it('should return JSON content', function (done) {
+        api.get('/stats/newUsersPerDate')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res) {
+                if (err) throw err;
+                res.status.should.equal(200);
+                done();
+            });
+    });
+
+    it('should return JSON content containing the number of new users per date', function (done) {
+        api.get('/stats/newUsersPerDate')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res) {
+                if (err) throw err;
+                res.status.should.equal(200);
+                res.body.should.not.equal(undefined);
+                res.body.should.not.equal('');
+                expect(res.body).to.not.equal(undefined);
+                expect(res.body).to.not.equal('');
+
+                res.body[0].should.not.equal(undefined);
+                res.body[0].should.not.equal('');
+                expect(res.body[0]).to.not.equal(undefined);
+                expect(res.body[0]).to.not.equal('');
+
+                res.body[0]['count(n.username)'].should.not.equal(undefined);
+                res.body[0]['count(n.username)'].should.not.equal('');
+                expect(res.body[0]['count(n.username)']).to.not.equal(undefined);
+                expect(res.body[0]['count(n.username)']).to.not.equal('');
+
+                assert.typeOf(res.body[0]['count(n.username)'], 'number', 'we have an integer');
+                done();
+            });
+    });
+});
+
+describe('numberOfCarsViewed', function () {
+    it('should return JSON content', function (done) {
+        api.get('/stats/numberOfCarsViewed')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res) {
+                if (err) throw err;
+                res.status.should.equal(200);
+                done();
+            });
+    });
+
+    it('should return JSON content containing the number of cars viewed per date', function (done) {
+        api.get('/stats/numberOfCarsViewed')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res) {
+                if (err) throw err;
+                res.status.should.equal(200);
+                res.body.should.not.equal(undefined);
+                res.body.should.not.equal('');
+                expect(res.body).to.not.equal(undefined);
+                expect(res.body).to.not.equal('');
+
+                res.body[0].should.not.equal(undefined);
+                res.body[0].should.not.equal('');
+                expect(res.body[0]).to.not.equal(undefined);
+                expect(res.body[0]).to.not.equal('');
+
+                res.body[0]['n.carsviewed'].should.not.equal(undefined);
+                res.body[0]['n.carsviewed'].should.not.equal('');
+                expect(res.body[0]['n.carsviewed']).to.not.equal(undefined);
+                expect(res.body[0]['n.carsviewed']).to.not.equal('');
+
+                assert.typeOf(res.body[0]['n.carsviewed'], 'number', 'we have an integer');
+                done();
+            });
+    });
+});
+
+describe('numberOfCarsBought', function () {
+    it('should return JSON content', function (done) {
+        api.get('/stats/numberOfCarsBought')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res) {
+                if (err) throw err;
+                res.status.should.equal(200);
+                done();
+            });
+    });
+
+    it('should return JSON content containing the number of cars bought per date', function (done) {
+        api.get('/stats/numberOfCarsBought')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res) {
+                if (err) throw err;
+                res.status.should.equal(200);
+                res.body.should.not.equal(undefined);
+                res.body.should.not.equal('');
+                expect(res.body).to.not.equal(undefined);
+                expect(res.body).to.not.equal('');
+
+                res.body[0].should.not.equal(undefined);
+                res.body[0].should.not.equal('');
+                expect(res.body[0]).to.not.equal(undefined);
+                expect(res.body[0]).to.not.equal('');
+
+                res.body[0]['n.carsbought'].should.not.equal(undefined);
+                res.body[0]['n.carsbought'].should.not.equal('');
+                expect(res.body[0]['n.carsbought']).to.not.equal(undefined);
+                expect(res.body[0]['n.carsbought']).to.not.equal('');
+
+                assert.typeOf(res.body[0]['n.carsbought'], 'number', 'we have an integer');
+                done();
+            });
+    });
+});

@@ -329,25 +329,25 @@ var server = restify.createServer({
     name: 'CarShop'
 });
 
-server.use(restify.bodyParser());                               // Used for parsing the Request body
-server.use(restify.queryParser());                              // Used for allowing "?variable=value" in the URL
-server.use(restify.CORS({ credentials: true }));                // Used for allowing Access-Control-Allow-Origin
+server.use(restify.bodyParser());                                   // Used for parsing the Request body
+server.use(restify.queryParser());                                  // Used for allowing "?variable=value" in the URL
+server.use(restify.CORS({ credentials: true }));                    // Used for allowing Access-Control-Allow-Origin
 
-server.get('/search/:value', searchRespond);                    // Allows users to search by make, model and year
-server.get('/filter/:type', filterRespond);                     // Someone who goes to this link will get the result of filterRespond
-server.get('/detail/:id', detailRespond);                       // Gives back the properties of the NodeJS ID
-server.get('/users/usernametaken/:username', checkUsername);
-server.get('/users/usernameblocked/:username', denyAccesRespond);
-server.get('/wishlists', publicWishListsRespond);               // Gives all of the public wishlists usernames
-server.get('/user/:user/wishlist', getUserWishlistRespond);     // Gives the public wishlist of a specific user
+server.get('/search/:value', searchRespond);                        // Allows users to search by make, model and year
+server.get('/filter/:type', filterRespond);                         // Someone who goes to this link will get the result of filterRespond
+server.get('/detail/:id', detailRespond);                           // Gives back the properties of the NodeJS ID
+server.get('/users/usernametaken/:username', checkUsername);        // Returns a bool; Whether a username is taken or not
+server.get('/users/usernameblocked/:username', denyAccesRespond);   // Checks if a user is blocked
+server.get('/wishlists', publicWishListsRespond);                   // Gives all of the public wishlists usernames
+server.get('/user/:user/wishlist', getUserWishlistRespond);         // Gives the public wishlist of a specific user
 
 // Statistics
-server.get('/stats/newUsersPerDate', newUsersPerDate);          // Gives the number of new users created per date
-server.get('/stats/numberOfCarsViewed', numberOfCarsViewed);    // Gives the number of cars viewed per date
-server.get('/stats/numberOfCarsBought', numberOfCarsBought);    // Gives the number of cars bought per date
+server.get('/stats/newUsersPerDate', newUsersPerDate);              // Gives the number of new users created per date
+server.get('/stats/numberOfCarsViewed', numberOfCarsViewed);        // Gives the number of cars viewed per date
+server.get('/stats/numberOfCarsBought', numberOfCarsBought);        // Gives the number of cars bought per date
 
-server.get('/stats/carViewed', carViewed);                      // Adds one to the number of cars viewed per date
-server.get('/stats/carBought', carBought);                      // Adds one to the number of cars bought per date
+server.get('/stats/carViewed', carViewed);                          // Adds one to the number of cars viewed per date
+server.get('/stats/carBought', carBought);                          // Adds one to the number of cars bought per date
 
 
 // Page responses (POST)
@@ -358,10 +358,10 @@ server.post('/delete', deleteUserRespond);
 server.post('/block', blockUserRespond);
 
 // Wishlist responses (POST)
-server.post('/wladd', addWishListRespond);                      // Add to wishlist
-server.post('/wldel', deleteWishListRespond);                   // Delete from wishlist
-server.post('/wlvis', visibilityWishListRespond);               // Set wishlist visibility ('public' or 'private')
-server.post('/wl', viewWishListRespond);                        // View the wishlist
+server.post('/wladd', addWishListRespond);                          // Add to wishlist
+server.post('/wldel', deleteWishListRespond);                       // Delete from wishlist
+server.post('/wlvis', visibilityWishListRespond);                   // Set wishlist visibility ('public' or 'private')
+server.post('/wl', viewWishListRespond);                            // View the wishlist
 
 // Files are made accessible to the user, HTML index page is made default
 server.get(/.*/, restify.serveStatic({
