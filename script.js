@@ -445,20 +445,22 @@ function setChartsView() {
 
 function setHistoryView() {
     setContentTo('history.html');
-    $.get('http://' + ip + ':' + port + '/wishlists', function (data) {
+    $.get('http://' + ip + ':' + port + '/order/'+ user.username, function (data) {
         var list = $('<div></div>');
         for (var i = data.length - 1; i >= 0; i--) {
-            var line = $('<p onclick="showOrderHistory(' + "'" + data[i] + "'" + ')">' + data[i] + '</p>');
+            var line = $('<p onclick="showOrderHistory(' + "'" + data[i]._id + "'" + ')">' + data[i]._id + '</p>');
             list.append(line);
         }
         $('#orders').html(list);
     });
 }
 function showOrderHistory(id) {
-    $.get('http://' + ip + ':' + port + '/user/' + id + '/wishlist', function (data) {
+    $.get('http://' + ip + ':' + port + '/orderinfo/' + id, function (data) {
         var list = $('<div></div>');
         for (var i = data.length - 1; i >= 0; i--) {
-            var line = $('<p style="display: inline-block">' + data[i].properties.make + ' ' + data[i].properties.model + ' ' + data[i].properties.year + ' - </p>');
+            console.log(data.length);
+            console.log(data[i].properties);
+            var line = $('<p style="display: inline-block">' + data[i].properties + ' -split-' + data[i] + ' - </p>');
             list.append(line);
         }
         $('#ordersinfo').html(list);
@@ -923,6 +925,11 @@ function getCars() {
     //Initial Setup
     setJSONTable('/filter/Car');
 
+}
+
+function initial() {
+    setJSONTable('/filter/Car', 1);
+
     jQuery(document).bind("keyup", function(e) {
         if(e.which == 13 || e.keycode == 13) {
             e.preventDefault();
@@ -933,9 +940,5 @@ function getCars() {
             }
         }
     }); //Checks if the enter key is pressed on the login page to submit the form
-}
-
-function initial() {
-    setJSONTable('/filter/Car', 1);
 }
 initial();

@@ -276,11 +276,11 @@ function publicWishListsRespond(req, res, next) {
 //Order
 //idea
 function getUserOrderRespond(req, res, next) {
-    var query = 'Match (o:User{username: \''+ req.params.username +'\'})-[:bought]->(f: Order) return f.id';
+    var query = 'Match (o:User{username: \''+ req.params.username +'\'})-[:bought]->(f: Order) return f';
     db.cypher({ query: query }, function(err, results) {
         var response = { length: results.length.toString() };
         for (var i = results.length - 1; i >= 0; i--) {
-            response[i] = results[i]['f.id'];
+            response[i] = results[i]['f'];
         }
         res.send(200, response);
     });
@@ -288,11 +288,12 @@ function getUserOrderRespond(req, res, next) {
 }
 //idea
 function getOrderInfoRespond(req, res, next) {
-    var query = 'MATCH (f:Order { id: \'' + req.params.id + '\'}) return f';
+    //var query = 'MATCH (f:Order { id: \'' + req.params.id + '\'}) return f';
+    var query = matchDataByID(req.params.id);
     db.cypher({ query: query }, function(err, results) {
         var response = { length: results.length.toString() };
         for (var i = results.length - 1; i >= 0; i--) {
-            response[i] = results[i]['f'];
+            response[i] = results[i]['o'];
         }
         res.send(200, response);
     });
