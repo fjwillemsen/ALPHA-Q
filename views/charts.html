@@ -1,42 +1,139 @@
 <div id="charts">
-    <canvas id="chart1" width="400" height="400"></canvas>
+    <br><p>Number of cars viewed per day:</p>
+    <canvas id="chart2" width="400" height="400"></canvas>
+
+    <br><p>Number of cars bought per day:</p>
+    <canvas id="chart3" width="400" height="400"></canvas>
+
+    <br><p>Conversion (cars viewed VS cars bought):</p>
+    <canvas id="chart4" width="400" height="400"></canvas>
+
+    <br><p>New users registered per day:</p>
+    <canvas id="chart1"></canvas>
 </div>
 <script>
-    var ctx = document.getElementById("chart1");
-    var chart1 = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-            datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true
-                    }
-                }]
-            }
+    Chart.defaults.global.maintainAspectRatio = false;
+    Chart.defaults.global.responsive = true;
+
+    var canvasChart1 = document.getElementById("chart1");
+    var url = 'http://' + ip + ':' + port + '/stats/newUsersPerDate';
+    $.get(url, function(rdata) {
+        var numberOfNewUserslist = [];
+        var dateList = [];
+        for (i = 0; i < rdata.length; i++) {
+            numberOfNewUserslist.push(rdata[i]['count(n.username)']);
+            dateList.push(rdata[i]['n.createDay'] + '-' + rdata[i]['n.createMonth'] + '-' + rdata[i]['n.createYear']);
         }
+
+        var chart1 = new Chart(canvasChart1, {
+            type: 'line',
+            data: {
+                labels: dateList,
+                datasets: [{
+                    label: '# of new users',
+                    data: numberOfNewUserslist,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255,99,132,1)',
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+    });
+
+    var canvasChart2 = document.getElementById("chart2");
+    url = 'http://' + ip + ':' + port + '/stats/numberOfCarsViewed';
+    $.get(url, function(rdata) {
+        var numberOfCarsViewedList2 = [];
+        var dateList2 = [];
+        for (i = 0; i < rdata.length; i++) {
+            numberOfCarsViewedList2.push(rdata[i]['n.carsviewed']);
+            dateList2.push(rdata[i]['n.day'] + '-' + rdata[i]['n.month'] + '-' + rdata[i]['n.year']);
+        }
+
+        var chart2 = new Chart(canvasChart2, {
+            type: 'bar',
+            data: {
+                labels: dateList2,
+                datasets: [{
+                    label: '# of cars viewed',
+                    data: numberOfCarsViewedList2,
+                    backgroundColor: 'rgba(99, 99, 255, 0.2)',
+                    borderColor: 'rgba(99,99,200,1)',
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+
+        var canvasChart3 = document.getElementById("chart3");
+        var url = 'http://' + ip + ':' + port + '/stats/numberOfCarsBought';
+        $.get(url, function(rdata) {
+            var numberOfCarsBoughtList3 = [];
+            var dateList3 = [];
+            for (i = 0; i < rdata.length; i++) {
+                numberOfCarsBoughtList3.push(rdata[i]['n.carsbought']);
+                dateList3.push(rdata[i]['n.day'] + '-' + rdata[i]['n.month'] + '-' + rdata[i]['n.year']);
+            }
+
+            var chart3 = new Chart(canvasChart3, {
+                type: 'bar',
+                data: {
+                    labels: dateList3,
+                    datasets: [{
+                        label: '# of cars bought',
+                        data: numberOfCarsBoughtList3,
+                        backgroundColor: 'rgba(99, 255, 99, 0.2)',
+                        borderColor: 'rgba(99,200,99,1)',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+
+            console.log(chart2.data.datasets);
+
+            var canvasChart4 = document.getElementById("chart4");
+            var chart4 = new Chart(canvasChart4, {
+                type: 'line',
+                data: {
+                    labels: dateList3,
+                    datasets: [chart2.data.datasets[0], chart3.data.datasets[0]]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+        });
     });
 </script>

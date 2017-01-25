@@ -3,11 +3,11 @@ var restify = require('restify');
 fs = require('fs');
 
 // Set the port number that's included in the launch arguments, if it is
-var port = 8081
+var port = 8081;
 if(process.argv[2] && process.argv[2] != '') {
     port = process.argv[2]
 }
-console.log(process.argv[2])
+
 
 //Connects to the database
 var db = new neo4j.GraphDatabase('http://neo4j:gZb-AFF-82n-CVo@145.24.222.132:80');
@@ -152,16 +152,17 @@ function loginRespond(req, res, next) {
     next();
 }
 
+
 //Profile
 function registerRespond(req, res, next) {
     var data = JSON.parse(req.body.toString())
     var query = '';
-    var d = new Date();
 
     if(data != undefined) {
         if(!data['role'] || data['role'] == '') {
             data['role'] = 'customer'
         }
+        var d = new Date();
         query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \'' + data['postalcode']
                 + '\', createDay: \'' + d.getDate() + '\', createMonth: \'' + (d.getMonth() + 1) + '\', createYear: \'' + (d.getYear() + 1900)
                 + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\', role: \'' + data['role'] + '\', status: \'' + data['status']+'\'});';
@@ -198,6 +199,7 @@ function blockUserRespond(req,res,next){
     next();
 }
 
+
 //Wishlist
 function viewWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
@@ -226,7 +228,6 @@ function viewWishListRespond(req, res, next) {
 }
 
 function getUserWishlistRespond(req, res, next) {
-    console.log(req.params.username);
     var query = 'MATCH (u:User { username: \'' + req.params.user + '\', wishlist: \'public\'})-[:WISHES]-(c:Car) return c';
     console.log(query);
     db.cypher({ query: query }, function(err, results) {
@@ -241,7 +242,6 @@ function getUserWishlistRespond(req, res, next) {
     next();
 }
 
-//use this as an example callback(for what?)
 function addWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
     var query = 'MATCH (u:User {username:\'' + data['username'] + '\', password: \'' + data['password'] + '\'}), (c:Car) where ID(c)=' + data['addwishlistid'] + ' CREATE (u)-[:WISHES]->(c)';
@@ -283,40 +283,93 @@ function publicWishListsRespond(req, res, next) {
 }
 
 
-//Start the server
+// Statistics
+function resultsPerDate(query, req, res, next) {
+    db.cypher({ query: query }, function(err, results) {
+        var response = { length: results.length.toString() };
+        for (var i = results.length - 1; i >= 0; i--) {
+            response[i] = results[i];
+        }
+        res.send(200, response);
+    });
+    next();
+}
+
+function newUsersPerDate(req, res, next) {
+    var query = 'MATCH (n:User) RETURN count(n.username), n.createDay, n.createMonth, n.createYear ORDER BY toInt(n.createDay), toInt(n.createMonth), toInt(n.createYear);';
+    resultsPerDate(query, req, res, next);
+}
+
+function numberOfCarsViewed(req, res, next) {
+    var query = "MATCH (n:Statistic) RETURN n.carsviewed, n.day, n.month, n.year ORDER BY toInt(n.day), toInt(n.month), toInt(n.year);";
+    resultsPerDate(query, req, res, next);
+}
+
+function numberOfCarsBought(req, res, next) {
+    var query = "MATCH (n:Statistic) RETURN n.carsbought, n.day, n.month, n.year ORDER BY toInt(n.day), toInt(n.month), toInt(n.year);";
+    resultsPerDate(query, req, res, next);
+}
+
+function carViewed() {
+    var d = new Date();
+    var query = "MERGE (n:Statistic { day: " + d.getDate() + ", month: " + (d.getMonth() + 1) + ", year: " + (d.getYear() + 1900) + "}) ON CREATE SET n.carsviewed = 1, n.carsbought = 0 ON MATCH SET n.carsviewed = n.carsviewed + 1;";
+    console.log(query);
+    db.cypher({ query: query });
+}
+
+function carBought() {
+    var d = new Date();
+    var query = "MERGE (n:Statistic { day: " + d.getDate() + ", month: " + (d.getMonth() + 1) + ", year: " + (d.getYear() + 1900) + "}) ON CREATE SET n.carsviewed = 0, n.carsbought = 1 ON MATCH SET n.carsbought = n.carsbought + 1;";
+    db.cypher({ query: query});
+}
+
+
+// Start the server
 var server = restify.createServer({
     name: 'CarShop'
 });
 
-server.use(restify.bodyParser()); //Used for parsing the Request body
-server.use(restify.queryParser()); //Used for allowing "?variable=value" in the URL
+server.use(restify.bodyParser());                                   // Used for parsing the Request body
+server.use(restify.queryParser());                                  // Used for allowing "?variable=value" in the URL
+server.use(restify.CORS({ credentials: true }));                    // Used for allowing Access-Control-Allow-Origin
 
-server.get('/search/:value', searchRespond); //Allows users to search by make, model and year
-server.get('/filter/:type', filterRespond); //Someone who goes to this link will get the result of filterRespond
-server.get('/detail/:id', detailRespond);
-server.get('/wishlists', publicWishListsRespond); //Gives all of the public wishlists usernames
-server.get('/users/usernametaken/:username', checkUsername);
-server.get('/users/usernameblocked/:username', denyAccesRespond);
-server.get('/user/:user/wishlist', getUserWishlistRespond) //Gives the public wishlist of a specific user
+server.get('/search/:value', searchRespond);                        // Allows users to search by make, model and year
+server.get('/filter/:type', filterRespond);                         // Someone who goes to this link will get the result of filterRespond
+server.get('/detail/:id', detailRespond);                           // Gives back the properties of the NodeJS ID
+server.get('/users/usernametaken/:username', checkUsername);        // Returns a bool; Whether a username is taken or not
+server.get('/users/usernameblocked/:username', denyAccesRespond);   // Checks if a user is blocked
+server.get('/wishlists', publicWishListsRespond);                   // Gives all of the public wishlists usernames
+server.get('/user/:user/wishlist', getUserWishlistRespond);         // Gives the public wishlist of a specific user
 
+// Statistics
+server.get('/stats/newUsersPerDate', newUsersPerDate);              // Gives the number of new users created per date
+server.get('/stats/numberOfCarsViewed', numberOfCarsViewed);        // Gives the number of cars viewed per date
+server.get('/stats/numberOfCarsBought', numberOfCarsBought);        // Gives the number of cars bought per date
+
+server.get('/stats/carViewed', carViewed);                          // Adds one to the number of cars viewed per date
+server.get('/stats/carBought', carBought);                          // Adds one to the number of cars bought per date
+
+
+// Page responses (POST)
 server.post('/login', loginRespond);
 server.post('/edituser', editProfileRespond);
 server.post('/register', registerRespond);
 server.post('/delete', deleteUserRespond);
 server.post('/block', blockUserRespond);
 
-server.post('/wladd', addWishListRespond); //Add to wishlist
-server.post('/wldel', deleteWishListRespond); //Delete from wishlist
-server.post('/wlvis', visibilityWishListRespond); //Set wishlist visibility ('public' or 'private')
-server.post('/wl', viewWishListRespond); //View the wishlist
+// Wishlist responses (POST)
+server.post('/wladd', addWishListRespond);                          // Add to wishlist
+server.post('/wldel', deleteWishListRespond);                       // Delete from wishlist
+server.post('/wlvis', visibilityWishListRespond);                   // Set wishlist visibility ('public' or 'private')
+server.post('/wl', viewWishListRespond);                            // View the wishlist
 
-//Files are made accessible to the user, HTML index page is made default
+// Files are made accessible to the user, HTML index page is made default
 server.get(/.*/, restify.serveStatic({
-    'directory': '..',
+    'directory': __dirname,
     'default': 'index.html'
 }));
 
-//Listens for a connection
+// Listens for a connection
 server.listen(port, function() {
     console.log('%s listening at %s', server.name, server.url);
 });

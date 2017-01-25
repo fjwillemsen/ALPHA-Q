@@ -1,0 +1,12 @@
+#!/bin/sh
+rsync -au -P /Users/floris-jan/GitHub/Project\ 5-6 ubuntu-0911853@145.24.222.57:~/
+ssh ubuntu-0911853@145.24.222.57 <<EOF 
+    cd Project\ 5-6
+    pm2 stop all
+    pm2 delete all
+    pm2 start -f main.js --name="Development" -- 8081
+    echo "Unit tests:"
+    sleep 3
+    env KEY1='57' KEY2='8081' mocha tests/websiteTest.js
+EOF
+open http://145.24.222.57:8081/
