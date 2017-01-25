@@ -282,6 +282,25 @@ function publicWishListsRespond(req, res, next) {
     next();
 }
 
+//Order
+//idea
+function getUserOrderRespond() {
+    var query = 'Match (o:User{username: \''+ req.params.username +'\'})-[:bought]-(f: Order) return f.id';
+    filter(query,res, 'f.id');
+    next()
+}
+//idea
+function getOrderInfoRespond(req, res, next) {
+    var query = 'MATCH (f:Order { id: \'' + req.params.id + '\'}) return f';
+    db.cypher({ query: query }, function(err, results) {
+        var response = { length: results.length.toString() };
+        for (var i = results.length - 1; i >= 0; i--) {
+            response[i] = results[i]['f'];
+        }
+        res.send(200, response);
+    });
+    next();
+}
 
 // Statistics
 function resultsPerDate(query, req, res, next) {
@@ -340,6 +359,8 @@ server.get('/users/usernametaken/:username', checkUsername);        // Returns a
 server.get('/users/usernameblocked/:username', denyAccesRespond);   // Checks if a user is blocked
 server.get('/wishlists', publicWishListsRespond);                   // Gives all of the public wishlists usernames
 server.get('/user/:user/wishlist', getUserWishlistRespond);         // Gives the public wishlist of a specific user
+server.get('/order/:username', getUserOrderRespond);                //respond get users orders //idea
+server.get('/orderinfo/:id', getOrderInfoRespond);                  //order info/factuur //idea
 
 // Statistics
 server.get('/stats/newUsersPerDate', newUsersPerDate);              // Gives the number of new users created per date
