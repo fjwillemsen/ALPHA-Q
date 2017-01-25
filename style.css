@@ -370,6 +370,22 @@ button {
 	width: 35em;
 }
 
+#history {
+	display: inline-block;
+}
+
+#orders {
+	background-color: #2460ff;
+	float: left;
+	width: 35em;
+}
+
+#ordersinfo {
+	background-color: #9cd3b6;
+	float: right;
+	width: 35em;
+}
+
 /*Charts*/
 #charts {
 	margin-left: auto;

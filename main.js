@@ -69,8 +69,6 @@ function denyAccesRespond(req,res){
 function editQuery(query, res, callback) {
     db.cypher({ query: query }, function (err, results) {
             var response = {ok: 'ok'};
-            // console.log('response: ' + response);
-            // console.log(res);
             res.send(200, response);
             callback(response);
         }
@@ -167,7 +165,6 @@ function registerRespond(req, res, next) {
                 + '\', createDay: \'' + d.getDate() + '\', createMonth: \'' + (d.getMonth() + 1) + '\', createYear: \'' + (d.getYear() + 1900)
                 + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\', role: \'' + data['role'] + '\', status: \'' + data['status']+'\'});';
     }
-    console.log('Query: ' + query);
     editQuery(query, res);
     next();
 }
@@ -180,7 +177,6 @@ function editProfileRespond(req, res, next) {
         var query = 'MATCH (o:User { username: \'' + data['currentusername'] + '\', password: \'' + data['currentpassword'] + '\'}) SET o.username=\'' + data['username'] + '\', o.password=\'' + data['password'] + '\', o.firstname=\'' + data['firstname'] + '\', o.lastname=\'' + data['lastname'] + '\', o.role=\'' + data['role'] + '\';';
     }
 
-    console.log('Query: ' + query);
     editQuery(query, res);
     next();
 }
@@ -229,14 +225,11 @@ function viewWishListRespond(req, res, next) {
 
 function getUserWishlistRespond(req, res, next) {
     var query = 'MATCH (u:User { username: \'' + req.params.user + '\', wishlist: \'public\'})-[:WISHES]-(c:Car) return c';
-    console.log(query);
     db.cypher({ query: query }, function(err, results) {
         var response = { length: results.length.toString() };
         for (var i = results.length - 1; i >= 0; i--) {
             response[i] = results[i]['c'];
         }
-        console.log(results);
-        console.log(response);
         res.send(200, response);
     });
     next();
@@ -263,7 +256,6 @@ function addWishListRespond(req, res, next) {
 function deleteWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
     var query = 'MATCH (u:User {username:\'' + data['username'] + '\', password: \'' + data['password'] + '\'})-[relation:WISHES]-(c:Car) where ID(c)=' + data['removewishlistid'] + ' DELETE relation';
-    console.log('Q: ' + query);
     editQuery(query, res);
     next();
 }
@@ -271,7 +263,6 @@ function deleteWishListRespond(req, res, next) {
 function visibilityWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
     var query = 'MATCH (u:User {username:\'' + data['username'] + '\', password: \'' + data['password'] + '\'}) SET u.wishlist=\'' + data['wlvisibility'] + '\'';
-    console.log('Q: ' + query);
     editQuery(query, res);
     next();
 }
@@ -282,6 +273,31 @@ function publicWishListsRespond(req, res, next) {
     next();
 }
 
+//Order
+//idea
+function getUserOrderRespond(req, res, next) {
+    var query = 'Match (o:User{username: \''+ req.params.username +'\'})-[:bought]->(f: Order) return f.id';
+    db.cypher({ query: query }, function(err, results) {
+        var response = { length: results.length.toString() };
+        for (var i = results.length - 1; i >= 0; i--) {
+            response[i] = results[i]['f.id'];
+        }
+        res.send(200, response);
+    });
+    next()
+}
+//idea
+function getOrderInfoRespond(req, res, next) {
+    var query = 'MATCH (f:Order { id: \'' + req.params.id + '\'}) return f';
+    db.cypher({ query: query }, function(err, results) {
+        var response = { length: results.length.toString() };
+        for (var i = results.length - 1; i >= 0; i--) {
+            response[i] = results[i]['f'];
+        }
+        res.send(200, response);
+    });
+    next();
+}
 
 // Statistics
 function resultsPerDate(query, req, res, next) {
@@ -313,7 +329,6 @@ function numberOfCarsBought(req, res, next) {
 function carViewed() {
     var d = new Date();
     var query = "MERGE (n:Statistic { day: " + d.getDate() + ", month: " + (d.getMonth() + 1) + ", year: " + (d.getYear() + 1900) + "}) ON CREATE SET n.carsviewed = 1, n.carsbought = 0 ON MATCH SET n.carsviewed = n.carsviewed + 1;";
-    console.log(query);
     db.cypher({ query: query });
 }
 
@@ -340,6 +355,8 @@ server.get('/users/usernametaken/:username', checkUsername);        // Returns a
 server.get('/users/usernameblocked/:username', denyAccesRespond);   // Checks if a user is blocked
 server.get('/wishlists', publicWishListsRespond);                   // Gives all of the public wishlists usernames
 server.get('/user/:user/wishlist', getUserWishlistRespond);         // Gives the public wishlist of a specific user
+server.get('/order/:username', getUserOrderRespond);                //respond get users orders //idea
+server.get('/orderinfo/:id', getOrderInfoRespond);                  //order info/factuur //idea
 
 // Statistics
 server.get('/stats/newUsersPerDate', newUsersPerDate);              // Gives the number of new users created per date
