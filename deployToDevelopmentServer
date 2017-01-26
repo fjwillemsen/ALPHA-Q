@@ -9,4 +9,4 @@ ssh ubuntu-0911853@145.24.222.57 <<EOF
     sleep 2
     env KEY1='57' KEY2='8081' mocha tests/
 EOF
-# open http://145.24.222.57:8081/
+open http://145.24.222.57:8081/
