@@ -114,6 +114,12 @@ function setChartsView() {
     setContentTo('charts.html');
 }
 
+function setPay(){
+    setContentTo('payment.html')
+}
+function setAfterpayment(){
+    setContentTo('afterPayment.html')
+}
 function setHistoryView() {
     setContentTo('history.html');
     $.get('http://' + ip + ':' + port + '/order/'+ user.username, function (data) {

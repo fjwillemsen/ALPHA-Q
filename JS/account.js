@@ -56,6 +56,9 @@ function submitLogin() {
                             if (user.role = "admin") {
                                 adminLoggedIn();
                             }
+                            if (user.role = "user"){
+                                userLoggedIn();
+                            }
                         }
                     } else {
                         swal({
@@ -129,12 +132,18 @@ function setBlockAccountView(){
 
 function adminLoggedIn() {
     $('#chartsButton').css('visibility', 'visible');
-}                      // Triggered when an admin has logged in
+    $('#cardbutton').css('visibility', 'visible');
 
+}    // Triggered when an admin has logged in
+
+function userLoggedIn(){
+    $('#cardbutton').css('visibility', 'visible');
+}
 function logOut() {
     var empty;
     user = empty;
     $('#accountButton').text('LOG IN -');
     $('#chartsButton').css('visibility', 'hidden');
+    $('#cardbutton').css('visibility', 'hidden');
     setJSONTable('/filter/Car');
 }                             // Log out the user, go back to initial state
