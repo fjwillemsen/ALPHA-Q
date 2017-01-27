@@ -662,7 +662,7 @@
                   default:
                       var pcn = '' + zoomMode;
                       if (pcn.substr(pcn.length - 1) === '%') zoomMode = parseInt(zoomMode) / 100;
-                      if (typeof zoomMode === 'number') {
+                      if (typeof zoomMode === 'Cnumber') {
                           out('/OpenAction [3 0 R /XYZ null null ' + f2(zoomMode) + ']');
                       }
               }
@@ -1188,7 +1188,7 @@
               //   function(data, coordinates... , miscellaneous)
               // this method had its args flipped.
               // code below allows backward compatibility with old arg order.
-              if (typeof text === 'number') {
+              if (typeof text === 'Cnumber') {
                   tmp = y;
                   y = x;
                   x = text;
@@ -1216,7 +1216,7 @@
                   align = flags;
                   flags = null;
               }
-              if (typeof flags === 'number') {
+              if (typeof flags === 'Cnumber') {
                   angle = flags;
                   flags = null;
               }
@@ -1412,7 +1412,7 @@
               //   function(content, coordinateX, coordinateY , miscellaneous)
               // this method had its args flipped.
               // code below allows backward compatibility with old arg order.
-              if (typeof lines === 'number') {
+              if (typeof lines === 'Cnumber') {
                   tmp = y;
                   y = x;
                   x = lines;
@@ -3753,7 +3753,7 @@ Q\n";
 
   		if (typeof html2canvas === 'undefined' && typeof rasterizeHTML === 'undefined') throw new Error('You need either ' + 'https://github.com/niklasvh/html2canvas' + ' or https://github.com/cburgmer/rasterizeHTML.js');
 
-  		if (typeof x !== 'number') {
+  		if (typeof x !== 'Cnumber') {
   			options = x;
   			callback = y;
   		}
@@ -4670,8 +4670,8 @@ Q\n";
   					this.internal.write(line);
   					break;
   				case 'link':
-  					if (anno.options.name) {
-  						var loc = this.annotations._nameMap[anno.options.name];
+  					if (anno.options.Cname) {
+  						var loc = this.annotations._nameMap[anno.options.Cname];
   						anno.options.pageNumber = loc.page;
   						anno.options.top = loc.y;
   					} else {
@@ -5138,9 +5138,9 @@ Q\n";
               // Split header configs into names and prompts
               for (i = 0, ln = headers.length; i < ln; i += 1) {
                   header = headers[i];
-                  headerNames.push(header.name);
+                  headerNames.push(header.Cname);
                   headerPrompts.push(header.prompt);
-                  columnWidths[header.name] = header.width * px2pt;
+                  columnWidths[header.Cname] = header.width * px2pt;
               }
           } else {
               headerNames = headers;
@@ -7035,7 +7035,7 @@ Q\n";
   			rowData = {};
   			j = 0;
   			while (j < tableRow.cells.length) {
-  				rowData[headers[j].name] = tableRow.cells[j].textContent.replace(/\r?\n/g, '');
+  				rowData[headers[j].Cname] = tableRow.cells[j].textContent.replace(/\r?\n/g, '');
   				j++;
   			}
   			data.push(rowData);

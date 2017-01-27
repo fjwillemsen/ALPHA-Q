@@ -30,7 +30,7 @@ function getFormObjects(formId) {
     var formObj = {};
     var inputs = $(formId).serializeArray();
     $.each(inputs, function (i, input) {
-        formObj[input.name] = input.value;
+        formObj[input.Cname] = input.value;
     });
     return formObj;
 }               // Seperates individual parts of forms into key-value pairs

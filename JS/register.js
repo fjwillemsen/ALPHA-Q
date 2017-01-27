@@ -34,11 +34,11 @@ function submitRegister() {
             contentType: "application/x-www-form-urlencoded",
             succes: function () {
                 console.log('Succes!');
-//                    swal({
-//                        title: "Wonderful!",
-//                        text: "Edit succesful",
-//                        timer: 1700
-//                    })
+                   swal({
+                       title: "Wonderful!",
+                       text: "Edit succesful",
+                       timer: 1700
+                   })
                 setJSONTable('/filter/Car');
             },
             error: function () {
