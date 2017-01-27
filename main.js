@@ -36,8 +36,6 @@ function filter(query, res, getter, callback) {
             }
         }
 
-        console.log(response);
-
         res.send(200, response);
         callback(response);
     });
@@ -106,6 +104,11 @@ function noUndefined(data) {
     }
 
     return false;
+}
+
+function missingImageRespond(req, res) {
+    var query = 'MATCH (o:Car) WHERE id(o) = ' + req.params.id + '  SET o.image=false;';
+    editQuery(query, res);
 }
 
 
@@ -179,7 +182,6 @@ function loginRespond(req, res, next) {
     var password = JSON.parse(req.body.toString())["password"];
 
     var query = 'MATCH (o:User { username: \'' + username + '\', password: \'' + password + '\' }) RETURN o';
-    console.log(query);
     filter(query, res, 'o', returnData);
     next();
 }
@@ -195,7 +197,7 @@ function registerRespond(req, res, next) {
             data['role'] = 'customer'
         }
 
-        if(data) {
+        if(noUndefined(data)) {
             var d = new Date();
             query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \'' + data['postalcode']
                 + '\', createDay: \'' + d.getDate() + '\', createMonth: \'' + (d.getMonth() + 1) + '\', createYear: \'' + (d.getYear() + 1900)
@@ -323,6 +325,7 @@ function getUserOrderRespond(req, res, next) {
     });
     next()
 }
+
 //idea
 function getOrderInfoRespond(req, res, next) {
     //var query = 'MATCH (f:Order { id: \'' + req.params.id + '\'}) return f';
@@ -394,8 +397,9 @@ server.get('/users/usernametaken/:username', checkUsername);        // Returns a
 server.get('/users/usernameblocked/:username', denyAccesRespond);   // Checks if a user is blocked
 server.get('/wishlists', publicWishListsRespond);                   // Gives all of the public wishlists usernames
 server.get('/user/:user/wishlist', getUserWishlistRespond);         // Gives the public wishlist of a specific user
-server.get('/order/:username', getUserOrderRespond);                //respond get users orders //idea
-server.get('/orderinfo/:id', getOrderInfoRespond);                  //order info/factuur //idea
+server.get('/order/:username', getUserOrderRespond);                // Respond get users orders //idea
+server.get('/orderinfo/:id', getOrderInfoRespond);                  // Order info/factuur //idea
+server.get('/cars/reportMissingImage/:id', missingImageRespond);    // Set the 'missing image' attribute of the car to true
 
 // Statistics
 server.get('/stats/newUsersPerDate', newUsersPerDate);              // Gives the number of new users created per date
