@@ -138,6 +138,12 @@ button {
 	visibility: hidden;
 }
 
+#cardbutton{
+	background-image: url('icons/CC.svg');
+	visibility: hidden;
+}
+
+
 /*Subbar*/
 #subbar {
 	display: inline-block;

@@ -115,6 +115,13 @@ function setChartsView() {
     setContentTo('charts.html');
 }
 
+function setPay(){
+    setContentTo('payment.html')
+}
+function setAfterpayment(){
+    setContentTo('afterPayment.html')
+}
+
 function toggleAndSetSubbar(id, page, fn) {
     if($('#subbar').css('display') == 'none' || !$('#' + id).length) {
         $('#subbar').show();
