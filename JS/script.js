@@ -3,6 +3,7 @@ var port = window.location.port;
 var username = '';
 var password = '';
 var cartList = [];
+var cartTotalPrice = 0;
 var user;
 var wishlist;
 
@@ -40,7 +41,7 @@ function setDetailView(value) {
             $('#details .title').append(data[0].properties.make + " " + data[0].properties.model);
             $('#subtitle').append(data[0].properties.year);
             $('#price').append('&euro;' + data[0].properties.price);
-            $('#optionsbar').html('<div class="imagebutton" id="addtocartbutton" onclick="addCarToCart(\'' + data[0]._id.toString() + '\', \'' + data[0].properties.make.toString() + '\', \'' + data[0].properties.model.toString() + '\', \'' + data[0].properties.year.toString() + '\')"></div>' +
+            $('#optionsbar').html('<div class="imagebutton" id="addtocartbutton" onclick="addCarToCart(\'' + data[0]._id.toString() + '\', \'' + data[0].properties.make.toString() + '\', \'' + data[0].properties.model.toString() + '\', \'' + data[0].properties.year.toString() + '\',\'' + data[0].properties.price +'\')"></div>' +
                 '<div class="imagebutton" id="addtowishlistbutton" onclick="addToWishList(\'' + data[0]._id.toString() + '\', \'' + data[0].properties.make.toString() + '\', \'' + data[0].properties.model.toString() + '\')"></div>');
 
             var blacklist = ['model_sold_in_us', 'model', 'make', 'year', 'make_display', 'price', 'model_year', 'model_make_display', 'model_make_id', 'model_trim', 'model_name'];
@@ -114,32 +115,6 @@ function setChartsView() {
     setContentTo('charts.html');
 }
 
-function setHistoryView() {
-    setContentTo('history.html');
-    $.get('http://' + ip + ':' + port + '/order/'+ user.username, function (data) {
-        var list = $('<div></div>');
-        for (var i = data.length - 1; i >= 0; i--) {
-            var line = $('<p onclick="showOrderHistory(' + "'" + data[i]._id + "'" + ')">' + data[i]._id + '</p>');
-            list.append(line);
-        }
-        $('#orders').html(list);
-    });
-}
-
-function showOrderHistory(id) {
-    $.get('http://' + ip + ':' + port + '/orderinfo/' + id, function (data) {
-        var list = $('<div></div>');
-        for (var i = data.length - 1; i >= 0; i--) {
-            console.log(data.length);
-            console.log(data[i].properties);
-            var line = $('<p style="display: inline-block">' + data[i].properties + ' -split-' + data[i] + ' - </p>');
-            list.append(line);
-        }
-        $('#ordersinfo').html(list);
-    });
-}
-
-
 function toggleAndSetSubbar(id, page, fn) {
     if($('#subbar').css('display') == 'none' || !$('#' + id).length) {
         $('#subbar').show();
@@ -195,4 +170,5 @@ function initial() {
         }
     }); //Checks if the enter key is pressed on the login page to submit the form
 }
+
 initial();

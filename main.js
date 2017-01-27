@@ -295,6 +295,7 @@ function getOrderInfoRespond(req, res, next) {
         for (var i = results.length - 1; i >= 0; i--) {
             response[i] = results[i]['o'];
         }
+        //console.log(Object.keys(response[0]['properties']).length);
         res.send(200, response);
     });
     next();

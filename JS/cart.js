@@ -1,5 +1,8 @@
-function addCarToCart(id, make, model, year) {
+function addCarToCart(id, make, model, year, price) {
     var item = $('<option value="">'+ make + " " + model+ " " + year + '</option>');
+    cartTotalPrice = cartTotalPrice + parseInt(price);
+    console.log(cartTotalPrice);
+
     cartList.push(item);
     //item.append(JSON.stringify(cartList));
     $('#subbar').hide();
