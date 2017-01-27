@@ -57,13 +57,18 @@ function denyAccesRespond(req,res){
     var query = 'MATCH (o:User { username: \'' + req.params.username + '\' }) RETURN o.status';
 
     db.cypher({ query: query}, function (err, results) {
-            if (results[0]['o.status'] == 'blocked') {
-                res.send(200, true)
-            } else {
-                res.send(200, false)
+        if (results[0]) {
+            if(results[0]['o.status']) {
+                if (results[0]['o.status'] == 'blocked') {
+                    res.send(200, true)
+                } else {
+                    res.send(200, false)
+                }
             }
+            res.send(200, false)
         }
-    )
+        res.send(200, false)
+    });
 }
 
 function editQuery(query, res, callback) {
@@ -73,6 +78,21 @@ function editQuery(query, res, callback) {
             callback(response);
         }
     );
+}
+
+function noUndefined(data) {
+    if(data && data.length) {
+        var correct = true;
+        for (var i = 0; i < data.length; i++) {
+            if(data[i] == undefined || data[i] == '') {
+                correct = false;
+            }
+        }
+
+        return correct;
+    }
+
+    return false;
 }
 
 
@@ -160,10 +180,13 @@ function registerRespond(req, res, next) {
         if(!data['role'] || data['role'] == '') {
             data['role'] = 'customer'
         }
-        var d = new Date();
-        query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \'' + data['postalcode']
+
+        if(noUndefined(data)) {
+            var d = new Date();
+            query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \'' + data['postalcode']
                 + '\', createDay: \'' + d.getDate() + '\', createMonth: \'' + (d.getMonth() + 1) + '\', createYear: \'' + (d.getYear() + 1900)
-                + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\', role: \'' + data['role'] + '\', status: \'' + data['status']+'\'});';
+                + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\', role: \'' + data['role'] + '\', status: \'' + data['status'] + '\'});';
+        }
     }
     editQuery(query, res);
     next();

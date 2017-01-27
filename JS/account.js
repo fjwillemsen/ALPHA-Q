@@ -139,6 +139,7 @@ function adminLoggedIn() {
 function userLoggedIn(){
     $('#cardbutton').css('visibility', 'visible');
 }
+
 function logOut() {
     var empty;
     user = empty;
