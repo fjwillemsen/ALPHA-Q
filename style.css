@@ -414,6 +414,27 @@ button {
 	height: 100%;
 }
 
+/*Card*/
+
+.demo-container {
+	width: 100%;
+	max-width: 350px;
+	margin: 50px auto;
+}
+.demo-container form {
+	margin: 30px;
+}
+.demo-container input {
+	width: 200px;
+	margin: 10px auto;
+	display: block;
+}
+.demo-container button{
+	width: 100%;
+	max-width: 350px;
+	margin: 50px auto;
+}
+
 /*Responsive*/
 @media screen and (max-width: 1060px) {
 	#title {

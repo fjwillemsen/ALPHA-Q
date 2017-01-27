@@ -66,7 +66,6 @@ describe("POST Requests", function () {
                     assert.typeOf(res.body[0].properties['role'], 'string', 'we have a string');
                     assert.typeOf(res.body[0].properties['address'], 'string', 'we have a string');
                     assert.typeOf(res.body[0].properties['shipcountry'], 'string', 'we have a string');
-                    assert.typeOf(res.body[0].properties['wishlist'], 'string', 'we have a string');
                     assert.typeOf(res.body[0].properties['createYear'], 'string', 'we have a string');
                     assert.typeOf(res.body[0].properties['shipaddress'], 'string', 'we have a string');
                     assert.typeOf(res.body[0].properties['createDay'], 'string', 'we have a string');
@@ -82,7 +81,7 @@ describe("POST Requests", function () {
     });
 
     describe("edituser", function() {
-        it("should return OK in JSON", function(done) {
+        it("should return NO in JSON", function(done) {
             request.post(url + '/edituser')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
                 .send('{"username":"admin", "password":"admin"}')
@@ -97,8 +96,8 @@ describe("POST Requests", function () {
                     expect(res.body).to.not.equal('');
 
                     assert.typeOf(res.body, 'object', 'we have a object');
-                    res.body.ok.should.equal('ok');
-                    expect(res.body.ok).to.equal('ok');
+                    res.body.ok.should.equal('no');
+                    expect(res.body.ok).to.equal('no');
 
                     done();
                 })
@@ -106,7 +105,7 @@ describe("POST Requests", function () {
     });
 
     describe("register", function() {
-        it("should return OK in JSON", function(done) {
+        it("should return NO in JSON", function(done) {
             request.post(url + '/register')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
                 .send('{"username":"admin", "password":"admin"}')
@@ -121,8 +120,8 @@ describe("POST Requests", function () {
                     expect(res.body).to.not.equal('');
 
                     assert.typeOf(res.body, 'object', 'we have a object');
-                    res.body.ok.should.equal('ok');
-                    expect(res.body.ok).to.equal('ok');
+                    res.body.ok.should.equal('no');
+                    expect(res.body.ok).to.equal('no');
 
                     done();
                 })
@@ -130,7 +129,7 @@ describe("POST Requests", function () {
     });
 
     describe("delete", function() {
-        it("should return OK in JSON", function(done) {
+        it("should return NO in JSON", function(done) {
             request.post(url + '/delete')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
                 .send('{"username":"admin", "password":"admin"}')
@@ -145,8 +144,8 @@ describe("POST Requests", function () {
                     expect(res.body).to.not.equal('');
 
                     assert.typeOf(res.body, 'object', 'we have a object');
-                    res.body.ok.should.equal('ok');
-                    expect(res.body.ok).to.equal('ok');
+                    res.body.ok.should.equal('no');
+                    expect(res.body.ok).to.equal('no');
 
                     done();
                 })
@@ -154,7 +153,7 @@ describe("POST Requests", function () {
     });
 
     describe("block", function() {
-        it("should return OK in JSON", function(done) {
+        it("should return NO in JSON", function(done) {
             request.post(url + '/block')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
                 .send('{"username":"admin", "password":"admin"}')
@@ -169,8 +168,8 @@ describe("POST Requests", function () {
                     expect(res.body).to.not.equal('');
 
                     assert.typeOf(res.body, 'object', 'we have a object');
-                    res.body.ok.should.equal('ok');
-                    expect(res.body.ok).to.equal('ok');
+                    res.body.ok.should.equal('no');
+                    expect(res.body.ok).to.equal('no');
 
                     done();
                 })

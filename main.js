@@ -36,6 +36,8 @@ function filter(query, res, getter, callback) {
             }
         }
 
+        console.log(response);
+
         res.send(200, response);
         callback(response);
     });
@@ -73,7 +75,10 @@ function denyAccesRespond(req,res){
 
 function editQuery(query, res, callback) {
     db.cypher({ query: query }, function (err, results) {
-            var response = {ok: 'ok'};
+            var response = {ok: 'no'};
+            if(query == undefined || query == '') {
+                response = {ok: 'ok'};
+            }
             res.send(200, response);
             callback(response);
         }
@@ -83,10 +88,18 @@ function editQuery(query, res, callback) {
 function noUndefined(data) {
     if(data && data.length) {
         var correct = true;
-        for (var i = 0; i < data.length; i++) {
-            if(data[i] == undefined || data[i] == '') {
-                correct = false;
-            }
+
+        if("firstname" == undefined ||
+            "lastname" == undefined ||
+            "address" == undefined ||
+            "postalcode" == undefined ||
+            "country" == undefined ||
+            "shipaddress" == undefined ||
+            "shipcountry" == undefined ||
+            "shippostalcode" == undefined ||
+            "username" == undefined ||
+            "password" == undefined) {
+            correct = false;
         }
 
         return correct;
@@ -166,7 +179,8 @@ function loginRespond(req, res, next) {
     var password = JSON.parse(req.body.toString())["password"];
 
     var query = 'MATCH (o:User { username: \'' + username + '\', password: \'' + password + '\' }) RETURN o';
-    filter(query, res, 'o', returnData)
+    console.log(query);
+    filter(query, res, 'o', returnData);
     next();
 }
 
@@ -181,7 +195,7 @@ function registerRespond(req, res, next) {
             data['role'] = 'customer'
         }
 
-        if(noUndefined(data)) {
+        if(data) {
             var d = new Date();
             query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \'' + data['postalcode']
                 + '\', createDay: \'' + d.getDate() + '\', createMonth: \'' + (d.getMonth() + 1) + '\', createYear: \'' + (d.getYear() + 1900)
@@ -318,6 +332,7 @@ function getOrderInfoRespond(req, res, next) {
         for (var i = results.length - 1; i >= 0; i--) {
             response[i] = results[i]['o'];
         }
+        //console.log(Object.keys(response[0]['properties']).length);
         res.send(200, response);
     });
     next();

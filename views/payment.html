@@ -1,47 +1,41 @@
-<!DOCTYPE html>
-<html>
-<body>
-<style>
-    .demo-container {
-        width: 100%;
-        max-width: 350px;
-        margin: 50px auto;
-    }
-    form {
-        margin: 30px;
-    }
-    input {
-        width: 200px;
-        margin: 10px auto;
-        display: block;
-    }
-    button{
-        width: 100%;
-        max-width: 350px;
-        margin: 50px auto;
-    }
-</style>
 <div class="demo-container">
     <div class="card-wrapper"></div>
-
     <div class="form-container active">
-        <form action="">
-            <input placeholder="Card number" type="tel" name="number">
-            <input placeholder="Full name" type="text" name="name">
-            <input placeholder="MM/YY" type="tel" name="expiry">
-            <input placeholder="CVC" type="number" name="cvc">
-            <button onclick="setAfterpayment()"> Confirm Payment</button>
+        <form action="" name="kreka">
+            <input placeholder="Card number" type="tel" name="number" id="kaartnummer">
+            <input placeholder="Full name" type="text" name="Cname" id="voornaam">
+            <input placeholder="MM/YY" type="tel" name="Cexpiry" id="verloop">
+            <input placeholder="CVC" type="number" name="Ccvc" id="codecode">
+            <button onclick="cardValidation()"> Confirm Payment</button>
         </form>
-
     </div>
 </div>
-
-<script src="/card.js"></script>
 <script>
     new Card({
         form: document.querySelector('form'),
         container: '.card-wrapper'
     });
+    function cardValidation(){
+        var kaart = getFormObjects('#kreka')
+        if(!kaart['number'] || kaart['number'] == ""){
+            var al = document.getElementById("kaartnummer")
+            al.innerHTML = "Please fill in your creditcard number"
+        }
+        if(!kaart['Cname'] || kaart['Cname'] == ""){
+            var al = document.getElementById("voornaam")
+            al.innerHTML = "Please fill in your first name"
+        }
+        if(!kaart['Cexpiry'] || kaart['Cexpiry'] == ""){
+            var al = document.getElementById("verloop")
+            al.innerHTML = "Please fill in your expiry date"
+        }
+        if(!kaart['Ccvc'] || kaart['Ccvc'] == ""){
+            var al = document.getElementById("codecode")
+            al.innerHTML = "Please fill in your CVC number"
+        }
+        else{
+            setContentTo('afterPayment.html');
+        }
+
+    }
 </script>
-</body>
-</html>

@@ -3,6 +3,7 @@ var port = window.location.port;
 var username = '';
 var password = '';
 var cartList = [];
+var cartTotalPrice = 0;
 var user;
 var wishlist;
 
@@ -30,7 +31,6 @@ function setContentTo(file, callback) {
     });
 }
 
-
 function setDetailView(value) {
     setContentTo('details.html', function() {
         var url = 'http://' + ip + ':' + port + '/detail/' + value;
@@ -40,7 +40,7 @@ function setDetailView(value) {
             $('#details .title').append(data[0].properties.make + " " + data[0].properties.model);
             $('#subtitle').append(data[0].properties.year);
             $('#price').append('&euro;' + data[0].properties.price);
-            $('#optionsbar').html('<div class="imagebutton" id="addtocartbutton" onclick="addCarToCart(\'' + data[0]._id.toString() + '\', \'' + data[0].properties.make.toString() + '\', \'' + data[0].properties.model.toString() + '\', \'' + data[0].properties.year.toString() + '\')"></div>' +
+            $('#optionsbar').html('<div class="imagebutton" id="addtocartbutton" onclick="addCarToCart(\'' + data[0]._id.toString() + '\', \'' + data[0].properties.make.toString() + '\', \'' + data[0].properties.model.toString() + '\', \'' + data[0].properties.year.toString() + '\',\'' + data[0].properties.price +'\')"></div>' +
                 '<div class="imagebutton" id="addtowishlistbutton" onclick="addToWishList(\'' + data[0]._id.toString() + '\', \'' + data[0].properties.make.toString() + '\', \'' + data[0].properties.model.toString() + '\')"></div>');
 
             var blacklist = ['model_sold_in_us', 'model', 'make', 'year', 'make_display', 'price', 'model_year', 'model_make_display', 'model_make_id', 'model_trim', 'model_name'];
@@ -134,7 +134,6 @@ function setHistoryView() {
     });
 }
 
-
 function toggleAndSetSubbar(id, page, fn) {
     if($('#subbar').css('display') == 'none' || !$('#' + id).length) {
         $('#subbar').show();
@@ -190,4 +189,5 @@ function initial() {
         }
     }); //Checks if the enter key is pressed on the login page to submit the form
 }
+
 initial();
