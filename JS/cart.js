@@ -1,9 +1,11 @@
 function addCarToCart(id, make, model, year, price) {
-    var item = $('<option value="">'+ make + " " + model+ " " + year + '</option>');
+    var item = $('<option value="">'+ make + " " + model+ " " + year + " " + price +  '</option>');
+    var item2 = make + " " + model + " " + year + " " + "&#8364;" + price;
     cartTotalPrice = cartTotalPrice + parseInt(price);
     console.log(cartTotalPrice);
 
     cartList.push(item);
+    orderList.push(item2);
     //item.append(JSON.stringify(cartList));
     $('#subbar').hide();
     swal({
@@ -18,13 +20,14 @@ function showCart() {
     toggleAndSetSubbar('cart', 'cart', function() {
         //var item = $('<p></p>');
         var deleteButton = $('<input type= "button"id="btDel" value="Remove" onclick= onRemoveCartItem() />');
+        var paymentButton = $('<input type= "button"id="btPay" value="Set order" onclick= setPaymentContentResult() />');
 
         var box = $('<select id = "cList"></select>' )
         cartList.join('');
         box.append(cartList);
         $('#cart').append(box);
         $('#cart').append(deleteButton);
-
+        $('#cart').append(paymentButton);
     });
 }
 
@@ -37,3 +40,18 @@ function onRemoveCartItem() {
         timer: 1700
     })
 }                   // Removes an item from the cart
+
+// Order view
+function setPaymentContentResult(){
+    var list = $('<div></div>');
+    for (var i = orderList.length - 1; i >= 0; i--) {
+
+        var line = $('<p> ' + orderList[i] + '</p><br>');
+        list.append(line);
+    }
+    setContentTo('order.html', function call(){
+        $('#orderOrder').html(list);
+        document.getElementById("orderTotal").innerHTML= ("&#8364;" + cartTotalPrice);
+
+    });
+}

@@ -3,6 +3,7 @@ var port = window.location.port;
 var username = '';
 var password = '';
 var cartList = [];
+var orderList = [];
 var cartTotalPrice = 0;
 var user;
 var wishlist;
@@ -41,7 +42,7 @@ function setDetailView(value) {
             $('#details .title').append(data[0].properties.make + " " + data[0].properties.model);
             $('#subtitle').append(data[0].properties.year);
             $('#price').append('&euro;' + data[0].properties.price);
-            $('#optionsbar').html('<div class="imagebutton" id="addtocartbutton" onclick="addCarToCart(\'' + data[0]._id.toString() + '\', \'' + data[0].properties.make.toString() + '\', \'' + data[0].properties.model.toString() + '\', \'' + data[0].properties.year.toString() + '\',\'' + data[0].properties.price +'\')"></div>' +
+            $('#optionsbar').html('<div class="imagebutton" id="addtocartbutton" onclick="addCarToCart(\'' + data[0]._id.toString() + '\', \'' + data[0].properties.make.toString() + '\', \'' + data[0].properties.model.toString() + '\', \'' + data[0].properties.year.toString() + '\', \'' + data[0].properties.price.toString() +'\')"></div>' +
                 '<div class="imagebutton" id="addtowishlistbutton" onclick="addToWishList(\'' + data[0]._id.toString() + '\', \'' + data[0].properties.make.toString() + '\', \'' + data[0].properties.model.toString() + '\')"></div>');
 
             var blacklist = ['model_sold_in_us', 'model', 'make', 'year', 'make_display', 'price', 'model_year', 'model_make_display', 'model_make_id', 'model_trim', 'model_name'];
