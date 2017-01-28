@@ -28,10 +28,13 @@ function blockUser(){
 }
 
 function submitLogin() {
-    var formobjects = getFormObjects('#loginform');
-    username = formobjects['username'];
-    password = formobjects['password'];
     var fo = getFormObjects('#loginform');
+    console.log(fo);
+    username = fo["username"];
+    password = fo["password"];
+    console.log(username);
+    console.log(password);
+
     $.get('http://' + ip+":"+port+"/users/usernameblocked/" + fo['username'], function (data) {
         if(data == true){
             setBlockedProfileView();
@@ -53,10 +56,10 @@ function submitLogin() {
                             submitViewWishList();
                             $('#accountButton').text('ACCOUNT -');
 
-                            if (user.role = "admin") {
+                            if (user.role == "admin") {
                                 adminLoggedIn();
                             }
-                            if (user.role = "user"){
+                            if (user.role == "user"){
                                 userLoggedIn();
                             }
                         }
@@ -134,11 +137,12 @@ function adminLoggedIn() {
     $('#chartsButton').css('visibility', 'visible');
     $('#cardbutton').css('visibility', 'visible');
 
-}    // Triggered when an admin has logged in
+}                      // Triggered when an admin has logged in
 
 function userLoggedIn(){
     $('#cardbutton').css('visibility', 'visible');
 }
+
 function logOut() {
     var empty;
     user = empty;

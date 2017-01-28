@@ -32,7 +32,6 @@ function setContentTo(file, callback) {
     });
 }
 
-
 function setDetailView(value) {
     setContentTo('details.html', function() {
         var url = 'http://' + ip + ':' + port + '/detail/' + value;
@@ -88,16 +87,22 @@ function setJSONTable(value, first) {
             var i = data.length - 1;
         }
         for (i; i >= 0; i--) {
-            var itemcontainer = $('<a id="cell"' + i + ' onclick="setDetailView(' + data[i]._id + ')"></a>');
-            var item = $('<td></td>');
-            item.append('<img src= "/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png">');
-            item.append(data[i].properties.make);
-            item.append(" " + data[i].properties.model);
-            item.append(" " + data[i].properties.year);
-            item.append("<br>&euro;" + data[i].properties.price);
+            if (data[i]) {
+                if(data[i].properties) {
+                    if (data[i].properties.image) {
+                        var itemcontainer = $('<a id="cell"' + i + ' onclick="setDetailView(' + data[i]._id + ')"></a>');
+                        var item = $('<td></td>');
+                        item.append('<img src="/images/' + data[i].properties.make.toString() + '/' + data[i].properties.model.toString() + '.png" alt="Strange, no picture?" onerror="onMissingImage(' + data[i]._id + ')">');
+                        item.append(data[i].properties.make);
+                        item.append(" " + data[i].properties.model);
+                        item.append(" " + data[i].properties.year);
+                        item.append("<br>&euro;" + data[i].properties.price);
 
-            itemcontainer.append(item);
-            row.append(itemcontainer);
+                        itemcontainer.append(item);
+                        row.append(itemcontainer);
+                    }
+                }
+            }
         }
 
         row.append('</tr>');
@@ -106,6 +111,13 @@ function setJSONTable(value, first) {
         $('#content').html('');
         $('#content').append(table);
     });
+}
+
+function onMissingImage(id) {
+    var url = 'http://' + ip + ':' + port + '/cars/reportMissingImage/' + id;
+    $.get(url);
+    console.log("Reported Missing Image ID: " + id);
+    this.onerror = null;
 }
 
 function setContactView() {
@@ -119,8 +131,21 @@ function setChartsView() {
 function setPay(){
     setContentTo('payment.html')
 }
+
 function setAfterpayment(){
     setContentTo('afterPayment.html')
+}
+
+function setHistoryView() {
+    setContentTo('history.html');
+    $.get('http://' + ip + ':' + port + '/order/'+ user.username, function (data) {
+        var list = $('<div></div>');
+        for (var i = data.length - 1; i >= 0; i--) {
+            var line = $('<p class="invoiceButton" onclick="nodePDF(' + "'" + data[i]._id + "'" + ')">' + '#' + data[i]._id + '</p>');
+            list.append(line);
+        }
+        $('#orders').html(list);
+    });
 }
 
 function toggleAndSetSubbar(id, page, fn) {

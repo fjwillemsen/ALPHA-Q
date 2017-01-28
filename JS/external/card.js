@@ -468,7 +468,7 @@ var card =
 			var alreadyImportedModules = {};
 			for(var i = 0; i < this.length; i++) {
 				var id = this[i][0];
-				if(typeof id === "Cnumber")
+				if(typeof id === "number")
 					alreadyImportedModules[id] = true;
 			}
 			for(i = 0; i < modules.length; i++) {
@@ -477,7 +477,7 @@ var card =
 				// this implementation is not 100% perfect for weird media query combinations
 				//  when a module is imported multiple times with different media queries.
 				//  I hope this will never occur (Hey this way we have smaller bundles)
-				if(typeof item[0] !== "Cnumber" || !alreadyImportedModules[item[0]]) {
+				if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
 					if(mediaQuery && !item[2]) {
 						item[2] = mediaQuery;
 					} else if(mediaQuery) {

@@ -246,7 +246,7 @@ describe("GET Requests", function () {
                     expect(res.body[0]['count(n.username)']).to.not.equal(undefined);
                     expect(res.body[0]['count(n.username)']).to.not.equal('');
 
-                    assert.typeOf(res.body[0]['count(n.username)'], 'Cnumber', 'we have an integer');
+                    assert.typeOf(res.body[0]['count(n.username)'], 'number', 'we have an integer');
                     done();
                 });
         });
@@ -288,7 +288,7 @@ describe("GET Requests", function () {
                     expect(res.body[0]['n.carsviewed']).to.not.equal(undefined);
                     expect(res.body[0]['n.carsviewed']).to.not.equal('');
 
-                    assert.typeOf(res.body[0]['n.carsviewed'], 'Cnumber', 'we have an integer');
+                    assert.typeOf(res.body[0]['n.carsviewed'], 'number', 'we have an integer');
                     done();
                 });
         });
@@ -330,7 +330,7 @@ describe("GET Requests", function () {
                     expect(res.body[0]['n.carsbought']).to.not.equal(undefined);
                     expect(res.body[0]['n.carsbought']).to.not.equal('');
 
-                    assert.typeOf(res.body[0]['n.carsbought'], 'Cnumber', 'we have an integer');
+                    assert.typeOf(res.body[0]['n.carsbought'], 'number', 'we have an integer');
                     done();
                 });
         });

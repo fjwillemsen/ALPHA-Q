@@ -23,7 +23,7 @@ function submitRegister() {
             title: "Wonderful",
             text: "You are now registred at CarShop!",
             timer: 1700
-        })
+        });
         console.log(data);
 
         $.ajax({
@@ -36,7 +36,7 @@ function submitRegister() {
                 console.log('Succes!');
                    swal({
                        title: "Wonderful!",
-                       text: "Edit succesful",
+                       text: "Registration succesful",
                        timer: 1700
                    })
                 setJSONTable('/filter/Car');
@@ -66,6 +66,7 @@ function validatePasswordCorrect() {
 
 function validateUsernameExist(id, fieldname, action){
     var fo = getFormObjects(id);
+
     console.log(fo[fieldname]);
     $.get('http://' + ip+":"+port+"/users/usernametaken/" + fo[fieldname], function (data) {
         if (data == true){

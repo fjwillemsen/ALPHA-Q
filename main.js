@@ -57,22 +57,58 @@ function denyAccesRespond(req,res){
     var query = 'MATCH (o:User { username: \'' + req.params.username + '\' }) RETURN o.status';
 
     db.cypher({ query: query}, function (err, results) {
-            if (results[0]['o.status'] == 'blocked') {
-                res.send(200, true)
-            } else {
-                res.send(200, false)
+        if (results[0]) {
+            if(results[0]['o.status']) {
+                if (results[0]['o.status'] == 'blocked') {
+                    res.send(200, true)
+                } else {
+                    res.send(200, false)
+                }
             }
+            res.send(200, false)
         }
-    )
+        res.send(200, false)
+    });
 }
 
 function editQuery(query, res, callback) {
     db.cypher({ query: query }, function (err, results) {
-            var response = {ok: 'ok'};
+            var response = {ok: 'no'};
+            if(query == undefined || query == '') {
+                response = {ok: 'ok'};
+            }
             res.send(200, response);
             callback(response);
         }
     );
+}
+
+function noUndefined(data) {
+    if(data && data.length) {
+        var correct = true;
+
+        if("firstname" == undefined ||
+            "lastname" == undefined ||
+            "address" == undefined ||
+            "postalcode" == undefined ||
+            "country" == undefined ||
+            "shipaddress" == undefined ||
+            "shipcountry" == undefined ||
+            "shippostalcode" == undefined ||
+            "username" == undefined ||
+            "password" == undefined) {
+            correct = false;
+        }
+
+        return correct;
+    }
+
+    return false;
+}
+
+function missingImageRespond(req, res) {
+    var query = 'MATCH (o:Car) WHERE id(o) = ' + req.params.id + '  SET o.image=false;';
+    editQuery(query, res);
 }
 
 
@@ -146,7 +182,7 @@ function loginRespond(req, res, next) {
     var password = JSON.parse(req.body.toString())["password"];
 
     var query = 'MATCH (o:User { username: \'' + username + '\', password: \'' + password + '\' }) RETURN o';
-    filter(query, res, 'o', returnData)
+    filter(query, res, 'o', returnData);
     next();
 }
 
@@ -160,10 +196,13 @@ function registerRespond(req, res, next) {
         if(!data['role'] || data['role'] == '') {
             data['role'] = 'customer'
         }
-        var d = new Date();
-        query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \'' + data['postalcode']
+
+        if(noUndefined(data)) {
+            var d = new Date();
+            query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \'' + data['postalcode']
                 + '\', createDay: \'' + d.getDate() + '\', createMonth: \'' + (d.getMonth() + 1) + '\', createYear: \'' + (d.getYear() + 1900)
-                + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\', role: \'' + data['role'] + '\', status: \'' + data['status']+'\'});';
+                + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\', role: \'' + data['role'] + '\', status: \'' + data['status'] + '\'});';
+        }
     }
     editQuery(query, res);
     next();
@@ -286,6 +325,7 @@ function getUserOrderRespond(req, res, next) {
     });
     next()
 }
+
 //idea
 function getOrderInfoRespond(req, res, next) {
     //var query = 'MATCH (f:Order { id: \'' + req.params.id + '\'}) return f';
@@ -357,8 +397,9 @@ server.get('/users/usernametaken/:username', checkUsername);        // Returns a
 server.get('/users/usernameblocked/:username', denyAccesRespond);   // Checks if a user is blocked
 server.get('/wishlists', publicWishListsRespond);                   // Gives all of the public wishlists usernames
 server.get('/user/:user/wishlist', getUserWishlistRespond);         // Gives the public wishlist of a specific user
-server.get('/order/:username', getUserOrderRespond);                //respond get users orders //idea
-server.get('/orderinfo/:id', getOrderInfoRespond);                  //order info/factuur //idea
+server.get('/order/:username', getUserOrderRespond);                // Respond get users orders //idea
+server.get('/orderinfo/:id', getOrderInfoRespond);                  // Order info/factuur //idea
+server.get('/cars/reportMissingImage/:id', missingImageRespond);    // Set the 'missing image' attribute of the car to true
 
 // Statistics
 server.get('/stats/newUsersPerDate', newUsersPerDate);              // Gives the number of new users created per date

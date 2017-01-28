@@ -21,8 +21,10 @@
         var numberOfNewUserslist = [];
         var dateList = [];
         for (i = 0; i < rdata.length; i++) {
-            numberOfNewUserslist.push(rdata[i]['count(n.username)']);
-            dateList.push(rdata[i]['n.createDay'] + '-' + rdata[i]['n.createMonth'] + '-' + rdata[i]['n.createYear']);
+            if(rdata[i]['n.createDay'] != null && rdata[i]['n.createMonth'] != null && rdata[i]['n.createYear'] != null) {
+                numberOfNewUserslist.push(rdata[i]['count(n.username)']);
+                dateList.push(rdata[i]['n.createDay'] + '-' + rdata[i]['n.createMonth'] + '-' + rdata[i]['n.createYear']);
+            }
         }
 
         var chart1 = new Chart(canvasChart1, {
@@ -55,8 +57,10 @@
         var numberOfCarsViewedList2 = [];
         var dateList2 = [];
         for (i = 0; i < rdata.length; i++) {
-            numberOfCarsViewedList2.push(rdata[i]['n.carsviewed']);
-            dateList2.push(rdata[i]['n.day'] + '-' + rdata[i]['n.month'] + '-' + rdata[i]['n.year']);
+            if(rdata[i]['n.day'] != null && rdata[i]['n.month'] != null && rdata[i]['n.year'] != null) {
+                numberOfCarsViewedList2.push(rdata[i]['n.carsviewed']);
+                dateList2.push(rdata[i]['n.day'] + '-' + rdata[i]['n.month'] + '-' + rdata[i]['n.year']);
+            }
         }
 
         var chart2 = new Chart(canvasChart2, {
@@ -88,8 +92,10 @@
             var numberOfCarsBoughtList3 = [];
             var dateList3 = [];
             for (i = 0; i < rdata.length; i++) {
-                numberOfCarsBoughtList3.push(rdata[i]['n.carsbought']);
-                dateList3.push(rdata[i]['n.day'] + '-' + rdata[i]['n.month'] + '-' + rdata[i]['n.year']);
+                if(rdata[i]['n.day'] != null && rdata[i]['n.month'] != null && rdata[i]['n.year'] != null) {
+                    numberOfCarsBoughtList3.push(rdata[i]['n.carsbought']);
+                    dateList3.push(rdata[i]['n.day'] + '-' + rdata[i]['n.month'] + '-' + rdata[i]['n.year']);
+                }
             }
 
             var chart3 = new Chart(canvasChart3, {

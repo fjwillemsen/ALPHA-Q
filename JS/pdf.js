@@ -32,6 +32,14 @@ function nodePDF(id) {                  // Generate a PDF based from the informa
         doc.setFontType('normal');
         doc.setFontSize(10);
         doc.text(20, 45, text);
-        doc.save('invoice.pdf');
+
+        var string = doc.output('datauristring');
+
+        var iframe = "<iframe width='100%' height='100%' src='" + string + "'></iframe>"
+
+        $('#invoice').html(iframe);
+
+        // data = doc.output 'dataurlstring', {}
+        // $('#report').html "<iframe src='#{data}'></iframe>"
     });
 }
