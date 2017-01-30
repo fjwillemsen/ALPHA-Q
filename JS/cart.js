@@ -11,7 +11,7 @@ function addCarToCart(id, make, model, year, price) {
     $('#subbar').hide();
     swal({
         title: "Wonderful!",
-        text: make + '' + model + ' added to your shopping cart!',
+        text: make + ' ' + model + ' added to your shopping cart!',
         timer: 1700
     })
 }  // Add items to the cart
