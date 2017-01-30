@@ -50,3 +50,9 @@ function setIfNotEmpty(value, fallback) {
         return fallback;
     }
 }       // Returns a value if it is not empty, otherwise it returns the fallback
+
+Array.prototype.remove = function(from, to) {
+    var rest = this.slice((to || from) + 1 || this.length);
+    this.length = from < 0 ? this.length + from : from;
+    return this.push.apply(this, rest);
+};

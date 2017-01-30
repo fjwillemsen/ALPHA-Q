@@ -5,10 +5,10 @@ var password = '';
 var cartList = [];
 var orderList = [];
 var idList = [];
+var cartPriceList = [];
 var cartTotalPrice = 0;
 var user;
 var wishlist;
-
 
 function setSubbarTo(file, callback) {
     var url = 'http://' + ip + ':' + port + '/views/' + file;
