@@ -119,8 +119,6 @@ function setProfileView(user) {
         } else {
             $('#status').css('display', 'none');
         }
-
-        $('#profileButtons').append('<button onclick="setEditProfileView()">Edit Profile</button>');
         if (user.role == 'admin') {
             $('#profileButtons').append('<button onclick="setDeleteAccountView()">Delete an account</button>')
             $('#profileButtons').append('<button onclick="setBlockAccountView()">Block an account</button>')
