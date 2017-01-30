@@ -8,7 +8,11 @@ function setEditProfileView() {
     });
 }
 
-function submitEdit() {
+function submitEdit(){
+    validateUsernameExist('#editform','currentusername', 'edit');
+}
+
+function editUser() {
     var url = 'http://' + ip + ':' + port + '/edituser';
     if(processEditForm()) {
         $.ajax({
@@ -31,7 +35,6 @@ function submitEdit() {
                     title: "Ooops..!",
                     text: "Edit went wrong. Please try again!",
                     timer: 1700
-
                 });
             }
         }); //Sends the account data to the server in a safe way
@@ -55,6 +58,7 @@ function processEditForm() {
             user.role = setIfNotEmpty(fo['role'], user.role);
             user.currentusername = setIfNotEmpty(fo['currentusername']);
             user.currentpassword = setIfNotEmpty(fo['currentpassword']);
+            console.log(user.username);
             return true;
         } else {
             swal({

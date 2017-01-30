@@ -78,24 +78,32 @@ function validateUsernameExist(id, fieldname, action){
             }
             else if (action == 'registreren'){
                 var id = document.getElementById("error-Username");
-                id.innerHTML = "Username already exist"
+                id.innerHTML = "Username already exist";
+            }
+            else if(action == 'edit'){
+                var id = document.getElementById("error-edituser");
+                id.innerHTML = "";
+                editUser();
             }
 
         }
         else{
             if (action == 'delete'){
                 var id = document.getElementById("error-deleteuser");
-                id.innerHTML = "Username doesn't exist"
+                id.innerHTML = "Username doesn't exist";
             }
             else if (action == 'block'){
                 var id = document.getElementById("error-blockuser");
-                id.innerHTML = "Username doesn't exist"
+                id.innerHTML = "Username doesn't exist";
             }
             else if (action == 'registreren'){
                 var id = document.getElementById("error-Username");
-                id.innerHTML = ""
+                id.innerHTML = "";
                 submitRegister();
-
+            }
+            else if (action == 'edit'){
+                var id = document.getElementById("error-edituser");
+                id.innerHTML = "Username doesn't exist";
             }
 
         }
