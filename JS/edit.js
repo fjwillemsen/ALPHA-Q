@@ -27,8 +27,7 @@ function editUser() {
                     text: "Edit succesful",
                     timer: 1700
                 })
-                //logOut();
-                setContentTo('profile.html');
+                initial()
             },
             error: function() {
                 swal({
@@ -58,7 +57,6 @@ function processEditForm() {
             user.role = setIfNotEmpty(fo['role'], user.role);
             user.currentusername = setIfNotEmpty(fo['currentusername']);
             user.currentpassword = setIfNotEmpty(fo['currentpassword']);
-            console.log(user.username);
             return true;
         } else {
             swal({

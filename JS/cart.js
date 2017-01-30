@@ -18,7 +18,6 @@ function addCarToCart(id, make, model, year, price) {
 
 function showCart() {
     toggleAndSetSubbar('cart', 'cart', function() {
-        //var item = $('<p></p>');
         var deleteButton = $('<input type= "button"id="btDel" value="Remove" onclick= onRemoveCartItem() />');
         var paymentButton = $('<input type= "button"id="btPay" value="Set order" onclick= setPaymentContentResult() />');
 
