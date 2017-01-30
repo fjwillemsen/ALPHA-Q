@@ -1,1 +1,22 @@
 <p>Payment succesful! You can check your order here: <button onclick="setHistoryView()"> Order History</button></p>
+<script>
+
+    var order = {
+        cars: orderList,
+        carIDs: idList,
+        user: user,
+        price: cartTotalPrice
+    };
+
+    $.ajax({
+        url: 'http://' + ip + ':' + port + '/order/addOrder',
+        type: 'POST',
+        data: JSON.stringify(order),
+        datatype: 'json',
+        contentType: "application/x-www-form-urlencoded",
+        success: function(data) {
+
+        },
+        error: function() { }
+    }); //Sends the order data to the server in a safe way
+</script>

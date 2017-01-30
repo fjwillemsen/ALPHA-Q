@@ -17,8 +17,9 @@
         width: 350 // optional — default 350px
 
     });
-    function cardValidation(){
+    function cardValidation() {
         setContentTo('afterPayment.html');
+        $.get('http://' + ip + ':' + port + '/stats/carBought'); // Adds one to the number of cars bought today in the database
     }
 
 //        var kaart = getFormObjects('#kreka')

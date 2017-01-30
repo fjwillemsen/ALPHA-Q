@@ -50,4 +50,3 @@ function setIfNotEmpty(value, fallback) {
         return fallback;
     }
 }       // Returns a value if it is not empty, otherwise it returns the fallback
-

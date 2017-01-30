@@ -135,12 +135,12 @@ button {
 
 #chartsButton {
 	background-image: url('icons/Charts.svg');
-	visibility: hidden;
+	display: none !important;
 }
 
 #cardbutton{
 	background-image: url('icons/CC.svg');
-	visibility: hidden;
+	display: none !important;
 }
 
 
@@ -344,12 +344,12 @@ button {
 
 /*Profile*/
 #profile {
-	width: 30vw;
+	width: 40vw;
 	min-width: 500px;
 	margin-left: auto;
 	margin-right: auto;
-	text-align: center;
 	color: black;
+	display: inline;
 }
 
 #profile .title {
@@ -357,7 +357,18 @@ button {
 }
 
 #profile p {
+	width: 30vw;
+	margin-left: auto;
+	margin-right: auto;
 	font-size: 1.5em;
+	text-align: left;
+}
+
+#profile #profileButtons {
+	width: 20vw;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
 }
 
 /*Wishlist*/
@@ -441,6 +452,10 @@ button {
 		font-size: 1.5em;
 	}
 
+	#profile p {
+		width: 50vw;
+	}
+
 	#navbar a {
 		font-size: 1em;
 	}
@@ -480,5 +495,9 @@ button {
 
 	#details #price {
 		font-size: 1.5em;
+	}
+
+	#profile p {
+		width: 80vw;
 	}
 }
