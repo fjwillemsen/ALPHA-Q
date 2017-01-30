@@ -10,6 +10,7 @@ function carInvoicePDF(id) {
     $.get(url, function(data) {
         var text = '';
         var space = '    | ';
+        var separator = '\n\n\n---------------------------------\n';
 
         var userinfo =  '\n' + space + 'Name: ' + user.lastname + ', ' + user.firstname + '\n' +
                         '\n' + space + 'Billing Address: ' + user.address +
@@ -17,7 +18,8 @@ function carInvoicePDF(id) {
                         '\n' + space + 'Billing Country: ' + user.country + '\n' +
                         '\n' + space + 'Shipping Address: ' + user.shipaddress +
                         '\n' + space + 'Shipping Zipcode: ' + user.shippostalcode +
-                        '\n' + space + 'Shipping Country: ' + user.shipcountry + '\n\n';
+                        '\n' + space + 'Shipping Country: ' + user.shipcountry + '\n\n' +
+                        separator + '\n\n';
 
         text = text + userinfo;
 
@@ -35,7 +37,7 @@ function carInvoicePDF(id) {
         }
         text = text + ids + '\n';
 
-        text = text + '\n\n\n---------------------------------\n';
+        text = text + separator;
         text = text + 'Total Price: \u20AC ' + data[0].properties['price'] + '\n\n';
 
         generatePDF(text);

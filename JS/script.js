@@ -158,7 +158,6 @@ function setHistoryView() {
 }
 
 
-
 function toggleAndSetSubbar(id, page, fn) {
     if($('#subbar').css('display') == 'none' || !$('#' + id).length) {
         $('#subbar').show();
@@ -202,7 +201,6 @@ function getCars() {
 
 function initial() {
     setJSONTable('/filter/Car', 1);
-
     jQuery(document).bind("keyup", function(e) {
         if(e.which == 13 || e.keycode == 13) {
             e.preventDefault();

@@ -138,11 +138,6 @@ button {
 	display: none !important;
 }
 
-#cardbutton{
-	background-image: url('icons/CC.svg');
-	display: none !important;
-}
-
 
 /*Subbar*/
 #subbar {

@@ -36,6 +36,7 @@ function onRemoveCartItem() {
     cartList.remove($('#cList').prop('selectedIndex'));
     orderList.remove($('#cList').prop('selectedIndex'));
     cartPriceList.remove($('#cList').prop('selectedIndex'));
+    idList.remove($('#cList').prop('selectedIndex'));
     calculatePrice();
     showCart();
     //swal("Shame on you!","Such a nice car is deleted from your list :(", "success");
