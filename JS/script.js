@@ -136,6 +136,7 @@ function setAfterpayment(){
     setContentTo('afterPayment.html')
 }
 
+
 function setHistoryView() {
     setContentTo('history.html');
     $.get('http://' + ip + ':' + port + '/order/'+ user.username, function (data) {

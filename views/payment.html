@@ -1,41 +1,47 @@
 <div class="demo-container">
     <div class="card-wrapper"></div>
     <div class="form-container active">
-        <form action="" name="kreka">
-            <input placeholder="Card number" type="tel" name="number" id="kaartnummer">
-            <input placeholder="Full name" type="text" name="Cname" id="voornaam">
-            <input placeholder="MM/YY" type="tel" name="Cexpiry" id="verloop">
-            <input placeholder="CVC" type="number" name="Ccvc" id="codecode">
-            <button onclick="cardValidation()"> Confirm Payment</button>
+        <form>
+            <input type="tel" name="number" id="kaartnummer" minlength="12" placeholder="**** **** **** ****" required>
+            <input type="text" name="name" id="voornaam" minlength="2" maxlength="18" placeholder="Name on creditcard" required>
+            <input type="tel" name="expiry" id="verloop" placeholder="MM/YY" required>
+            <input type="tel" name="cvc" id="codecode" minlength="3" maxlength="4" placeholder="CVC" required>
         </form>
+        <button onclick="cardValidation()"> Confirm Payment</button>
     </div>
 </div>
 <script>
     new Card({
         form: document.querySelector('form'),
-        container: '.card-wrapper'
+        container: '.card-wrapper',
+        width: 350 // optional — default 350px
+
     });
     function cardValidation(){
-        var kaart = getFormObjects('#kreka')
-        if(!kaart['number'] || kaart['number'] == ""){
-            var al = document.getElementById("kaartnummer")
-            al.innerHTML = "Please fill in your creditcard number"
-        }
-        if(!kaart['Cname'] || kaart['Cname'] == ""){
-            var al = document.getElementById("voornaam")
-            al.innerHTML = "Please fill in your first name"
-        }
-        if(!kaart['Cexpiry'] || kaart['Cexpiry'] == ""){
-            var al = document.getElementById("verloop")
-            al.innerHTML = "Please fill in your expiry date"
-        }
-        if(!kaart['Ccvc'] || kaart['Ccvc'] == ""){
-            var al = document.getElementById("codecode")
-            al.innerHTML = "Please fill in your CVC number"
-        }
-        else{
-            setContentTo('afterPayment.html');
-        }
-
+        setContentTo('afterPayment.html');
     }
+
+//        var kaart = getFormObjects('#kreka')
+//        if(kaart['number'] == "" || kaart['number'] ==  null){
+//            var al = document.getElementById("kaartnummer")
+//            al.innerHTML = "Please fill in your creditcard number"
+//
+//        }
+//        if(kaart['name'] == ""){
+//            var al = document.getElementById("voornaam")
+//            al.innerHTML = "Please fill in your first name"
+//        }
+//        if(kaart['expiry'] == ""){
+//            var al = document.getElementById("verloop")
+//            al.innerHTML = "Please fill in your expiry date"
+//        }
+//        if(kaart['cvc'] == ""){
+//            var al = document.getElementById("codecode")
+//            al.innerHTML = "Please fill in your CVC number"
+////        }
+    ////        else{
+    //              setContentTo('afterPayment.html');
+    ////        }
+    //
+    //    }
 </script>
