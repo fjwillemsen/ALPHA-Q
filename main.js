@@ -84,19 +84,20 @@ function editQuery(query, res, callback) {
 }
 
 function noUndefined(data) {
-    if(data && data.length) {
+
+    if(data) {
         var correct = true;
 
-        if("firstname" == undefined ||
-            "lastname" == undefined ||
-            "address" == undefined ||
-            "postalcode" == undefined ||
-            "country" == undefined ||
-            "shipaddress" == undefined ||
-            "shipcountry" == undefined ||
-            "shippostalcode" == undefined ||
-            "username" == undefined ||
-            "password" == undefined) {
+        if(data["firstname"] == undefined ||
+            data["lastname"] == undefined ||
+            data["address"] == undefined ||
+            data["postalcode"] == undefined ||
+            data["country"] == undefined ||
+            data["shipaddress"] == undefined ||
+            data["shipcountry"] == undefined ||
+            data["shippostalcode"] == undefined ||
+            data["username"] == undefined ||
+            data["password"] == undefined) {
             correct = false;
         }
 
@@ -197,14 +198,17 @@ function registerRespond(req, res, next) {
             data['role'] = 'customer'
         }
 
-        if(data) {
+        if(noUndefined(data)) {
             var d = new Date();
             query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \'' + data['postalcode']
                 + '\', createDay: \'' + d.getDate() + '\', createMonth: \'' + (d.getMonth() + 1) + '\', createYear: \'' + (d.getYear() + 1900)
                 + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\', role: \'' + data['role'] + '\', status: \'' + data['status'] + '\'});';
+            editQuery(query, res);
+        } else {
+            var response = { ok: 'no'};
+            res.send(200, response);
         }
     }
-    editQuery(query, res);
     next();
 }
 

@@ -1,12 +1,13 @@
 function addCarToCart(id, make, model, year, price) {
     var item = $('<option value="">'+ make + " " + model+ " " + year + " " + price +  '</option>');
     var item2 = make + " " + model + " " + year + " " + "&#8364;" + price;
-    cartTotalPrice = cartTotalPrice + parseInt(price);
-    console.log(cartTotalPrice);
 
     cartList.push(item);
     orderList.push(item2);
+    cartPriceList.push(parseInt(price));
     idList.push(id);
+    calculatePrice();
+
     //item.append(JSON.stringify(cartList));
     $('#subbar').hide();
     swal({
@@ -21,7 +22,7 @@ function showCart() {
         var deleteButton = $('<input type= "button"id="btDel" value="Remove" onclick= onRemoveCartItem() />');
         var paymentButton = $('<input type= "button"id="btPay" value="Set order" onclick= setPaymentContentResult() />');
 
-        var box = $('<select id = "cList"></select>' )
+        var box = $('<select id="cList"></select>' );
         cartList.join('');
         box.append(cartList);
         $('#cart').append(box);
@@ -31,7 +32,11 @@ function showCart() {
 }
 
 function onRemoveCartItem() {
-    $('#cList').find("option:selected").remove();
+    cartList.remove($('#cList').prop('selectedIndex'));
+    orderList.remove($('#cList').prop('selectedIndex'));
+    cartPriceList.remove($('#cList').prop('selectedIndex'));
+    calculatePrice();
+    showCart();
     //swal("Shame on you!","Such a nice car is deleted from your list :(", "success");
     swal({
         title: ":(",
@@ -52,4 +57,13 @@ function setPaymentContentResult() {
         $('#orderOrder').html(list);
         document.getElementById("orderTotal").innerHTML= ("&#8364;" + cartTotalPrice);
     });
+}
+
+function calculatePrice() {
+    cartTotalPrice = 0;
+    for (var i = 0; i < cartPriceList.length; i++) {
+        cartTotalPrice = cartTotalPrice + cartPriceList[i];
+    }
+
+    return cartTotalPrice;
 }

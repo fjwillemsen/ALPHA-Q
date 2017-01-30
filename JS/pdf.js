@@ -9,6 +9,17 @@ function carInvoicePDF(id) {
     var url = 'http://' + ip + ':' + port + '/detail/' + id;
     $.get(url, function(data) {
         var text = '';
+        var space = '    | ';
+
+        var userinfo =  '\n' + space + 'Name: ' + user.lastname + ', ' + user.firstname + '\n' +
+                        '\n' + space + 'Billing Address: ' + user.address +
+                        '\n' + space + 'Billing Zipcode: ' + user.postalcode +
+                        '\n' + space + 'Billing Country: ' + user.country + '\n' +
+                        '\n' + space + 'Shipping Address: ' + user.shipaddress +
+                        '\n' + space + 'Shipping Zipcode: ' + user.shippostalcode +
+                        '\n' + space + 'Shipping Country: ' + user.shipcountry + '\n\n';
+
+        text = text + userinfo;
 
         var carsarray = data[0].properties['cars'].toString().split(",");
         var cars = 'Cars: \n';
@@ -18,7 +29,7 @@ function carInvoicePDF(id) {
         text = text + cars + '\n';
 
         var caridarray = data[0].properties['carIDs'].toString().split(",");
-        var ids = 'Car Serial Numbers: \n';
+        var ids = 'Car Unique Identifiers: \n';
         for(i = 0; i < caridarray.length; i++) {
             ids = ids + '   - ' + caridarray[i] + '\n';
         }

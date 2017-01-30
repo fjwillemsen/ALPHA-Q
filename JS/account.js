@@ -64,7 +64,7 @@ function submitLogin() {
                             }
 
                             $('#registerButton').css('display', 'none');
-                            $('#cardbutton').css('display', 'default !important');
+                            $('#cardbutton').css('display', 'inline !important');
                         }
                     } else {
                         swal({
@@ -115,7 +115,7 @@ function setProfileView(user) {
         $('#role').append(user.role);
         if(user.status && user.status != undefined && user.status != "undefined") {
             $('#status').append(user.status);
-            $('#status').css('display', 'default');
+            $('#status').css('display', 'inline');
         } else {
             $('#status').css('display', 'none');
         }
@@ -142,7 +142,7 @@ function setBlockAccountView(){
 }
 
 function adminLoggedIn() {
-    $('#chartsButton').css('display', 'default !important');
+    $('#chartsButton').css('display', 'inline !important');
 
 }                      // Triggered when an admin has logged in
 
@@ -154,7 +154,7 @@ function logOut() {
     var empty;
     user = empty;
     $('#accountButton').text('LOG IN -');
-    $('#registerButton').css('display', 'default');
+    $('#registerButton').css('display', 'inline');
     $('#chartsButton').css('display', 'none !important');
     $('#cardbutton').css('display', 'none !important');
     setJSONTable('/filter/Car');
