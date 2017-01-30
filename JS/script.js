@@ -4,6 +4,7 @@ var username = '';
 var password = '';
 var cartList = [];
 var orderList = [];
+var idList = [];
 var cartTotalPrice = 0;
 var user;
 var wishlist;
@@ -71,7 +72,7 @@ function setDetailView(value) {
             });
         });
     });
-    $.get('http://' + ip + ':' + port + '/stats/carViewed'); // Adds one to the number of cars viewed today in the database
+    $.get('http://' + ip + ':' + port + '/stats/carViewed', function (data) {}); // Adds one to the number of cars viewed today in the database
 }
 
 function setJSONTable(value, first) {
@@ -128,14 +129,21 @@ function setChartsView() {
     setContentTo('charts.html');
 }
 
-function setPay(){
-    setContentTo('payment.html')
+function setPay() {
+    if(user && user != undefined) {
+        setContentTo('payment.html');
+    } else {
+        swal({
+            title: "Whoops...",
+            text: "You'll need to log in before purchasing",
+            timer: 1700
+        });
+    }
 }
 
 function setAfterpayment(){
     setContentTo('afterPayment.html')
 }
-
 
 function setHistoryView() {
     setContentTo('history.html');
@@ -148,6 +156,8 @@ function setHistoryView() {
         $('#orders').html(list);
     });
 }
+
+
 
 function toggleAndSetSubbar(id, page, fn) {
     if($('#subbar').css('display') == 'none' || !$('#' + id).length) {

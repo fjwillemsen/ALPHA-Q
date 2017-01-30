@@ -197,7 +197,7 @@ function registerRespond(req, res, next) {
             data['role'] = 'customer'
         }
 
-        if(noUndefined(data)) {
+        if(data) {
             var d = new Date();
             query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \'' + data['postalcode']
                 + '\', createDay: \'' + d.getDate() + '\', createMonth: \'' + (d.getMonth() + 1) + '\', createYear: \'' + (d.getYear() + 1900)
@@ -276,6 +276,7 @@ function getUserWishlistRespond(req, res, next) {
 
 function addWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
+    console.log(data);
     var query = 'MATCH (u:User {username:\'' + data['username'] + '\', password: \'' + data['password'] + '\'}), (c:Car) where ID(c)=' + data['addwishlistid'] + ' CREATE (u)-[:WISHES]->(c)';
     db.cypher({ query: query }, function(err, results) {
         query = 'MATCH (u:User { username: \'' + data['wishlistusername'] + '\', password: \'' + data['password'] + '\'})-[:WISHES]-(c:Car) return c';
@@ -313,7 +314,6 @@ function publicWishListsRespond(req, res, next) {
 }
 
 //Order
-//idea
 function getUserOrderRespond(req, res, next) {
     var query = 'Match (o:User{username: \''+ req.params.username +'\'})-[:bought]->(f: Order) return f';
     db.cypher({ query: query }, function(err, results) {
@@ -326,7 +326,6 @@ function getUserOrderRespond(req, res, next) {
     next()
 }
 
-//idea
 function getOrderInfoRespond(req, res, next) {
     //var query = 'MATCH (f:Order { id: \'' + req.params.id + '\'}) return f';
     var query = matchDataByID(req.params.id);
@@ -339,6 +338,17 @@ function getOrderInfoRespond(req, res, next) {
         res.send(200, response);
     });
     next();
+}
+
+function addOrderRespond(req, res, next) {
+    var data = JSON.parse(req.body.toString());
+    console.log(data);
+    var query = 'match (u:User { username: \'' + data['user']['username'] + '\', password: \'' + data['user']['password'] + '\'}) create (o:Order { cars: \'' + data['cars'] + '\', carIDs: \'' + data['carIDs'] + '\', price: \'' + data['price']  + '\'}) create (u)-[b:bought]->(o);'
+    console.log(query);
+    db.cypher({ query: query}, function (err, results) {
+        var response = { ok: 'ok'};
+        res.send(200, response);
+    });
 }
 
 // Statistics
@@ -371,13 +381,19 @@ function numberOfCarsBought(req, res, next) {
 function carViewed() {
     var d = new Date();
     var query = "MERGE (n:Statistic { day: " + d.getDate() + ", month: " + (d.getMonth() + 1) + ", year: " + (d.getYear() + 1900) + "}) ON CREATE SET n.carsviewed = 1, n.carsbought = 0 ON MATCH SET n.carsviewed = n.carsviewed + 1;";
-    db.cypher({ query: query });
+    db.cypher({ query: query }, function (err, results) {
+        var response = { ok: 'ok'};
+        res.send(200, response);
+    });
 }
 
 function carBought() {
     var d = new Date();
     var query = "MERGE (n:Statistic { day: " + d.getDate() + ", month: " + (d.getMonth() + 1) + ", year: " + (d.getYear() + 1900) + "}) ON CREATE SET n.carsviewed = 0, n.carsbought = 1 ON MATCH SET n.carsbought = n.carsbought + 1;";
-    db.cypher({ query: query});
+    db.cypher({ query: query}, function (err, results) {
+        var response = { ok: 'ok'};
+        res.send(200, response);
+    });
 }
 
 
@@ -416,6 +432,7 @@ server.post('/edituser', editProfileRespond);
 server.post('/register', registerRespond);
 server.post('/delete', deleteUserRespond);
 server.post('/block', blockUserRespond);
+server.post('/order/addOrder', addOrderRespond);
 
 // Wishlist responses (POST)
 server.post('/wladd', addWishListRespond);                          // Add to wishlist

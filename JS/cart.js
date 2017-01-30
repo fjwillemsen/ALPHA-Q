@@ -6,6 +6,7 @@ function addCarToCart(id, make, model, year, price) {
 
     cartList.push(item);
     orderList.push(item2);
+    idList.push(id);
     //item.append(JSON.stringify(cartList));
     $('#subbar').hide();
     swal({
@@ -13,7 +14,6 @@ function addCarToCart(id, make, model, year, price) {
         text: make + '' + model + ' added to your shopping cart!',
         timer: 1700
     })
-    $.get('http://' + ip + ':' + port + '/stats/carBought'); // Adds one to the number of cars bought today in the database
 }  // Add items to the cart
 
 function showCart() {
@@ -42,16 +42,15 @@ function onRemoveCartItem() {
 }                   // Removes an item from the cart
 
 // Order view
-function setPaymentContentResult(){
+function setPaymentContentResult() {
     var list = $('<div></div>');
     for (var i = orderList.length - 1; i >= 0; i--) {
 
         var line = $('<p> ' + orderList[i] + '</p><br>');
         list.append(line);
     }
-    setContentTo('order.html', function call(){
+    setContentTo('order.html', function call() {
         $('#orderOrder').html(list);
         document.getElementById("orderTotal").innerHTML= ("&#8364;" + cartTotalPrice);
-
     });
 }

@@ -107,7 +107,7 @@ function setWishListView(uname) {
         submitViewWishList(username, function() {
             var list = $('<div></div>');
             for (var i = wishlist.length - 1; i >= 0; i--) {
-                var line = $('<p onclick="setDetailView(' + wishlist[i]._id + ')" style="display: inline-block">' + wishlist[i].properties.make + ' ' + wishlist[i].properties.model + ' ' + wishlist[i].properties.year + ' - </p><button onclick="addCarToCart(\'' + wishlist[i]._id + '\', \'' + wishlist[i].properties.make + '\', \'' + wishlist[i].properties.model + '\', \'' + wishlist[i].properties.year + '\')" style="display: inline-block">Add To Cart</button><button onclick="removeFromWishList(' + wishlist[i]._id + ')" style="display: inline-block">Remove</button><br>');
+                var line = $('<p onclick="setDetailView(' + wishlist[i]._id + ')" style="display: inline-block">' + wishlist[i].properties.make + ' ' + wishlist[i].properties.model + ' ' + wishlist[i].properties.year + ' - </p><button onclick="addCarToCart(\'' + wishlist[i]._id + '\', \'' + wishlist[i].properties.make + '\', \'' + wishlist[i].properties.model + '\', \'' + wishlist[i].properties.year + '\', \'' + wishlist[i].properties.price + '\')" style="display: inline-block">Add To Cart</button><button onclick="removeFromWishList(' + wishlist[i]._id + ')" style="display: inline-block">Remove</button><br>');
                 list.append(line);
             }
             $('#wishlistlist').html(list);

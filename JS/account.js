@@ -62,6 +62,9 @@ function submitLogin() {
                             if (user.role == "user"){
                                 userLoggedIn();
                             }
+
+                            $('#registerButton').css('display', 'none');
+                            $('#cardbutton').css('display', 'default !important');
                         }
                     } else {
                         swal({
@@ -110,10 +113,17 @@ function setProfileView(user) {
         $('#shippostalcode').append(user.shippostalcode);
         $('#shipcountry').append(user.shipcountry);
         $('#role').append(user.role);
-        $('#profile').append('<button onclick="setEditProfileView()">Edit Profile</button>');
-        if (user.role == 'admin'){
-            $('#profile').append('<button onclick="setDeleteAccountView()">Delete an account</button>')
-            $('#profile').append('<button onclick="setBlockAccountView()">Block an account</button>')
+        if(user.status && user.status != undefined && user.status != "undefined") {
+            $('#status').append(user.status);
+            $('#status').css('display', 'default');
+        } else {
+            $('#status').css('display', 'none');
+        }
+
+        $('#profileButtons').append('<button onclick="setEditProfileView()">Edit Profile</button>');
+        if (user.role == 'admin') {
+            $('#profileButtons').append('<button onclick="setDeleteAccountView()">Delete an account</button>')
+            $('#profileButtons').append('<button onclick="setBlockAccountView()">Block an account</button>')
         }
     });
 }
@@ -134,20 +144,20 @@ function setBlockAccountView(){
 }
 
 function adminLoggedIn() {
-    $('#chartsButton').css('visibility', 'visible');
-    $('#cardbutton').css('visibility', 'visible');
+    $('#chartsButton').css('display', 'default !important');
 
 }                      // Triggered when an admin has logged in
 
 function userLoggedIn(){
-    $('#cardbutton').css('visibility', 'visible');
-}
+
+}                       // Triggered when an user has logged in
 
 function logOut() {
     var empty;
     user = empty;
     $('#accountButton').text('LOG IN -');
-    $('#chartsButton').css('visibility', 'hidden');
-    $('#cardbutton').css('visibility', 'hidden');
+    $('#registerButton').css('display', 'default');
+    $('#chartsButton').css('display', 'none !important');
+    $('#cardbutton').css('display', 'none !important');
     setJSONTable('/filter/Car');
 }                             // Log out the user, go back to initial state
