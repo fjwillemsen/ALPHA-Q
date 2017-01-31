@@ -21,11 +21,46 @@ var assert = chai.assert;
 // Tests
 
 describe("POST Requests", function () {
+
+    describe("register", function() {
+        it("should return OK in JSON", function(done) {
+            request.post(url + '/register')
+                .set('Content-Type', 'application/x-www-form-urlencoded')
+                .send('{    "username":"integrationTest", ' +
+                    '"password":"integrationTest", ' +
+                    '"firstname":"integrationTest", ' +
+                    '"lastname":"integrationTest", ' +
+                    '"address":"integrationTest", ' +
+                    '"country":"integrationTest", ' +
+                    '"postalcode":"integrationTest", ' +
+                    '"role":"admin", ' +
+                    '"shipaddress":"integrationTest", ' +
+                    '"shipcountry":"integrationTest", ' +
+                    '"shippostalcode":"integrationTest" }')
+            .end(function(err,res){
+                if (err) throw err;
+                expect('Content-Type', /x-www-form-urlencoded/);
+
+                res.status.should.equal(200);
+                res.body.should.not.equal(undefined);
+                res.body.should.not.equal('');
+                expect(res.body).to.not.equal(undefined);
+                expect(res.body).to.not.equal('');
+
+                assert.typeOf(res.body, 'object', 'we have a object');
+                res.body.ok.should.equal('ok');
+                expect(res.body.ok).to.equal('ok');
+
+                done();
+            })
+        });
+    });
+
     describe("login", function() {
         it("should return body in JSON", function(done) {
             request.post(url + '/login')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
-                .send('{"username":"admin", "password":"admin"}')
+                .send('{"username":"integrationTest", "password":"integrationTest"}')
                 .end(function(err,res){
                     if (err) throw err;
                     expect('Content-Type', /x-www-form-urlencoded/);
@@ -49,7 +84,7 @@ describe("POST Requests", function () {
         it("should return user account details in JSON", function(done) {
             request.post(url + '/login')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
-                .send('{"username":"admin", "password":"admin"}')
+                .send('{"username":"integrationTest", "password":"integrationTest"}')
                 .end(function(err,res){
                     if (err) throw err;
 
@@ -84,7 +119,7 @@ describe("POST Requests", function () {
         it("should return NO in JSON", function(done) {
             request.post(url + '/edituser')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
-                .send('{"username":"admin", "password":"admin"}')
+                .send('{"currentusername":"integrationTest", "firstname":"new firstname test"}')
                 .end(function(err,res){
                     if (err) throw err;
                     expect('Content-Type', /x-www-form-urlencoded/);
@@ -95,55 +130,7 @@ describe("POST Requests", function () {
                     expect(res.body).to.not.equal(undefined);
                     expect(res.body).to.not.equal('');
 
-                    assert.typeOf(res.body, 'object', 'we have a object');
-                    res.body.ok.should.equal('no');
-                    expect(res.body.ok).to.equal('no');
-
-                    done();
-                })
-        });
-    });
-
-    describe("register", function() {
-        it("should return NO in JSON", function(done) {
-            request.post(url + '/register')
-                .set('Content-Type', 'application/x-www-form-urlencoded')
-                .send('{"username":"admin", "password":"admin"}')
-                .end(function(err,res){
-                    if (err) throw err;
-                    expect('Content-Type', /x-www-form-urlencoded/);
-
-                    res.status.should.equal(200);
-                    res.body.should.not.equal(undefined);
-                    res.body.should.not.equal('');
-                    expect(res.body).to.not.equal(undefined);
-                    expect(res.body).to.not.equal('');
-
-                    assert.typeOf(res.body, 'object', 'we have a object');
-                    res.body.ok.should.equal('no');
-                    expect(res.body.ok).to.equal('no');
-
-                    done();
-                })
-        });
-    });
-
-    describe("delete", function() {
-        it("should return NO in JSON", function(done) {
-            request.post(url + '/delete')
-                .set('Content-Type', 'application/x-www-form-urlencoded')
-                .send('{"username":"admin", "password":"admin"}')
-                .end(function(err,res){
-                    if (err) throw err;
-                    expect('Content-Type', /x-www-form-urlencoded/);
-
-                    res.status.should.equal(200);
-                    res.body.should.not.equal(undefined);
-                    res.body.should.not.equal('');
-                    expect(res.body).to.not.equal(undefined);
-                    expect(res.body).to.not.equal('');
-
-                    assert.typeOf(res.body, 'object', 'we have a object');
+                    assert.typeOf(res.body, 'object', 'we have an object');
                     res.body.ok.should.equal('no');
                     expect(res.body.ok).to.equal('no');
 
@@ -153,10 +140,10 @@ describe("POST Requests", function () {
     });
 
     describe("block", function() {
-        it("should return NO in JSON", function(done) {
+        it("should return OK in JSON", function(done) {
             request.post(url + '/block')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
-                .send('{"username":"admin", "password":"admin"}')
+                .send('{"username":"integrationTest", "password":"integrationTest"}')
                 .end(function(err,res){
                     if (err) throw err;
                     expect('Content-Type', /x-www-form-urlencoded/);
@@ -167,9 +154,33 @@ describe("POST Requests", function () {
                     expect(res.body).to.not.equal(undefined);
                     expect(res.body).to.not.equal('');
 
-                    assert.typeOf(res.body, 'object', 'we have a object');
-                    res.body.ok.should.equal('no');
-                    expect(res.body.ok).to.equal('no');
+                    assert.typeOf(res.body, 'object', 'we have an object');
+                    res.body.ok.should.equal('ok');
+                    expect(res.body.ok).to.equal('ok');
+
+                    done();
+                })
+        });
+    });
+
+    describe("delete", function() {
+        it("should return OK in JSON", function(done) {
+            request.post(url + '/delete')
+                .set('Content-Type', 'application/x-www-form-urlencoded')
+                .send('{"deletename":"integrationTest"}')
+                .end(function(err,res){
+                    if (err) throw err;
+                    expect('Content-Type', /x-www-form-urlencoded/);
+
+                    res.status.should.equal(200);
+                    res.body.should.not.equal(undefined);
+                    res.body.should.not.equal('');
+                    expect(res.body).to.not.equal(undefined);
+                    expect(res.body).to.not.equal('');
+
+                    assert.typeOf(res.body, 'object', 'we have an object');
+                    res.body.ok.should.equal('ok');
+                    expect(res.body.ok).to.equal('ok');
 
                     done();
                 })
