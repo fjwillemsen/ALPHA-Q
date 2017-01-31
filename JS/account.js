@@ -31,7 +31,7 @@ function submitLogin() {
     var fo = getFormObjects('#loginform');
     console.log(fo);
     username = fo["username"];
-    password = fo["password"];
+    password = CryptoJS.MD5(fo["password"]);
     console.log(username);
     console.log(password);
 

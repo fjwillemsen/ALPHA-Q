@@ -16,7 +16,7 @@ function submitRegister() {
             'shipcountry': fo['shipcountry'],
             'shippostalcode': fo['shippostalcode'],
             'username': fo['username'],
-            'password': fo['password']
+            'password': CryptoJS.MD5(fo['password'])
         });
         swal({
             title: "Wonderful",
