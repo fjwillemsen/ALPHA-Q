@@ -1,5 +1,6 @@
 var neo4j = require('neo4j');
 var restify = require('restify');
+var md5 = require('md5');
 fs = require('fs');
 
 // Set the port number that's included in the launch arguments, if it is
