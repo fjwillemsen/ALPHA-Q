@@ -5,6 +5,9 @@ function setEditProfileView() {
         } else {
             $('#currentpasswordinput').show();
         }
+        var username = document.getElementById('currentusername');
+        username.value = user.username;
+        username.placeholders = '';
     });
 }
 
@@ -18,18 +21,29 @@ function editUser() {
         $.ajax({
             url: url,
             type: 'POST',
-            data: JSON.stringify(user),
+            data: JSON.stringify(tempuser),
             datatype: 'json',
             contentType: "application/x-www-form-urlencoded",
-            success: function() {
-                swal({
-                    title: "Wonderful!",
-                    text: "Edit succesful",
-                    timer: 1700
-                })
+            success: function(data) {
+                if(!data.ok || data.ok != 'no') {
+                    user = data[0].properties;
+                    swal({
+                        title: "Wonderful!",
+                        text: "Your edit was succesful.",
+                        timer: 1700
+                    });
+                    // setProfileView(user);
+                } else {
+                    swal({
+                        title: "Ooops..!",
+                        text: "Edit went wrong. Please try again!",
+                        timer: 1700
+                    });
+                }
+
                 initial()
             },
-            error: function() {
+            error: function(err) {
                 swal({
                     title: "Ooops..!",
                     text: "Edit went wrong. Please try again!",
@@ -44,19 +58,37 @@ function processEditForm() {
     var fo = getFormObjects('#editform');
     if(!empty(fo['currentusername'])) {
         if(!empty(fo['currentpassword']) || user.role == 'admin') {
-            user.username = setIfNotEmpty(fo['username'], user.username);
-            user.password = setIfNotEmpty(fo['password'], user.password);
-            user.firstname = setIfNotEmpty(fo['firstname'], user.firstname);
-            user.lastname = setIfNotEmpty(fo['lastname'], user.lastname);
-            user.address = setIfNotEmpty(fo['address'], user.address);
-            user.postalcode = setIfNotEmpty(fo['postalcode'], user.postalcode);
-            user.country = setIfNotEmpty(fo['country'], user.country);
-            user.shipaddress = setIfNotEmpty(fo['shipaddress'], user.shipaddress);
-            user.shippostalcode = setIfNotEmpty(fo['shippostalcode'], user.shippostalcode);
-            user.shipcountry = setIfNotEmpty(fo['shipcountry'], user.shipcountry);
-            user.role = setIfNotEmpty(fo['role'], user.role);
-            user.currentusername = setIfNotEmpty(fo['currentusername']);
-            user.currentpassword = setIfNotEmpty(fo['currentpassword']);
+            tempuser = user;
+            if((fo['password'] != '' ||
+                fo['firstname'] != '' ||
+                fo['lastname'] != '' ||
+                fo['address'] != '' ||
+                fo['postalcode'] != '' ||
+                fo['country'] != '' ||
+                fo['shipaddress'] != '' ||
+                fo['shippostalcode'] != '' ||
+                fo['shipcountry'] != '' ) &&
+                fo['currentusername'] != '' ) {
+
+                tempuser.password = fo['password'];
+                tempuser.firstname = fo['firstname'];
+                tempuser.lastname = fo['lastname'];
+                tempuser.address = fo['address'];
+                tempuser.postalcode = fo['postalcode'];
+                tempuser.country = fo['country'];
+                tempuser.shipaddress = fo['shipaddress'];
+                tempuser.shippostalcode = fo['shippostalcode'];
+                tempuser.shipcountry = fo['shipcountry'];
+                tempuser.currentusername = fo['currentusername'];
+                tempuser.currentpassword = fo['currentpassword'];
+            } else {
+                swal({
+                    title: "Ooops!",
+                    text: "You forgot to edit at least one field.",
+                    timer: 1700
+                });
+            }
+
             return true;
         } else {
             swal({
@@ -64,10 +96,8 @@ function processEditForm() {
                 text: "You forgot to enter your password! Please fill in your password",
                 timer: 1700
             });
-            //alert("lol");
         }
     } else {
-        //console.log("No user");
         swal({
             title: "Ooops!",
             text: "You forgot to enter your username! Please fill in your username",

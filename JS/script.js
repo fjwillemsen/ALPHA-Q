@@ -8,6 +8,7 @@ var idList = [];
 var cartPriceList = [];
 var cartTotalPrice = 0;
 var user;
+var tempuser;
 var wishlist;
 
 function setSubbarTo(file, callback) {

@@ -141,11 +141,11 @@ function setBlockAccountView(){
 }
 
 function adminLoggedIn() {
-    document.getElementById('chartsButton').style.display = 'inline-block !important';
+    document.getElementById('chartsButton').style.visibility = 'visible';
 }                      // Triggered when an admin has logged in
 
 function userLoggedIn(){
-    document.getElementById('chartsButton').style.display = 'none';
+    document.getElementById('chartsButton').style.visibility = 'hidden';
 }                       // Triggered when an user has logged in
 
 function logOut() {
@@ -153,6 +153,6 @@ function logOut() {
     user = empty;
     $('#accountButton').text('LOG IN -');
     $('#registerButton').css('display', 'inline');
-    document.getElementById('chartsButton').style.display = 'none !important';
+    document.getElementById('chartsButton').style.visibility = 'hidden';
     setJSONTable('/filter/Car');
 }                             // Log out the user, go back to initial state
