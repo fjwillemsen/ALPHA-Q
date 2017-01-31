@@ -1,19 +1,20 @@
 <div id="profile">
 
     <p class="title">Edit</p>
-    <center><form id="editform">
-        <input type="text" name="currentusername" placeholder="Current Username"><br><p id="error-edituser"></p>
-        <input id="currentpasswordinput" type="password" name="currentpassword" placeholder="Current Password"><br><br>
-        <input type="text" name="username" placeholder="New Username"><br>
-        <input type="password" name="password" placeholder="New Password"><br>
-        <input type="text" name="firstname" placeholder="New Firstname"><br>
-        <input type="text" name="lastname" placeholder="New Lastname"><br>
-        <input type="text" name="address" placeholder="New address"><br>
-        <input type="text" name="postalcode" placeholder="New Postal Code"><br>
-        <input type="text" name="country" placeholder="New Country"><br>
-        <input type="text" name="shipaddress" placeholder="New Shipping address"><br>
-        <input type="text" name="shippostalcode" placeholder="New Shipping Postal Code"><br>
-        <input type="text" name="shipcountry" placeholder="New Shipping Country"><br>
-    </form>
-    <button id="editsubmit" onclick="submitEdit()">Submit</button></center>
+    <div id="editprofile">
+        <form id="editform">
+            <input type="text" name="currentusername" placeholder="Current Username" id="currentusername"><br><p id="error-edituser"></p>
+            <input id="currentpasswordinput" type="password" name="currentpassword" placeholder="Current Password"><br><br>
+            <input type="password" name="password" placeholder="New Password"><br>
+            <input type="text" name="firstname" placeholder="New Firstname"><br>
+            <input type="text" name="lastname" placeholder="New Lastname"><br>
+            <input type="text" name="address" placeholder="New address"><br>
+            <input type="text" name="postalcode" placeholder="New Postal Code"><br>
+            <input type="text" name="country" placeholder="New Country"><br>
+            <input type="text" name="shipaddress" placeholder="New Shipping address"><br>
+            <input type="text" name="shippostalcode" placeholder="New Shipping Postal Code"><br>
+            <input type="text" name="shipcountry" placeholder="New Shipping Country"><br>
+        </form>
+        <button id="editsubmit" onclick="submitEdit()">Submit</button>
+    </div>
 </div>

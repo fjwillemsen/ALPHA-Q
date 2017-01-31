@@ -23,22 +23,24 @@ function filter(query, res, getter, callback) {
         query: query
     }, function (err, results) {
 
+        if (err) throw err;
         var response = {
             length: results.length.toString()
         };
 
-        if (err) throw err;
         var result = results[0];
         if (!result) {
             console.log('No object found.');
+            response = {ok: 'no'};
+            res.send(200, response);
         } else {
             for (var i = results.length - 1; i >= 0; i--) {
                 response[i] = results[i][getter];
             }
-        }
 
-        res.send(200, response);
-        callback(response);
+            res.send(200, response);
+            callback(response);
+        }
     });
 }
 
@@ -74,9 +76,9 @@ function denyAccesRespond(req,res){
 
 function editQuery(query, res, callback) {
     db.cypher({ query: query }, function (err, results) {
-            var response = {ok: 'no'};
+            var response = {ok: 'ok'};
             if(query == undefined || query == '') {
-                response = {ok: 'ok'};
+                response = {ok: 'no'};
             }
             res.send(200, response);
             callback(response);
@@ -111,6 +113,51 @@ function noUndefined(data) {
 function missingImageRespond(req, res) {
     var query = 'MATCH (o:Car) WHERE id(o) = ' + req.params.id + '  SET o.image=false;';
     editQuery(query, res);
+}
+
+function notEmpty(variable) {
+    if( variable &&
+        variable != undefined &&
+        variable != '') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function atLeastOneNotEmpty(data, idArray) {
+    for (i = 0; i < idArray.length; i++) {
+        if (notEmpty(data[idArray[i]])) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function arrayWithoutEmpty(data, idArray) {
+    var array = [];
+    for (i = 0; i < idArray.length; i++) {
+        if (notEmpty(data[idArray[i]])) {
+            array.push(idArray[i]);
+        }
+    }
+
+    return array;
+}
+
+function addDataIfNotEmpty(query, data, idArray) {
+    for (i = 0; i < idArray.length; i++) {
+        if(i == idArray.length -1) {
+            query = query + 'o.' + idArray[i] + '=\'' + data[idArray[i]] + '\' RETURN o;';
+        } else {
+            query = query + 'o.' + idArray[i] + '=\'' + data[idArray[i]] + '\', ';
+        }
+
+        console.log('d:' + query);
+    }
+
+    return query;
 }
 
 
@@ -215,13 +262,31 @@ function registerRespond(req, res, next) {
 
 function editProfileRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
-    if(data['currentpassword'] == '' || !data['currentpassword']) {
-        var query = 'MATCH (o:User { username: \'' + data['currentusername'] + '\'}) SET o.username=\'' + data['username'] + '\', o.password=\'' + data['password'] + '\', o.firstname=\'' + data['firstname'] + '\', o.lastname=\'' + data['lastname'] + '\', o.role=\'' + data['role'] + '\';';
-    } else {
-        var query = 'MATCH (o:User { username: \'' + data['currentusername'] + '\', password: \'' + data['currentpassword'] + '\'}) SET o.username=\'' + data['username'] + '\', o.password=\'' + data['password'] + '\', o.firstname=\'' + data['firstname'] + '\', o.lastname=\'' + data['lastname'] + '\', o.role=\'' + data['role'] + '\';';
-    }
+    var idArray = ['firstname', 'lastname', 'role', 'address', 'postalcode', 'country', 'shippingaddress', 'shippingpostalcode', 'shippingcountry'];
+    idArray = arrayWithoutEmpty(data, idArray);
 
-    editQuery(query, res);
+    console.log(data);
+    console.log(idArray);
+    console.log(idArray.length);
+
+    if(idArray.length > 0) {
+        var query = 'MATCH (o:User { username: \'' + data['currentusername'] + '\', password: \'' + data['currentpassword'] + '\'}) SET ';
+        if (data['role'] == 'admin') {
+            query = 'MATCH (o:User { username: \'' + data['currentusername'] + '\'}) SET ';
+        }
+
+        console.log(query);
+
+        query = addDataIfNotEmpty(query, data, idArray);
+
+        console.log(query);
+
+        filter(query, res);
+
+    } else {
+        var response = { ok: 'no'};
+        res.send(200, response);
+    }
     next();
 }
 

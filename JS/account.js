@@ -64,7 +64,6 @@ function submitLogin() {
                             }
 
                             $('#registerButton').css('display', 'none');
-                            $('#cardbutton').css('display', 'inline !important');
                         }
                     } else {
                         swal({
@@ -142,12 +141,11 @@ function setBlockAccountView(){
 }
 
 function adminLoggedIn() {
-    $('#chartsButton').css('display', 'inline !important');
-
+    document.getElementById('chartsButton').style.visibility = 'visible';
 }                      // Triggered when an admin has logged in
 
 function userLoggedIn(){
-
+    document.getElementById('chartsButton').style.visibility = 'hidden';
 }                       // Triggered when an user has logged in
 
 function logOut() {
@@ -155,7 +153,6 @@ function logOut() {
     user = empty;
     $('#accountButton').text('LOG IN -');
     $('#registerButton').css('display', 'inline');
-    $('#chartsButton').css('display', 'none !important');
-    $('#cardbutton').css('display', 'none !important');
+    document.getElementById('chartsButton').style.visibility = 'hidden';
     setJSONTable('/filter/Car');
 }                             // Log out the user, go back to initial state

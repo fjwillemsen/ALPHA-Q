@@ -8,6 +8,7 @@ var idList = [];
 var cartPriceList = [];
 var cartTotalPrice = 0;
 var user;
+var tempuser;
 var wishlist;
 
 function setSubbarTo(file, callback) {
@@ -145,20 +146,6 @@ function setAfterpayment(){
     setContentTo('afterPayment.html')
 }
 
-function setHistoryView() {
-    setContentTo('history.html');
-    $.get('http://' + ip + ':' + port + '/order/'+ user.username, function (data) {
-        var list = $('<div></div>');
-        for (var i = data.length - 1; i >= 0; i--) {
-            var line = $('<p class="invoiceButton" onclick="nodePDF(' + "'" + data[i]._id + "'" + ')">' + '#' + data[i]._id + '</p>');
-            list.append(line);
-        }
-        $('#orders').html(list);
-    });
-}
-
-
-
 function toggleAndSetSubbar(id, page, fn) {
     if($('#subbar').css('display') == 'none' || !$('#' + id).length) {
         $('#subbar').show();
@@ -202,7 +189,6 @@ function getCars() {
 
 function initial() {
     setJSONTable('/filter/Car', 1);
-
     jQuery(document).bind("keyup", function(e) {
         if(e.which == 13 || e.keycode == 13) {
             e.preventDefault();

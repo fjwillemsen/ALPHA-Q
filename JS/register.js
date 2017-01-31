@@ -3,7 +3,6 @@ function submitValidatedRegister(){
 }
 
 function submitRegister() {
-    console.log("im submitted");
     if (validateRequiredFields() && validatePasswordCorrect) {
         var fo = getFormObjects('#register') // form object
         var url = 'http://' + ip + ':' + port + '/register';
@@ -67,7 +66,6 @@ function validatePasswordCorrect() {
 function validateUsernameExist(id, fieldname, action){
     var fo = getFormObjects(id);
 
-    console.log(fo[fieldname]);
     $.get('http://' + ip+":"+port+"/users/usernametaken/" + fo[fieldname], function (data) {
         if (data == true){
             if (action == 'delete'){
@@ -107,7 +105,7 @@ function validateUsernameExist(id, fieldname, action){
             }
 
         }
-    })
+    });
 }
 
 function setRegisterView() {
