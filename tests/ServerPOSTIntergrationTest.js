@@ -61,7 +61,7 @@ describe("POST Requests", function () {
         it("should return body in JSON", function(done) {
             request.post(url + '/login')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
-                .send('{"username":"integrationTest", "password":"integrationTest"}')
+                .send('{"username":"integrationTest", "password":{"words":"integrationTest"}}')
                 .end(function(err,res){
                     if (err) throw err;
                     expect('Content-Type', /x-www-form-urlencoded/);
@@ -85,7 +85,7 @@ describe("POST Requests", function () {
         it("should return user account details in JSON", function(done) {
             request.post(url + '/login')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
-                .send('{"username":"integrationTest", "password":"integrationTest"}')
+                .send('{"username":"integrationTest", "password":{"words":"integrationTest"}}')
                 .end(function(err,res){
                     if (err) throw err;
 
