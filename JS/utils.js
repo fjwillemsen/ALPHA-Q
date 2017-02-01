@@ -13,7 +13,7 @@ function toUpperCaseFirst(string) {
 
 function jString(value) {
     return '\'' + value + '\'';
-}                       // Puts single quotes around a given string
+}                       // Puts single quotes around a given string using string escaping
 
 function showKey(string) {
     string = string.split('_');

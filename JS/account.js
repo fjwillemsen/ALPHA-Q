@@ -49,7 +49,7 @@ function submitLogin() {
                 datatype: 'json',
                 contentType: "application/x-www-form-urlencoded",
                 success: function(data) {
-                    if(data.length != '0') {
+                    if(data.length != '0' && data[0] && data[0].properties) {
                         user = data[0].properties;
                         if(user && user != undefined) {
                             setProfileView(user);

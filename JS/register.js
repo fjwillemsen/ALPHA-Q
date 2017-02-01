@@ -3,7 +3,7 @@ function submitValidatedRegister(){
 }
 
 function submitRegister() {
-    if (validateRequiredFields() && validatePasswordCorrect) {
+    if (validateRequiredFields(getFormObjects('#register')) && validatePasswordCorrect) {
         var fo = getFormObjects('#register') // form object
         var url = 'http://' + ip + ':' + port + '/register';
         var data = JSON.stringify({
@@ -112,10 +112,8 @@ function setRegisterView() {
     setContentTo('register.html');
 }
 
-function validateRequiredFields() {
+function validateRequiredFields(fo) {
     var done = true;
-    var fo = getFormObjects('#register');
-    var query = 'MATCH (o:User { username: \'' + username + '\' }) RETURN o';
 
     if (!fo['firstname'] || fo['firstname'] == '') {
         var el = document.getElementById("error-Firstname");

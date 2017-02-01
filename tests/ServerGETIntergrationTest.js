@@ -26,7 +26,7 @@ var assert = chai.assert;
 // Tests
 describe("GET Requests", function () {
 
-    describe('index', function() {
+    describe('Index', function() {
        it('should return a page', function(done) {
           api.get('/')
               .expect("Content-type",/html/)
@@ -52,7 +52,7 @@ describe("GET Requests", function () {
        });
     });
 
-    describe('search', function () {
+    describe('Search', function () {
         it('should return JSON content', function (done) {
             api.get('/search/Volvo')
                 .set('Accept', 'application/json')
@@ -101,7 +101,7 @@ describe("GET Requests", function () {
         });
     });
 
-    describe('filter', function () {
+    describe('Filter', function () {
        it('should return JSON content', function (done) {
            api.get('/filter/Car')
                .set('Accept', 'application/json')
@@ -161,7 +161,7 @@ describe("GET Requests", function () {
         });
     });
 
-    describe('detail', function () {
+    describe('Detail', function () {
         it('should return JSON content', function (done) {
             api.get('/detail/1000')
                 .set('Accept', 'application/json')
@@ -210,7 +210,7 @@ describe("GET Requests", function () {
         });
     });
 
-    describe('newUsersPerDate', function () {
+    describe('New Users Per Date', function () {
         it('should return JSON content', function (done) {
             api.get('/stats/newUsersPerDate')
                 .set('Accept', 'application/json')
@@ -252,7 +252,7 @@ describe("GET Requests", function () {
         });
     });
 
-    describe('numberOfCarsViewed', function () {
+    describe('Number Of Cars Viewed', function () {
         it('should return JSON content', function (done) {
             api.get('/stats/numberOfCarsViewed')
                 .set('Accept', 'application/json')
@@ -294,7 +294,7 @@ describe("GET Requests", function () {
         });
     });
 
-    describe('numberOfCarsBought', function () {
+    describe('Number Of Cars Bought', function () {
         it('should return JSON content', function (done) {
             api.get('/stats/numberOfCarsBought')
                 .set('Accept', 'application/json')
