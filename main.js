@@ -136,9 +136,12 @@ function atLeastOneNotEmpty(data, idArray) {
 }
 
 function arrayWithoutEmpty(data, idArray) {
+    console.log(idArray);
     var array = [];
     for (i = 0; i < idArray.length; i++) {
+
         if (notEmpty(data[idArray[i]])) {
+            console.log(data[idArray[i]]);
             array.push(idArray[i]);
         }
     }
@@ -148,6 +151,11 @@ function arrayWithoutEmpty(data, idArray) {
 
 function addDataIfNotEmpty(query, data, idArray) {
     for (i = 0; i < idArray.length; i++) {
+
+        if(data[idArray[i]]['words'] != undefined) {
+            data[idArray[i]] = data[idArray[i]]['words'];
+        }
+
         if(i == idArray.length -1) {
             query = query + 'o.' + idArray[i] + '=\'' + data[idArray[i]] + '\' RETURN o;';
         } else {
@@ -228,9 +236,10 @@ function returnData(results) {
 
 function loginRespond(req, res, next) {
     var username = JSON.parse(req.body.toString())["username"];
-    var password = JSON.parse(req.body.toString())["password"];
+    var password = JSON.parse(req.body.toString())["password"]['words'];
 
     var query = 'MATCH (o:User { username: \'' + username + '\', password: \'' + password + '\' }) RETURN o';
+    console.log(query);
     filter(query, res, 'o', returnData);
     next();
 }
@@ -238,7 +247,7 @@ function loginRespond(req, res, next) {
 
 //Profile
 function registerRespond(req, res, next) {
-    var data = JSON.parse(req.body.toString())
+    var data = JSON.parse(req.body.toString());
     var query = '';
 
     if(data != undefined) {
@@ -250,7 +259,7 @@ function registerRespond(req, res, next) {
             var d = new Date();
             query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \'' + data['postalcode']
                 + '\', createDay: \'' + d.getDate() + '\', createMonth: \'' + (d.getMonth() + 1) + '\', createYear: \'' + (d.getYear() + 1900)
-                + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password'] + '\', role: \'' + data['role'] + '\', status: \'' + data['status'] + '\'});';
+                + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password']['words'] + '\', role: \'' + data['role'] + '\', status: \'' + data['status'] + '\'});';
             editQuery(query, res);
         } else {
             var response = { ok: 'no'};
@@ -262,26 +271,34 @@ function registerRespond(req, res, next) {
 
 function editProfileRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
-    var idArray = ['firstname', 'lastname', 'role', 'address', 'postalcode', 'country', 'shippingaddress', 'shippingpostalcode', 'shippingcountry'];
+    var idArray = ['firstname', 'lastname', 'role', 'address', 'postalcode', 'country', 'shippingaddress', 'shippingpostalcode', 'shippingcountry', 'password'];
     idArray = arrayWithoutEmpty(data, idArray);
+
+    console.log('\n\n EDIT \n\n');
 
     console.log(data);
     console.log(idArray);
     console.log(idArray.length);
+    console.log(data['currentpassword']);
 
     if(idArray.length > 0) {
-        var query = 'MATCH (o:User { username: \'' + data['currentusername'] + '\', password: \'' + data['currentpassword'] + '\'}) SET ';
+        var query = '';
         if (data['role'] == 'admin') {
             query = 'MATCH (o:User { username: \'' + data['currentusername'] + '\'}) SET ';
+            query = addDataIfNotEmpty(query, data, idArray);
+            console.log(query);
+            filter(query, res);
+        } else {
+            if(data['currentpassword'] && data['currentpassword']['words']) {
+                query = 'MATCH (o:User { username: \'' + data['currentusername'] + '\', password: \'' + data['currentpassword']['words'] + '\'}) SET ';
+                query = addDataIfNotEmpty(query, data, idArray);
+                console.log(query);
+                filter(query, res);
+            } else {
+                var response = { ok: 'no'};
+                res.send(200, response);
+            }
         }
-
-        console.log(query);
-
-        query = addDataIfNotEmpty(query, data, idArray);
-
-        console.log(query);
-
-        filter(query, res);
 
     } else {
         var response = { ok: 'no'};

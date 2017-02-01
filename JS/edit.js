@@ -27,12 +27,16 @@ function editUser() {
             success: function(data) {
                 if(!data.ok || data.ok != 'no') {
                     user = data[0].properties;
+                    user.password = {
+                        words: data[0].properties.password,
+                        sigBytes: 16
+                    };
                     swal({
                         title: "Wonderful!",
                         text: "Your edit was succesful.",
                         timer: 1700
                     });
-                    // setProfileView(user);
+                    setProfileView(user);
                 } else {
                     swal({
                         title: "Ooops..!",
@@ -40,8 +44,6 @@ function editUser() {
                         timer: 1700
                     });
                 }
-
-                setProfileView(user);
             },
             error: function(err) {
                 swal({
@@ -70,7 +72,7 @@ function processEditForm() {
                 fo['shipcountry'] != '' ) &&
                 fo['currentusername'] != '' ) {
 
-                tempuser.password = fo['password'];
+                tempuser.password = CryptoJS.MD5(fo["password"]);
                 tempuser.firstname = fo['firstname'];
                 tempuser.lastname = fo['lastname'];
                 tempuser.address = fo['address'];
@@ -80,7 +82,7 @@ function processEditForm() {
                 tempuser.shippostalcode = fo['shippostalcode'];
                 tempuser.shipcountry = fo['shipcountry'];
                 tempuser.currentusername = fo['currentusername'];
-                tempuser.currentpassword = fo['currentpassword'];
+                tempuser.currentpassword = CryptoJS.MD5(fo['currentpassword']);
             } else {
                 swal({
                     title: "Ooops!",

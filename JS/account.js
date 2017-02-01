@@ -32,8 +32,10 @@ function submitLogin() {
     console.log(fo);
     username = fo["username"];
     password = CryptoJS.MD5(fo["password"]);
+
     console.log(username);
     console.log(password);
+    console.log(JSON.stringify(password));
 
     $.get('http://' + ip+":"+port+"/users/usernameblocked/" + fo['username'], function (data) {
         if(data == true){
@@ -49,8 +51,15 @@ function submitLogin() {
                 datatype: 'json',
                 contentType: "application/x-www-form-urlencoded",
                 success: function(data) {
+                    console.log(data);
                     if(data.length != '0' && data[0] && data[0].properties) {
                         user = data[0].properties;
+                        console.log("Password from server: " + data[0].properties.password);
+                        user.password = {
+                            words: data[0].properties.password,
+                            sigBytes: 16
+                        };
+                        console.log("Object: " + user.password);
                         if(user && user != undefined) {
                             setProfileView(user);
                             submitViewWishList();
