@@ -7,9 +7,9 @@
             <input type="tel" name="expiry" id="verloop" placeholder="MM/YY" required>
             <input type="tel" name="cvc" id="codecode" minlength="3" maxlength="4" placeholder="CVC" required>
         </form>
-        <button onclick="cardValidation()"> Confirm Payment</button>
     </div>
 </div>
+<button onclick="cardValidation()"> Confirm Payment</button>
 <script>
     new Card({
         form: document.querySelector('form'),
