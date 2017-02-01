@@ -18,12 +18,6 @@ function submitRegister() {
             'username': fo['username'],
             'password': CryptoJS.MD5(fo['password'])
         });
-        swal({
-            title: "Wonderful",
-            text: "You are now registred at CarShop!",
-            timer: 1700
-        });
-        console.log(data);
 
         $.ajax({
             url: url,
@@ -31,17 +25,24 @@ function submitRegister() {
             data: data,
             datatype: 'json',
             contentType: "application/x-www-form-urlencoded",
-            succes: function () {
-                console.log('Succes!');
-                   swal({
-                       title: "Wonderful!",
-                       text: "Registration succesful",
-                       timer: 1700
-                   })
-                setJSONTable('/filter/Car');
+            success: function(data) {
+                if(data.ok == "ok") {
+                    swal({
+                        title: "Wonderful!",
+                        text: "Registration succesful",
+                        timer: 1700
+                    });
+                    setLoginView();
+                } else {
+                    swal({
+                        title: "Ooops!",
+                        text: "Looks like something went wrong. Please try again.",
+                        timer: 1700
+                    });
+                }
             },
-            error: function () {
-                console.log('Failure!');
+            error: function(err) {
+                console.log(err);
                 swal({
                     title: "Ooops!",
                     text: "Something went terribly wrong. Please try again.",

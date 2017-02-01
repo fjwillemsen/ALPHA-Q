@@ -41,7 +41,7 @@ function editUser() {
                     });
                 }
 
-                initial()
+                setProfileView(user);
             },
             error: function(err) {
                 swal({
