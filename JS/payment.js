@@ -1,9 +1,3 @@
-new Card({
-    form: document.querySelector('form'),
-    container: '.card-wrapper',
-    width: 350 // optional — default 350px
-
-});
 function cardValidation() {
     setContentTo('afterPayment.html');
     $.get('http://' + ip + ':' + port + '/stats/carBought'); // Adds one to the number of cars bought today in the database

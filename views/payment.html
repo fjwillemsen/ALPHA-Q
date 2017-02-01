@@ -10,3 +10,10 @@
         <button onclick="cardValidation()"> Confirm Payment</button>
     </div>
 </div>
+<script>
+    new Card({
+        form: document.querySelector('form'),
+        container: '.card-wrapper',
+        width: 350 // optional — default 350px
+    });
+</script>
