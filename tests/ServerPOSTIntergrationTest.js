@@ -28,7 +28,7 @@ describe("POST Requests", function () {
             request.post(url + '/register')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
                 .send('{    "username":"integrationTest", ' +
-                    '"password":"integrationTest", ' +
+                    '"password":{"words":"integrationTest"}, ' +
                     '"firstname":"integrationTest", ' +
                     '"lastname":"integrationTest", ' +
                     '"address":"integrationTest", ' +
@@ -195,7 +195,7 @@ describe("POST Requests", function () {
             it("should return user account details in JSON", function (done) {
                 request.post(url + '/edituser')
                     .set('Content-Type', 'application/x-www-form-urlencoded')
-                    .send('{"currentusername":"integrationTest", "currentpassword":"integrationTest", "firstname":"new firstname test"}')
+                    .send('{"currentusername":"integrationTest", "currentpassword":{"words":"integrationTest"}, "firstname":"new firstname test"}')
                     .end(function (err, res) {
                         if (err) throw err;
                         expect('Content-Type', /x-www-form-urlencoded/);
