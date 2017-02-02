@@ -121,7 +121,7 @@ describe("POST Requests", function () {
         var order = {
             cars: ["Kia Amanti 2009 &#8364;88121"],
             carIDs: ["1461"],
-            user: user,
+            user: {"username":"integrationTest", "password":{"words":"integrationTest"}},
             price: 88121
         };
 

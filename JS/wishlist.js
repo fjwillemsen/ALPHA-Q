@@ -28,15 +28,22 @@ function showWishList() {
 }
 
 function setPublicWishlistView(){
-    setContentTo('allWishLists.html');
-    $.get('http://' + ip + ':' + port + '/wishlists', function(data){
-        var list = $('<div></div>');
-        for (var i = data.length - 1; i >= 0; i--) {
-            var line = $('<p onclick="showPublicWishList(' + "'" + data[i] + "'" + ')">' + data[i] + '</p>');
-            list.append(line);
-        }
+    setContentTo('allWishLists.html', function() {
+        $.get('http://' + ip + ':' + port + '/wishlists', function(data){
+            console.log(data);
+            // var list = $('<div></div>');
+            var list = '';
+            for (var i = data.length - 1; i >= 0; i--) {
+                var line = '<p onclick="showPublicWishList(\'' + data[i] + '\')">' + data[i] + '</p>';
+                console.log(line);
+                // list.append(line);
+                list = list + line;
+            }
 
-        $('#publicWishlistUsers').html(list);
+            console.log(list);
+            document.getElementById("publicWishlistUsers").innerHTML = list;
+            // $('#publicWishlistUsers').replaceWith(list);
+        });
     });
 }
 
@@ -44,6 +51,7 @@ function showPublicWishList(username) {
     console.log(username);
     $.get('http://' + ip + ':' + port + '/user/' + username + '/wishlist', function (data) {
         var list = $('<div></div>');
+        console.log(data);
         for (var i = data.length - 1; i >= 0; i--) {
             var line = $('<p onclick="setDetailView(' + data[i]._id+')" style="display: inline-block">' + data[i].properties.make + ' ' + data[i].properties.model + ' ' + data[i].properties.year + ' - </p>');
             list.append(line);
@@ -110,6 +118,8 @@ function setWishListView(uname) {
                 var line = $('<p onclick="setDetailView(' + wishlist[i]._id + ')" style="display: inline-block">' + wishlist[i].properties.make + ' ' + wishlist[i].properties.model + ' ' + wishlist[i].properties.year + ' - </p><button onclick="addCarToCart(\'' + wishlist[i]._id + '\', \'' + wishlist[i].properties.make + '\', \'' + wishlist[i].properties.model + '\', \'' + wishlist[i].properties.year + '\', \'' + wishlist[i].properties.price + '\')" style="display: inline-block">Add To Cart</button><button onclick="removeFromWishList(' + wishlist[i]._id + ')" style="display: inline-block">Remove</button><br>');
                 list.append(line);
             }
+
+            console.log(list);
             $('#wishlistlist').html(list);
             $('#wishlist #visibility').show();
         });

@@ -259,7 +259,7 @@ function registerRespond(req, res, next) {
             var d = new Date();
             query = 'CREATE (o:User { firstname: \'' + data['firstname'] + '\', lastname: \'' + data['lastname'] + '\', address: \'' + data['address'] + '\', postalcode: \'' + data['postalcode']
                 + '\', createDay: \'' + d.getDate() + '\', createMonth: \'' + (d.getMonth() + 1) + '\', createYear: \'' + (d.getYear() + 1900)
-                + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password']['words'] + '\', role: \'' + data['role'] + '\', status: \'' + data['status'] + '\'});';
+                + '\', country: \'' + data['country'] + '\', shipaddress: \'' + data['shipaddress'] + '\', shippostalcode: \'' + data['shippostalcode'] + '\', shipcountry: \'' + data['shipcountry'] + '\', username: \'' + data['username'] + '\', password: \'' + data['password']['words'] + '\', role: \'' + data['role'] + '\', wishlist: \'public\', status: \'' + data['status'] + '\'});';
             editQuery(query, res);
         } else {
             var response = { ok: 'no'};
@@ -325,7 +325,7 @@ function blockUserRespond(req,res,next){
 //Wishlist
 function viewWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
-    var query = 'MATCH (u:User { username: \'' + data['wishlistusername'] + '\', wishlist: \'public\'})-[:WISHES]-(c:Car) return c';
+    var query = 'MATCH (u:User { username: \'' + data['wishlistusername'] + '\'})-[:WISHES]-(c:Car) return c';
     db.cypher({ query: query }, function(err, results) {
         if(!results[0]) { //If the requested user's wishlist is not public, check if it is the logged in users' wishlist
             query = 'MATCH (u:User { username: \'' + data['wishlistusername'] + '\', password: \'' + data['password'] + '\'})-[:WISHES]-(c:Car) return c';
@@ -364,7 +364,7 @@ function getUserWishlistRespond(req, res, next) {
 function addWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
     console.log(data);
-    var query = 'MATCH (u:User {username:\'' + data['username'] + '\', password: \'' + data['password'] + '\'}), (c:Car) where ID(c)=' + data['addwishlistid'] + ' CREATE (u)-[:WISHES]->(c)';
+    var query = 'MATCH (u:User {username:\'' + data['username'] + '\', password: \'' + data['password']['words'] + '\'}), (c:Car) where ID(c)=' + data['addwishlistid'] + ' CREATE (u)-[:WISHES]->(c)';
     db.cypher({ query: query }, function(err, results) {
         query = 'MATCH (u:User { username: \'' + data['wishlistusername'] + '\', password: \'' + data['password'] + '\'})-[:WISHES]-(c:Car) return c';
         db.cypher({ query: query }, function(err, results) {
@@ -382,14 +382,14 @@ function addWishListRespond(req, res, next) {
 
 function deleteWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
-    var query = 'MATCH (u:User {username:\'' + data['username'] + '\', password: \'' + data['password'] + '\'})-[relation:WISHES]-(c:Car) where ID(c)=' + data['removewishlistid'] + ' DELETE relation';
+    var query = 'MATCH (u:User {username:\'' + data['username'] + '\', password: \'' + data['password']['words'] + '\'})-[relation:WISHES]-(c:Car) where ID(c)=' + data['removewishlistid'] + ' DELETE relation';
     editQuery(query, res);
     next();
 }
 
 function visibilityWishListRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
-    var query = 'MATCH (u:User {username:\'' + data['username'] + '\', password: \'' + data['password'] + '\'}) SET u.wishlist=\'' + data['wlvisibility'] + '\'';
+    var query = 'MATCH (u:User {username:\'' + data['username'] + '\', password: \'' + data['password']['words'] + '\'}) SET u.wishlist=\'' + data['wlvisibility'] + '\'';
     editQuery(query, res);
     next();
 }
@@ -430,7 +430,7 @@ function getOrderInfoRespond(req, res, next) {
 function addOrderRespond(req, res, next) {
     var data = JSON.parse(req.body.toString());
     console.log(data);
-    var query = 'match (u:User { username: \'' + data['user']['username'] + '\', password: \'' + data['user']['password'] + '\'}) create (o:Order { cars: \'' + data['cars'] + '\', carIDs: \'' + data['carIDs'] + '\', price: \'' + data['price']  + '\'}) create (u)-[b:bought]->(o);'
+    var query = 'match (u:User { username: \'' + data['user']['username'] + '\', password: \'' + data['user']['password']['words'] + '\'}) create (o:Order { cars: \'' + data['cars'] + '\', carIDs: \'' + data['carIDs'] + '\', price: \'' + data['price']  + '\'}) create (u)-[b:bought]->(o);'
     console.log(query);
     db.cypher({ query: query}, function (err, results) {
         var response = { ok: 'ok'};
